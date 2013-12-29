@@ -1,0 +1,20 @@
+{
+    "name": "awjudd/asset",
+    "description": "",
+    "authors": [
+        {
+            "name": "Andrew Judd",
+            "email": "contact@andrewjudd.ca"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.1.x"
+    },
+    "autoload": {
+        "psr-0": {
+            "Awjudd\\Asset": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
