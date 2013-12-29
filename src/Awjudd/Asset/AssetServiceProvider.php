@@ -2,7 +2,8 @@
 
 use Illuminate\Support\ServiceProvider;
 
-class AssetServiceProvider extends ServiceProvider {
+class AssetServiceProvider extends ServiceProvider
+{
 
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -10,6 +11,17 @@ class AssetServiceProvider extends ServiceProvider {
 	 * @var bool
 	 */
 	protected $defer = false;
+
+	/**
+     * Bootstrap the service provider.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->package('awjudd/asset');
+    }
+
 
 	/**
 	 * Register the service provider.
@@ -28,7 +40,7 @@ class AssetServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return array('asset');
 	}
 
 }
