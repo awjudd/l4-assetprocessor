@@ -30,7 +30,10 @@ class AssetServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		//
+		// Bind to the "Asset" section
+		$this->app->bind('asset', function() {
+			return new Asset();
+		});
 	}
 
 	/**
