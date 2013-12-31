@@ -62,6 +62,7 @@ return [
     'processors' => [
         'jsmin' => '\Awjudd\Asset\Processors\JsMinifierProcessor',
         'lesscss' => '\Awjudd\Asset\Processors\LessCSSProcessor',
+        'cssmin' => '\Awjudd\Asset\Processors\CSSMinifierProcessor'
     ],
 
 ];
