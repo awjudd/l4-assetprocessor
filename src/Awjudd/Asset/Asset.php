@@ -117,6 +117,39 @@ class Asset
     }
 
     /**
+     * Used to retrieve a single string which will contain all styles that are
+     * needed for your application.
+     * 
+     * @return string
+     */
+    public function getStyles()
+    {
+        return $this->retrieve('css');
+    }
+
+    /**
+     * Used to retrieve a single string which will contain all JavaScript that are
+     * needed for your application.
+     * 
+     * @return string
+     */
+    public function getScripts()
+    {
+        return $this->retrieve('js');
+    }
+
+    /**
+     * Used to retrieve a single string to used to retrieve all of the required assets.
+     * 
+     * @param string $type
+     * @return string
+     */
+    public function retrieve($type)
+    {
+
+    }
+
+    /**
      * Whether or not asset processing is enabled.
      * 
      * @return boolean
