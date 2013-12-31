@@ -5,6 +5,14 @@ use Awjudd\Asset\Interfaces\IAssetProcessor;
 class JsMinifierProcessor extends BaseProcessor
 {
     /**
+     * An array containing all of the file extensions that this processor needs
+     * to use.
+     * 
+     * @var array
+     */
+    public static $extensions = ['js'];
+
+    /**
      * The type of processor this instance is.
      * 
      * @return string
