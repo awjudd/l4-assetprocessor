@@ -13,6 +13,13 @@ abstract class BaseProcessor implements IAssetProcessor
     public static $extensions = [];
 
     /**
+     * Whether or not once we acquire the file, we will be processing it.
+     * 
+     * @var boolean
+     */
+    protected $processingEnabled = FALSE;
+
+    /**
      * The instance of the object that will be handling the processing of the input files.
      * 
      * @var Object
@@ -20,11 +27,23 @@ abstract class BaseProcessor implements IAssetProcessor
     protected static $instance = NULL;
 
     /**
+     * The default constructor.
+     * 
+     * @param boolean $processingEnabled
+     */
+    public function __construct($processingEnabled)
+    {
+        // Set the processing enabled flag
+        $this->processingEnabled = $processingEnabled;
+    }
+
+    /**
      * Returns an instance of the file processor.
      * 
+     * @param boolean $processingEnabled
      * @return Awjudd\Asset\Interfaces\IAssetProcessor
      */
-    public static function getInstance()
+    public static function getInstance($processingEnabled)
     {
         // Check if there already is an instance of the processor.
         if(self::$instance === NULL)
@@ -33,7 +52,7 @@ abstract class BaseProcessor implements IAssetProcessor
             $class = get_called_class();
 
             // There isn't, so instantiate it
-            self::$instance = new $class();
+            self::$instance = new $class($processingEnabled);
         }
 
         // Return the instance

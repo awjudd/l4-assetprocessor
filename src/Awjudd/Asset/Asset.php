@@ -28,6 +28,7 @@ class Asset
 
     public function __construct()
     {
+        // Determine if we should process the files
         $this->deriveProcessingEnabled();
 
         // Set up all of the libraries that we need
@@ -50,6 +51,10 @@ class Asset
         return $this->processingEnabled;
     }
 
+    /**
+     * Used internally in order to determine whether or not we need to actually
+     * process the input files.
+     */
     private function deriveProcessingEnabled()
     {
         // Are they forcing it to be enabled?
@@ -61,7 +66,7 @@ class Asset
         else
         {
             // Otherwise derive it based on the environment that we are in
-            $this->processingEnabled = in_array(\   App::environment()
+            $this->processingEnabled = in_array(\App::environment()
                     , \Config::get('asset::enabled.environments', array()));
         }
     }
@@ -79,7 +84,7 @@ class Asset
         foreach($processors as $name => $class)
         {
             // Get an instance of the processor
-            $instance = $class::getInstance();
+            $instance = $class::getInstance($this->processingEnabled);
 
             // Ensure that it implements the "Awjudd\Asset\Interfaces\IAssetProcessor"
             // interface

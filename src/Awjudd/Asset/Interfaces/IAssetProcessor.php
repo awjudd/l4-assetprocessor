@@ -4,11 +4,19 @@ interface IAssetProcessor
 {
 
     /**
+     * The default constructor.
+     * 
+     * @param boolean $processingEnabled
+     */
+    public function __construct($processingEnabled);
+
+    /**
      * Returns an instance of the file processor.
      * 
+     * @param boolean $processingEnabled
      * @return Awjudd\Asset\Interfaces\IAssetProcessor
      */
-    public static function getInstance();
+    public static function getInstance($processingEnabled);
 
     /**
      * The type of processor this instance is.
