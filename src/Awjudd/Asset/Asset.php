@@ -104,7 +104,7 @@ class Asset
                     if($this->processingEnabled || $this->processors[$processor]->bypassProcess())
                     {
                         // It is so, process the file
-                        $file_to_process = $this->processors[$processor]->process($file_to_process);
+                        $file_to_process = $this->processors[$processor]->process($file_to_process, $file->getFileName());
                     }
 
                     // Set the asset type
@@ -117,6 +117,7 @@ class Asset
                     // It was, so add it to the base folder
                     $dest_path = storage_path() . '/' . \Config::get('asset::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
                     copy($file_to_process, $dest_path);
+                    $file_to_process = basename($dest_path);
                 }
 
                 // Add it to the list of files that we processed
@@ -345,16 +346,16 @@ class Asset
         // Will contain all of the files put together
         $file = '';
 
+        // Derive the destination path
+        $directory = storage_path() . '/' . \Config::get('asset::cache.directory') . '/' 
+            . $type . '/';
+
         // Cycle through each of the files
         foreach($contents as $filename)
         {
             // Keep appending the file's contents
-            $file .= file_get_contents($filename);
+            $file .= file_get_contents($directory . $filename);
         }
-
-        // Derive the destination path
-        $directory = storage_path() . '/' . \Config::get('asset::cache.directory') . '/' 
-            . $type . '/';
 
         $filename = md5($file);
 

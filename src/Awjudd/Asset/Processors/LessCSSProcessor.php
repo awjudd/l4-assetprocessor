@@ -49,7 +49,7 @@ class LessCSSProcessor extends BaseProcessor
      * @param string $filename
      * @return string
      */
-    public function process($filename)
+    public function process($filename, $actualFileName)
     {
         if(!$this->shouldProcess($filename))
         {
@@ -58,7 +58,7 @@ class LessCSSProcessor extends BaseProcessor
 
         $less = new \lessc();
 
-        return $this->write($less->compileFile($filename), $filename);
+        return $this->write($less->compileFile($filename), $actualFileName);
     }
 
     /**

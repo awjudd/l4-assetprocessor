@@ -49,7 +49,7 @@ class CSSMinifierProcessor extends BaseProcessor
      * @param string $filename
      * @return string
      */
-    public function process($filename)
+    public function process($filename, $actualFileName)
     {
         if(!$this->shouldProcess($filename))
         {
@@ -58,7 +58,7 @@ class CSSMinifierProcessor extends BaseProcessor
 
         $css = new \CssMinifier(file_get_contents($filename));
 
-        return $this->write($css->getMinified(), $filename);
+        return $this->write($css->getMinified(), $actualFileName);
     }
 
     /**

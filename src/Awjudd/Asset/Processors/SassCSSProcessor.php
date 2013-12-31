@@ -49,7 +49,7 @@ class SassCSSProcessor extends BaseProcessor
      * @param string $filename
      * @return string
      */
-    public function process($filename)
+    public function process($filename, $actualFileName)
     {
         if(!$this->shouldProcess($filename))
         {
@@ -58,7 +58,7 @@ class SassCSSProcessor extends BaseProcessor
 
         $sass = new \scssc();
 
-        return $this->write($sass->compile(file_get_contents($filename)), $filename);
+        return $this->write($sass->compile(file_get_contents($filename)), $actualFileName);
     }
 
     /**

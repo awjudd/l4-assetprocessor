@@ -55,7 +55,7 @@ interface IAssetProcessor
      * @param string $filename
      * @return string
      */
-    public function process($filename);
+    public function process($filename, $actualFileName);
 
     /**
      * Determines whether or not we need to reprocess the file.

@@ -50,14 +50,14 @@ class CoffeeScriptProcessor extends BaseProcessor
      * @param string $filename
      * @return string
      */
-    public function process($filename)
+    public function process($filename, $actualFileName)
     {
         if(!$this->shouldProcess($filename))
         {
             return $this->getFinalName($filename);
         }
         
-        return $this->write(Compiler::compile(file_get_contents($filename)), $filename);
+        return $this->write(Compiler::compile(file_get_contents($filename)), $actualFileName);
     }
 
     /**
