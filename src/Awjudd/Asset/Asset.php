@@ -101,7 +101,7 @@ class Asset
                     }
 
                     // Check if we should be processing the file
-                    if($this->processingEnabled)
+                    if($this->processingEnabled || $this->processors[$processor]->bypassProcess())
                     {
                         // It is so, process the file
                         $file_to_process = $this->processors[$processor]->process($file_to_process);
@@ -151,7 +151,7 @@ class Asset
         $controller = \Config::get('asset::controller.name') . '@' . \Config::get('asset::controller.method');
 
         // Are we needing a single file?
-        if(\Config::get('asset::cache.singular'))
+        if(\Config::get('asset::cache.singular') && $this->processingEnabled)
         {
             $assets = $this->files[$type];
 

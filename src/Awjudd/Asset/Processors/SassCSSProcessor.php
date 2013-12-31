@@ -1,7 +1,7 @@
 <?php namespace Awjudd\Asset\Processors;
 
 
-class CSSMinifierProcessor extends BaseProcessor
+class SassCSSProcessor extends BaseProcessor
 {
     /**
      * An array containing all of the file extensions that this processor needs
@@ -9,7 +9,7 @@ class CSSMinifierProcessor extends BaseProcessor
      * 
      * @var array
      */
-    public static $extensions = ['less', 'scss', 'css'];
+    public static $extensions = ['scss'];
 
     /**
      * The type of processor this instance is.
@@ -18,7 +18,7 @@ class CSSMinifierProcessor extends BaseProcessor
      */
     public static function getType()
     {
-        return 'CSS Minifier Processor';
+        return 'SASS CSS Processor';
     }
 
     /**
@@ -28,7 +28,7 @@ class CSSMinifierProcessor extends BaseProcessor
      */
     public static function getDescription()
     {
-        return 'Used in order to minify the provided CSS files.';
+        return 'Used in order to process any of the provided SASS files.';
     }
 
     /**
@@ -56,9 +56,9 @@ class CSSMinifierProcessor extends BaseProcessor
             return $this->getFinalName($filename);
         }
 
-        $css = new \CssMinifier(file_get_contents($filename));
+        $sass = new \scssc();
 
-        return $this->write($css->getMinified(), $filename);
+        return $this->write($sass->compile(file_get_contents($filename)), $filename);
     }
 
     /**
@@ -68,6 +68,6 @@ class CSSMinifierProcessor extends BaseProcessor
      */
     public function bypassProcess()
     {
-        return false;
+        return true;
     }
 }

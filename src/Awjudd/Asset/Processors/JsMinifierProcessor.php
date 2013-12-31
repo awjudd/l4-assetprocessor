@@ -63,4 +63,14 @@ class JsMinifierProcessor extends BaseProcessor
         // Minify the JavaScript and then write it out
         return $this->write(Minify::minify($js), $filename);
     }
+
+    /**
+     * Whether or not we should bypass the process filter
+     * 
+     * @return boolean
+     */
+    public function bypassProcess()
+    {
+        return false;
+    }
 }

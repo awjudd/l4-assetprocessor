@@ -64,4 +64,11 @@ interface IAssetProcessor
      * @return boolean
      */
     public function shouldProcess($filename);
+
+    /**
+     * Whether or not we should bypass the process filter
+     * 
+     * @return boolean
+     */
+    public function bypassProcess();
 }

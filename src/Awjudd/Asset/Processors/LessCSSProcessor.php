@@ -60,4 +60,14 @@ class LessCSSProcessor extends BaseProcessor
 
         return $this->write($less->compileFile($filename), $filename);
     }
+
+    /**
+     * Whether or not we should bypass the process filter
+     * 
+     * @return boolean
+     */
+    public function bypassProcess()
+    {
+        return true;
+    }
 }

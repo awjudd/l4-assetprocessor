@@ -34,7 +34,7 @@ return [
          * @var boolean TRUE - one file per provided source file
          *              FALSE - combine all of the same-type of asset files together
          */
-        'singular' => TRUE,
+        'singular' => true,
     ],
 
     /**
@@ -70,6 +70,7 @@ return [
     'processors' => [
         'coffee'    => '\Awjudd\Asset\Processors\CoffeeScriptProcessor',
         'jsmin'     => '\Awjudd\Asset\Processors\JsMinifierProcessor',
+        'sasscss'   => '\Awjudd\Asset\Processors\SassCSSProcessor',
         'lesscss'   => '\Awjudd\Asset\Processors\LessCSSProcessor',
         'cssmin'    => '\Awjudd\Asset\Processors\CSSMinifierProcessor',
     ],
