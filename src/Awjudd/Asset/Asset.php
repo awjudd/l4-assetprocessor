@@ -35,10 +35,20 @@ class Asset
         $this->setupLibraries();
     }
 
-
-    public function add($name, $file)
+    /**
+     * Used in order to add a file to the asset management system.
+     * 
+     * @param string $name
+     * @param string $filename
+     */
+    public function add($name, $filename)
     {
-
+        // Check if the file exists
+        if(!file_exists($filename))
+        {
+            // The file doesn't exist, so throw an exception
+            throw new \Exception(\Lang::get('asset::errors.file-not-found', ['file' => $filename]));
+        }
     }
 
     /**
@@ -90,7 +100,7 @@ class Asset
             // interface
             if(!($instance instanceof \Awjudd\Asset\Interfaces\IAssetProcessor))
             {
-                throw new \Exception('Invalid asset class provided (' . $class . ') must implement "Awjudd\Asset\Interfaces\IAssetProcessor".');
+                throw new \Exception(\Lang::get('asset:errors.invalid-type', ['class' => $class, 'interface' => 'Awjudd\Asset\Interfaces\IAssetProcessor']));
             }
 
             // Grab the list of extensions it processes
