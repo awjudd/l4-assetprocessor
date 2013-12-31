@@ -25,6 +25,14 @@ interface IAssetProcessor
     public static function getDescription();
 
     /**
+     * Used in order to retrieve a list of file extensions that this processor
+     * handles.
+     * 
+     * @return array
+     */
+    public static function getAssociatedExtensions();
+
+    /**
      * The full name of the asset to add to be processed.
      * 
      * @param $filename The full path to the file
@@ -45,6 +53,4 @@ interface IAssetProcessor
      * @return array Full paths to each of the assets
      */
     public function retrieve();
-
-
 }

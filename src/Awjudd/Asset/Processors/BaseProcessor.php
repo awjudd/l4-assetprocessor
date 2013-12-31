@@ -60,4 +60,15 @@ abstract class BaseProcessor implements IAssetProcessor
     {
 
     }
+
+    /**
+     * Used in order to retrieve a list of file extensions that this processor
+     * handles.
+     * 
+     * @return array
+     */
+    public static function getAssociatedExtensions()
+    {
+        return self::$extensions;
+    }
 }
