@@ -4,7 +4,8 @@
     "authors": [
         {
             "name": "Andrew Judd",
-            "email": "contact@andrewjudd.ca"
+            "email": "contact@andrewjudd.ca",
+            "homepage": "http://www.andrewjudd.ca"
         }
     ],
     "require": {
@@ -12,7 +13,8 @@
         "illuminate/support": "4.1.x",
         "leafo/lessphp": "0.4.0",
         "werkint/jsmin": "1.0.0",
-        "natxet/CssMin": "dev-master"
+        "natxet/CssMin": "dev-master",
+        "coffeescript/coffeescript": "dev-master"
     },
     "autoload": {
         "psr-0": {
