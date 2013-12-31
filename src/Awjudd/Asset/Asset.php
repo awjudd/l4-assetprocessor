@@ -99,8 +99,12 @@ class Asset
                         throw new \Exception(\Lang::get('asset::errors.duplicate-name', ['name' => $name]));
                     }
 
-                    // Process the file
-                    $file_to_process = $this->processors[$processor]->process($file_to_process);
+                    // Check if we should be processing the file
+                    if($this->processingEnabled)
+                    {
+                        // It is so, process the file
+                        $file_to_process = $this->processors[$processor]->process($file_to_process);
+                    }
 
                     // Set the asset type
                     $assetType = $this->processors[$processor]->getAssetType();
