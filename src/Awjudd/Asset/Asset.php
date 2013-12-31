@@ -111,6 +111,14 @@ class Asset
                     $assetType = $this->processors[$processor]->getAssetType();
                 }
 
+                // Check if the file was processed
+                if($file_to_process!=$file->getRealPath())
+                {
+                    // It was, so add it to the base folder
+                    $dest_path = storage_path() . '/' . \Config::get('asset::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
+                    copy($file_to_process, $dest_path);
+                }
+
                 // Add it to the list of files that we processed
                 $this->files[$assetType][$name] = $file_to_process;
             }
