@@ -78,6 +78,6 @@ abstract class BaseProcessor implements IAssetProcessor
      */
     public static function getAssociatedExtensions()
     {
-        return self::$extensions;
+        return static::$extensions;
     }
 }
