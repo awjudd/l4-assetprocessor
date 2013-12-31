@@ -19,8 +19,17 @@ class Asset
      */
     private $extensionMapping = [];
 
+    /**
+     * Whether or not processing is enabled for the packages.
+     * 
+     * @var boolean
+     */
+    private $processingEnabled = FALSE;
+
     public function __construct()
     {
+        $this->deriveProcessingEnabled();
+
         // Set up all of the libraries that we need
         $this->setupLibraries();
     }
@@ -29,6 +38,32 @@ class Asset
     public function add($name, $file)
     {
 
+    }
+
+    /**
+     * Whether or not asset processing is enabled.
+     * 
+     * @return boolean
+     */
+    public function getProcessingEnabled()
+    {
+        return $this->processingEnabled;
+    }
+
+    private function deriveProcessingEnabled()
+    {
+        // Are they forcing it to be enabled?
+        if(\Config::get('asset::enabled.force', FALSE))
+        {
+            // It was forced, so enable it
+            $this->processingEnabled = TRUE;
+        }
+        else
+        {
+            // Otherwise derive it based on the environment that we are in
+            $this->processingEnabled = in_array(\   App::environment()
+                    , \Config::get('asset::enabled.environments', array()));
+        }
     }
 
     /**
