@@ -41,17 +41,19 @@ interface IAssetProcessor
     public static function getAssociatedExtensions();
 
     /**
-     * Used to add an entire directory into the list of assets.
+     * Determines the classification of an asset.
      * 
-     * @param string $filename The filename to process
-     * @param boolean $recursive Should we recursively scan through the directories?
+     * @return string
      */
-    public function add($filename, $recursive = FALSE);
+    public static function getAssetType();
 
     /**
-     * Used to retrieve all of the assets processed through this object.
+     * Used in order to process the input file.  After processing this input
+     * file, it will return a new file name for the rest of the process to use
+     * if needed.
      * 
-     * @return array Full paths to each of the assets
+     * @param string $filename
+     * @return string
      */
-    public function retrieve();
+    public function process($filename);
 }

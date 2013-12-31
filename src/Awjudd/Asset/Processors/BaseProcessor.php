@@ -24,7 +24,7 @@ abstract class BaseProcessor implements IAssetProcessor
      * 
      * @var Object
      */
-    protected static $instance = NULL;
+    protected static $instance = [];
 
     /**
      * The default constructor.
@@ -45,29 +45,18 @@ abstract class BaseProcessor implements IAssetProcessor
      */
     public static function getInstance($processingEnabled)
     {
-        // Check if there already is an instance of the processor.
-        if(self::$instance === NULL)
-        {
-            // Figure out the class name
-            $class = get_called_class();
+        // Figure out the class name
+        $class = get_called_class();
 
+        // Check if there already is an instance of the processor.
+        if(!isset(static::$instance[$class]))
+        {
             // There isn't, so instantiate it
-            self::$instance = new $class($processingEnabled);
+            static::$instance[$class] = new $class($processingEnabled);
         }
 
         // Return the instance
-        return self::$instance;
-    }
-
-    /**
-     * Used to add an entire directory into the list of assets.
-     * 
-     * @param string $filename The filename to process
-     * @param boolean $recursive Should we recursively scan through the directories?
-     */
-    public function add($filename, $recursive = FALSE)
-    {
-
+        return static::$instance[$class];
     }
 
     /**
@@ -79,5 +68,30 @@ abstract class BaseProcessor implements IAssetProcessor
     public static function getAssociatedExtensions()
     {
         return static::$extensions;
+    }
+
+    /**
+     * Used internally in order to write the current version of the file to disk.
+     * 
+     * @param string $contents The contents to write to the file.
+     * @return string The fill path to the newly created file
+     */
+    protected function write($contents)
+    {
+        // Derive the MD5 of the contents
+        $md5 = md5($contents);
+
+        // Derive the filename that we will be writing to
+        $directory = storage_path() . '/' . \Config::get('asset::cache.directory') . '/' . static::getAssetType() . '/';
+
+        // Make sure that the folder exists
+        if(!file_exists($directory))
+        {
+            // It doesn't, so make it
+            mkdir($directory, 0777, TRUE);
+        }
+
+        // Write the file to disk
+        file_put_contents($directory . $md5, $contents);
     }
 }

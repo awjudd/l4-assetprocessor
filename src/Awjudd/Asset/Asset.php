@@ -60,7 +60,7 @@ class Asset
         else if(isset($this->files[$name]) && \Config::get('asset::file.error-on-duplicate-name', FALSE))
         {
             // We are erroring because of the duplicate name, so throw an exception
-            throw new \Exception(\Lang::get('asset::duplicate-name', ['name' => $name]));
+            throw new \Exception(\Lang::get('asset::errors.duplicate-name', ['name' => $name]));
         }
 
         // Grab the file information
@@ -80,11 +80,35 @@ class Asset
         }
         else
         {
-            // It's a file, so process it.
-            $this->files[$name] = $file;
+            // Check if there is a file extension mapped
+            if(isset($this->extensionMapping[$file->getExtension()]))
+            {
+                $file_to_process = $file->getRealPath();
 
-            //
-            print_r($this->extensionMapping);
+                // Keep track of the actual asset type that is being processed
+                $assetType = NULL;
+
+                // There was something linked to it, so iterate through
+                foreach($this->extensionMapping[$file->getExtension()] as $processor)
+                {
+                    // Check the processor type to make sure we aren't classifying
+                    // it as two different types
+                    if($assetType !== NULL && $this->processors[$processor]->getAssetType() != $assetType)
+                    {
+                        // There is a mismatch, so throw an exception
+                        throw new \Exception(\Lang::get('asset::errors.different-asset-types', ['file' => $file_to_process]));
+                    }
+
+                    // Process the file
+                    $file_to_process = $this->processors[$processor]->process($file_to_process);
+
+                    // Set the asset type
+                    $assetType = $this->processors[$processor]->getAssetType();
+                }
+
+                // Add it to the list of files that we processed
+                $this->files[$assetType][$name] = $file_to_process;
+            }
         }
     }
 
@@ -140,8 +164,18 @@ class Asset
                 throw new \Exception(\Lang::get('asset:errors.invalid-type', ['class' => $class, 'interface' => 'Awjudd\Asset\Interfaces\IAssetProcessor']));
             }
 
+            // Add it into the array of processors
+            $this->processors[$name] = $instance;
+
             // Grab the list of extensions it processes
             $this->deriveExtensionMapping($name, $class::getAssociatedExtensions());
+
+            // Check if the asset type exists
+            if(!isset($this->files[$instance->getAssetType()]))
+            {
+                // Asset type didn't exist, so add it into the mapping
+                $this->files[$instance->getAssetType()] = [];
+            }
         }
     }
 

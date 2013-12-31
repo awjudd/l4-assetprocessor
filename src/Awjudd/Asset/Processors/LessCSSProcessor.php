@@ -1,8 +1,7 @@
 <?php namespace Awjudd\Asset\Processors;
 
-use JsMin\Minify;
 
-class JsMinifierProcessor extends BaseProcessor
+class LessCSSProcessor extends BaseProcessor
 {
     /**
      * An array containing all of the file extensions that this processor needs
@@ -10,7 +9,7 @@ class JsMinifierProcessor extends BaseProcessor
      * 
      * @var array
      */
-    public static $extensions = ['js'];
+    public static $extensions = ['less'];
 
     /**
      * The type of processor this instance is.
@@ -19,7 +18,7 @@ class JsMinifierProcessor extends BaseProcessor
      */
     public static function getType()
     {
-        return 'JavaScript Minifier';
+        return 'LESS CSS Processor';
     }
 
     /**
@@ -29,7 +28,7 @@ class JsMinifierProcessor extends BaseProcessor
      */
     public static function getDescription()
     {
-        return 'Used in order to minimize all of the JavaScript files that are provided.';
+        return 'Used in order to process any of the provided LESS files.';
     }
 
     /**
@@ -39,7 +38,7 @@ class JsMinifierProcessor extends BaseProcessor
      */
     public static function getAssetType()
     {
-        return 'js';
+        return 'css';
     }
 
     /**
@@ -52,10 +51,8 @@ class JsMinifierProcessor extends BaseProcessor
      */
     public function process($filename)
     {
-        // Read the contents of the JavaScript file
-        $js = file_get_contents($filename);
+        $less = new \lessc();
 
-        // Minify the JavaScript and then write it out
-        return $this->write(Minify::minify($js));
+        return $this->write($less->compileFile($filename));
     }
 }
