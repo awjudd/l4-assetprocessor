@@ -56,12 +56,6 @@ class Asset
             // The file doesn't exist, so throw an exception
             throw new \Exception(\Lang::get('asset::errors.file-not-found', ['file' => $filename]));
         }
-        // Was there a duplicate name, and we are erroring
-        else if(isset($this->files[$name]) && \Config::get('asset::file.error-on-duplicate-name', FALSE))
-        {
-            // We are erroring because of the duplicate name, so throw an exception
-            throw new \Exception(\Lang::get('asset::errors.duplicate-name', ['name' => $name]));
-        }
 
         // Grab the file information
         $file = new \SplFileInfo($filename);
@@ -97,6 +91,12 @@ class Asset
                     {
                         // There is a mismatch, so throw an exception
                         throw new \Exception(\Lang::get('asset::errors.different-asset-types', ['file' => $file_to_process]));
+                    }
+                    // Was there a duplicate name, and we are erroring
+                    else if(isset($this->files[$assetType][$name]) && \Config::get('asset::file.error-on-duplicate-name', FALSE))
+                    {
+                        // We are erroring because of the duplicate name, so throw an exception
+                        throw new \Exception(\Lang::get('asset::errors.duplicate-name', ['name' => $name]));
                     }
 
                     // Process the file
