@@ -51,8 +51,13 @@ class LessCSSProcessor extends BaseProcessor
      */
     public function process($filename)
     {
+        if(!$this->shouldProcess($filename))
+        {
+            return $this->getFinalName($filename);
+        }
+
         $less = new \lessc();
 
-        return $this->write($less->compileFile($filename));
+        return $this->write($less->compileFile($filename), $filename);
     }
 }

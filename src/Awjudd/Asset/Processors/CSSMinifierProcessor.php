@@ -51,8 +51,13 @@ class CSSMinifierProcessor extends BaseProcessor
      */
     public function process($filename)
     {
+        if(!$this->shouldProcess($filename))
+        {
+            return $this->getFinalName($filename);
+        }
+
         $css = new \CssMinifier(file_get_contents($filename));
 
-        return $this->write($css->getMinified());
+        return $this->write($css->getMinified(), $filename);
     }
 }

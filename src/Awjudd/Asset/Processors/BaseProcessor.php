@@ -71,21 +71,66 @@ abstract class BaseProcessor implements IAssetProcessor
     }
 
     /**
+     * Determines whether or not we need to reprocess the file.
+     * 
+     * @param string $filename
+     * @return boolean
+     */
+    public function shouldProcess($filename)
+    {
+        // Derive the name of the file to use
+        $destination = $this->getFinalName($filename);
+
+        // Does the destination file exist?
+        if(!\File::exists($destination))
+        {
+            // It doesn't exist, so we will need to process
+            return true;
+        }
+
+        // Otherwise compare the date stamps
+        $destinationChanged = \File::lastModified($destination);
+        $currentChanged = \File::lastModified($filename);
+
+        // Which one was last modified later
+        if($currentChanged > $destinationChanged)
+        {
+            // Our destination is older than the actual file, so update
+            return true;
+        }
+
+        // We don't need to process the file (the old version will do)
+        return false;
+    }
+
+    /**
+     * Used in order to get the final full path for the file that this process
+     * will generate.
+     * 
+     * @param $filename The filename to process
+     * @return string The full name for the file that we are processing
+     */
+    protected function getFinalName($filename)
+    {
+        return $this->getOutputDirectory(basename($filename)) . $this->getOutputFileName();
+    }
+
+        /**
      * Used internally in order to write the current version of the file to disk.
      * 
      * @param string $contents The contents to write to the file.
      * @return string The fill path to the newly created file
      */
-    protected function write($contents)
+    protected function write($contents, $assetFileName)
     {
-        // Derive the MD5 of the contents
-        $md5 = md5($contents);
-
         // Derive the filename that we will be writing to
-        $directory = storage_path() . '/' . \Config::get('asset::cache.directory') . '/' . static::getAssetType() . '/';
+        $directory = $this->getOutputDirectory($assetFileName);
 
         // Build the file name
-        $filename = $directory . $md5;
+        $filename = self::getOutputFileName();
+
+        // The full file path
+        $fullpath = $directory.$filename;
 
         // Make sure that the folder exists
         if(!file_exists($directory))
@@ -95,9 +140,31 @@ abstract class BaseProcessor implements IAssetProcessor
         }
 
         // Write the file to disk
-        file_put_contents($filename, $contents);
+        file_put_contents($fullpath, $contents);
 
         // Return the newly created file name
-        return $filename;
+        return $fullpath;
+    }
+
+    /**
+     * Used to get the derived output directory.
+     * 
+     * @param string $assetFileName The name of the file that we are processing
+     * @return string The full path to the directory to write to
+     */
+    protected function getOutputDirectory($assetFileName)
+    {
+        return storage_path() . '/' . \Config::get('asset::cache.directory') . '/' 
+            . static::getAssetType() . '/' . basename($assetFileName) . '/';
+    }
+
+    /**
+     * Used to derive the file name that we will be saving this file as.
+     * 
+     * @return string The name that this step of the processing will take
+     */
+    protected function getOutputFileName()
+    {
+        return md5(static::getType());
     }
 }

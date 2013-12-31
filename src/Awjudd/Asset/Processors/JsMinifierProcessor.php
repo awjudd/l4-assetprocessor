@@ -52,10 +52,15 @@ class JsMinifierProcessor extends BaseProcessor
      */
     public function process($filename)
     {
+        if(!$this->shouldProcess($filename))
+        {
+            return $this->getFinalName($filename);
+        }
+
         // Read the contents of the JavaScript file
         $js = file_get_contents($filename);
 
         // Minify the JavaScript and then write it out
-        return $this->write(Minify::minify($js));
+        return $this->write(Minify::minify($js), $filename);
     }
 }

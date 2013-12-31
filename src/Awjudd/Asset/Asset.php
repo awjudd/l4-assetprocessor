@@ -233,7 +233,6 @@ class Asset
             }
         }
 
-
         return $output;
     }
 
