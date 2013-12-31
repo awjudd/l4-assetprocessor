@@ -112,7 +112,7 @@ abstract class BaseProcessor implements IAssetProcessor
      */
     protected function getFinalName($filename)
     {
-        return $this->getOutputDirectory(basename($filename)) . $this->getOutputFileName();
+        return $this->getOutputDirectory(basename($filename)) . $this->getOutputFileName($filename);
     }
 
         /**
@@ -127,7 +127,7 @@ abstract class BaseProcessor implements IAssetProcessor
         $directory = $this->getOutputDirectory($assetFileName);
 
         // Build the file name
-        $filename = self::getOutputFileName();
+        $filename = self::getOutputFileName($assetFileName);
 
         // The full file path
         $fullpath = $directory.$filename;
@@ -163,8 +163,8 @@ abstract class BaseProcessor implements IAssetProcessor
      * 
      * @return string The name that this step of the processing will take
      */
-    protected function getOutputFileName()
+    protected function getOutputFileName($assetFileName)
     {
-        return md5(static::getType());
+        return md5(static::getType() . $assetFileName);
     }
 }
