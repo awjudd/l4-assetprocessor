@@ -5,18 +5,11 @@ use Awjudd\Asset\Processors\JsMinifierProcessor as JsMinifier;
 class Asset
 {
     /**
-     * Holds the instance of Lessc used to process .less files
+     * The processors that will be used for the rest of the work.
      * 
-     * @var lessc
+     * @var array
      */
-    public $lessc = NULL;
-
-    /**
-     * Holds the instance of a JavaScript minifier.
-     * 
-     * @var jsMin
-     */
-    public $jsMin = NULL;
+    protected $processors = [];
 
     public function __construct()
     {
@@ -24,8 +17,24 @@ class Asset
         $this->setupLibraries();
     }
 
+    public function add($name, $file)
+    {
+
+    }
+
+    /**
+     * Used internally in order to set up an instance of each of the processors
+     * that we will need.
+     */
     private function setupLibraries()
     {
-        $foo = JsMinifier::getInstance();
+        // Get the list of processors
+        $processors = \Config::get('asset::processors', []);
+
+        // Iterate through the list
+        foreach($processors as $name => $class)
+        {
+            $this->processors[$name] = $class::getInstance();
+        }
     }
 }
