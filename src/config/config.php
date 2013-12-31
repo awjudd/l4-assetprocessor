@@ -1,9 +1,9 @@
 <?php
 return [
     'controller' => [
-        'available' => [
-            'css',
-            'js',
+        'content-types' => [
+            'css' => 'text/css',
+            'js' => 'text/javascript',
         ],
         'method' => 'getIndex',
         'name' => '\Awjudd\Asset\Controllers\AssetController',
