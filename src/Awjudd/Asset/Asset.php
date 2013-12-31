@@ -123,7 +123,7 @@ class Asset
      * 
      * @return string
      */
-    public function getStyles()
+    public function styles()
     {
         return $this->retrieve('css');
     }
@@ -134,7 +134,7 @@ class Asset
      * 
      * @return string
      */
-    public function getScripts()
+    public function scripts()
     {
         return $this->retrieve('js');
     }
