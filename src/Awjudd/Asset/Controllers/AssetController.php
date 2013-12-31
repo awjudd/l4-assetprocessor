@@ -7,10 +7,10 @@ class AssetController extends Controller
 {
     public function getIndex($type, $name)
     {
-        $available = \Config::get('asset::controller.available', array());
+        $available = \Config::get('asset::controller.content-types', array());
 
         // Validate the type
-        if(in_array($type, $available))
+        if(isset($available[$type]))
         {
             // Verify that the name is an MD5
             if(!preg_match('/[A-Za-z0-9]{32}/', $name))
@@ -24,15 +24,17 @@ class AssetController extends Controller
             // Check that it exists
             if(!file_exists($filename))
             {
-                throw new \Exception(\Lang::get('asset::controller.file-not-found', ['name' => $name]));
+                throw new \Exception(\Lang::get('asset::errors.controller.file-not-found', ['name' => $name]));
             }
 
             // Everything validates, so spit it out
-            return file_get_contents($filename);
+            $output = file_get_contents($filename);
+
+            return \Response::make($output, 200, array('Content-Type' => $available[$type]));
         }
         else
         {
-            throw new \Exception(\Lang::get('asset::controller.invalid-type', ['type' => $type]));
+            throw new \Exception(\Lang::get('asset::errors.controller.invalid-type', ['type' => $type]));
         }
     }
 }
