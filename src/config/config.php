@@ -60,9 +60,10 @@ return [
      * be using.
      */
     'processors' => [
+        'coffes'    => '\Awjudd\Asset\Processors\CoffeeScriptProcessor',
         'jsmin'     => '\Awjudd\Asset\Processors\JsMinifierProcessor',
         'lesscss'   => '\Awjudd\Asset\Processors\LessCSSProcessor',
-        'cssmin'    => '\Awjudd\Asset\Processors\CSSMinifierProcessor'
+        'cssmin'    => '\Awjudd\Asset\Processors\CSSMinifierProcessor',
     ],
 
 ];

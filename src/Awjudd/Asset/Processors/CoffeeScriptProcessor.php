@@ -1,8 +1,8 @@
 <?php namespace Awjudd\Asset\Processors;
 
-use JsMin\Minify;
+use CoffeeScript\Compiler;
 
-class JsMinifierProcessor extends BaseProcessor
+class CoffeeScriptProcessor extends BaseProcessor
 {
     /**
      * An array containing all of the file extensions that this processor needs
@@ -10,7 +10,7 @@ class JsMinifierProcessor extends BaseProcessor
      * 
      * @var array
      */
-    public static $extensions = ['js', 'coffee'];
+    public static $extensions = ['coffee'];
 
     /**
      * The type of processor this instance is.
@@ -19,7 +19,7 @@ class JsMinifierProcessor extends BaseProcessor
      */
     public static function getType()
     {
-        return 'JavaScript Minifier';
+        return 'Coffee Script Processor';
     }
 
     /**
@@ -29,7 +29,7 @@ class JsMinifierProcessor extends BaseProcessor
      */
     public static function getDescription()
     {
-        return 'Used in order to minimize all of the JavaScript files that are provided.';
+        return 'Used in order to process any of the provided Coffee Script files.';
     }
 
     /**
@@ -52,10 +52,6 @@ class JsMinifierProcessor extends BaseProcessor
      */
     public function process($filename)
     {
-        // Read the contents of the JavaScript file
-        $js = file_get_contents($filename);
-
-        // Minify the JavaScript and then write it out
-        return $this->write(Minify::minify($js));
+        return $this->write(Compiler::compile(file_get_contents($filename)));
     }
 }
