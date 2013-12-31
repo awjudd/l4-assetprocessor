@@ -47,6 +47,7 @@ class Asset
      * 
      * @param string $name
      * @param string $filename
+     * @throws \Exception
      */
     public function add($name, $filename)
     {
@@ -152,8 +153,42 @@ class Asset
         // Are we needing a single file?
         if(\Config::get('asset::cache.singular'))
         {
+            $assets = $this->files[$type];
+
             // We only want a single file per type, so combine all of them together
-            
+            if(count($assets) == 1)
+            {
+                // There is only one, so just grab it
+                $asset = current($assets);
+
+                // Add in a bypass since there is no point in re-processing the file
+                switch($type)
+                {
+                    case 'js':
+                        $output .= \HTML::script(\URL::action($controller, array($type, $asset)));
+                        break;
+                    case 'css':
+                        $output .= \HTML::style(\URL::action($controller, array($type, $asset)));
+                        break;
+                }
+            }
+            else
+            {
+                // There was more than one file, so we need to combine them all
+                // into one file
+                $file = $this->write($type, $assets);
+
+                // Add in a bypass since there is no point in re-processing the file
+                switch($type)
+                {
+                    case 'js':
+                        $output .= \HTML::script(\URL::action($controller, array($type, $file)));
+                        break;
+                    case 'css':
+                        $output .= \HTML::style(\URL::action($controller, array($type, $file)));
+                        break;
+                }
+            }
         }
         else
         {
@@ -288,5 +323,45 @@ class Asset
             // Add a mapping between the two
             $this->extensionMapping[$extension][] = $name;
         }
+    }
+
+    /**
+     * Used internally in order to write all of the contents for the provided files
+     * into a single file.
+     * 
+     * @param string $type The type of asset that we are making
+     * @param array $contents An array of all of the files to combine
+     * @return string The new file name
+     */
+    private function write($type, array $contents)
+    {
+        // Will contain all of the files put together
+        $file = '';
+
+        // Cycle through each of the files
+        foreach($contents as $filename)
+        {
+            // Keep appending the file's contents
+            $file .= file_get_contents($filename);
+        }
+
+        // Derive the destination path
+        $directory = storage_path() . '/' . \Config::get('asset::cache.directory') . '/' 
+            . $type . '/';
+
+        $filename = md5($file);
+
+        // Make sure that the folder exists
+        if(!file_exists($directory))
+        {
+            // It doesn't, so make it (allow us to write)
+            mkdir($directory, 0777, TRUE);
+        }
+
+        // Write the file to disk
+        file_put_contents($directory . $filename, $file);
+
+        // Return the file name
+        return $filename;
     }
 }
