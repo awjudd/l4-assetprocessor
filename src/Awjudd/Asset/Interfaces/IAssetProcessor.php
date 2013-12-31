@@ -41,19 +41,12 @@ interface IAssetProcessor
     public static function getAssociatedExtensions();
 
     /**
-     * The full name of the asset to add to be processed.
-     * 
-     * @param $filename The full path to the file
-     */
-    public function addFile($filename);
-
-    /**
      * Used to add an entire directory into the list of assets.
      * 
-     * @param string $directory The directory
+     * @param string $filename The filename to process
      * @param boolean $recursive Should we recursively scan through the directories?
      */
-    public function addDirectory($directory, $recursive = FALSE);
+    public function add($filename, $recursive = FALSE);
 
     /**
      * Used to retrieve all of the assets processed through this object.

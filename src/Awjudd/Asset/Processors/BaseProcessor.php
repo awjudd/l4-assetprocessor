@@ -62,20 +62,10 @@ abstract class BaseProcessor implements IAssetProcessor
     /**
      * Used to add an entire directory into the list of assets.
      * 
-     * @param string $directory The directory
+     * @param string $filename The filename to process
      * @param boolean $recursive Should we recursively scan through the directories?
      */
-    public function addFile($filename)
-    {
-
-    }
-
-    /**
-     * The full name of the asset to add to be processed.
-     * 
-     * @param $filename The full path to the file
-     */
-    public function addDirectory($directory, $recursive = FALSE)
+    public function add($filename, $recursive = FALSE)
     {
 
     }
