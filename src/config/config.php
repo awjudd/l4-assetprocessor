@@ -1,5 +1,13 @@
 <?php
 return [
+    'controller' => [
+        'available' => [
+            'css',
+            'js',
+        ],
+        'method' => 'getIndex',
+        'name' => '\Awjudd\Asset\Controllers\AssetController',
+    ],
 
     /**
      * All of the cache settings

@@ -146,7 +146,60 @@ class Asset
      */
     public function retrieve($type)
     {
+        $output = '';
+        $controller = \Config::get('asset::controller.name') . '@' . \Config::get('asset::controller.method');
 
+        // Are we needing a single file?
+        if(\Config::get('asset::cache.singular'))
+        {
+            // We only want a single file per type, so combine all of them together
+            
+        }
+        else
+        {
+            // We want several files for each, so return each.
+            foreach($this->files[$type] as $file)
+            {
+                // Check if the asset is internal
+                if(\Str::contains($file, public_path()))
+                {
+                    $asset = str_replace(public_path(), '', $file);
+
+                    // It is external, so just emit it
+                    // Add in the asset
+                    switch($type)
+                    {
+                        case 'js':
+                            $output .= \HTML::script($asset);
+                            break;
+                        case 'css':
+                            $output .= \HTML::style($asset);
+                            break;
+                    }
+                }
+                else
+                {
+                    $actual_name = substr($file, -32);
+
+                    // It is internal, so emit with the asset controller
+                    // Add in the asset
+                    switch($type)
+                    {
+                        case 'js':
+                            $output .= \HTML::script(\URL::action($controller, array($type, $actual_name)));
+                            break;
+                        case 'css':
+                            $output .= \HTML::style(\URL::action($controller, array($type, $actual_name)));
+                            break;
+                    }
+                }
+
+                
+            }
+        }
+
+
+        return $output;
     }
 
     /**
