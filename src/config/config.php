@@ -14,7 +14,7 @@ return [
             'production'
         ],
         /**
-         * Should 
+         * Should we force the processor to process the files?
          */
         'force' => false,
     ],
