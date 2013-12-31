@@ -1,6 +1,25 @@
 <?php
 return [
     /**
+     * 
+     */
+    'cache' => [
+        /**
+         * Whether or not file caching is enabled.
+         * 
+         * @var boolean
+         */
+        'enabled' => true,
+
+        /**
+         * The directory in the storage folder where the cached processed files
+         * will be stored.
+         * 
+         * @var string
+         */
+        'directory' => 'assets',
+    ],
+    /**
      * Is the processing of these assets enabled?
      */
     'enabled' => [
