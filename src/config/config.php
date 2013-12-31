@@ -21,6 +21,13 @@ return [
         'directory' => 'assets',
 
         /**
+         * Whether or not we should cache the intermediate steps to disk.
+         * 
+         * @var boolean
+         */
+        'intermediate-steps' => TRUE,
+
+        /**
          * Should we be using a single file for each asset, or multiple?
          * 
          * @var boolean TRUE - one file per provided source file
