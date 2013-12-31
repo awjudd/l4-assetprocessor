@@ -1,15 +1,16 @@
 <?php
 return [
+
     /**
-     * 
+     * All of the cache settings
      */
     'cache' => [
         /**
-         * Whether or not file caching is enabled.
+         * How long should the file remain cached for? (in seconds)
          * 
-         * @var boolean
+         * @var integer
          */
-        'enabled' => true,
+        'duration' => 86400,
 
         /**
          * The directory in the storage folder where the cached processed files
@@ -18,7 +19,16 @@ return [
          * @var string
          */
         'directory' => 'assets',
+
+        /**
+         * Should we be using a single file for each asset, or multiple?
+         * 
+         * @var boolean TRUE - one file per provided source file
+         *              FALSE - combine all of the same-type of asset files together
+         */
+        'singular' => FALSE,
     ],
+
     /**
      * Is the processing of these assets enabled?
      */
@@ -37,6 +47,14 @@ return [
          */
         'force' => false,
     ],
+
+    'file' => [
+        /**
+         * Should the application error when there is a duplicate name.
+         */
+        'error-on-duplicate-name' => TRUE
+    ],
+
     /**
      * An array containing all of the processors that the application will
      * be using.

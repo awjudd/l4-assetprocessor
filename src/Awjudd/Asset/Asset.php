@@ -26,6 +26,13 @@ class Asset
      */
     private $processingEnabled = FALSE;
 
+    /**
+     * The list of files that are being processed by the asset handler.
+     * 
+     * @var array
+     */
+    private $files = [];
+
     public function __construct()
     {
         // Determine if we should process the files
@@ -48,6 +55,36 @@ class Asset
         {
             // The file doesn't exist, so throw an exception
             throw new \Exception(\Lang::get('asset::errors.file-not-found', ['file' => $filename]));
+        }
+        // Was there a duplicate name, and we are erroring
+        else if(isset($this->files[$name]) && \Config::get('asset::file.error-on-duplicate-name', FALSE))
+        {
+            // We are erroring because of the duplicate name, so throw an exception
+            throw new \Exception(\Lang::get('asset::duplicate-name', ['name' => $name]));
+        }
+
+        // Grab the file information
+        $file = new \SplFileInfo($filename);
+
+        // Check if the file is a directory
+        if($file->isDir())
+        {
+            // It was a directory, so iterate through it
+            $directory = new \DirectoryIterator($filename);
+
+            foreach ($directory as $file)
+            {
+                // Recursively call the add function
+                $this->add($name . $file->getFilename(), $file->getRealPath());
+            }
+        }
+        else
+        {
+            // It's a file, so process it.
+            $this->files[$name] = $file;
+
+            //
+            print_r($this->extensionMapping);
         }
     }
 
