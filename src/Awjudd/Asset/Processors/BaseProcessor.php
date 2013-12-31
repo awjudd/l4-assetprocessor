@@ -84,14 +84,20 @@ abstract class BaseProcessor implements IAssetProcessor
         // Derive the filename that we will be writing to
         $directory = storage_path() . '/' . \Config::get('asset::cache.directory') . '/' . static::getAssetType() . '/';
 
+        // Build the file name
+        $filename = $directory . $md5;
+
         // Make sure that the folder exists
         if(!file_exists($directory))
         {
-            // It doesn't, so make it
+            // It doesn't, so make it (allow us to write)
             mkdir($directory, 0777, TRUE);
         }
 
         // Write the file to disk
-        file_put_contents($directory . $md5, $contents);
+        file_put_contents($filename, $contents);
+
+        // Return the newly created file name
+        return $filename;
     }
 }
