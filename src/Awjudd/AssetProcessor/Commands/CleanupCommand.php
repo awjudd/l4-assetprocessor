@@ -30,7 +30,7 @@ class CleanupCommand extends Command
         $app = app();
 
         return array(
-            array('duration', '-d', InputOption::VALUE_OPTIONAL, 'The duration for files to be retained.'),
+            array('duration', '-d', InputOption::VALUE_OPTIONAL, 'The length of time (in seconds) that a file needs to be left untouched prior to deleting.'),
         );
     }
 
