@@ -1,7 +1,5 @@
 <?php namespace Awjudd\Asset;
 
-use Awjudd\Asset\Processors\JsMinifierProcessor as JsMinifier;
-
 class Asset
 {
     /**
