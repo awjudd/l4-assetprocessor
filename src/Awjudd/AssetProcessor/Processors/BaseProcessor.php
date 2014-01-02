@@ -157,7 +157,7 @@ abstract class BaseProcessor implements IAssetProcessor
      */
     protected function getOutputDirectory($assetFileName)
     {
-        return storage_path() . '/' . \Config::get('asset::cache.directory') . '/' 
+        return storage_path() . '/' . \Config::get('assetprocessor::cache.directory') . '/' 
             . static::getAssetType() . '/' . basename($assetFileName) . '/';
     }
 

@@ -31,6 +31,17 @@ class AssetProcessor
      */
     private $files = [];
 
+    /**
+     * Returns the base storage folder for any files.
+     * 
+     * @return string
+     */
+    public static function storageFolder()
+    {
+        return storage_path() . '/' . \Config::get('assetprocessor::cache.directory') . '/';
+    }
+
+
     public function __construct()
     {
         // Determine if we should process the files
@@ -68,8 +79,12 @@ class AssetProcessor
 
             foreach ($directory as $file)
             {
-                // Recursively call the add function
-                $this->add($name . $file->getFilename(), $file->getRealPath());
+                // Make sure we aren't the dot directory
+                if(!$file->isDot())
+                {
+                    // Recursively call the add function
+                    $this->add($name . $file->getFilename(), $file->getRealPath());
+                }
             }
         }
         else
@@ -359,8 +374,7 @@ class AssetProcessor
         $file = '';
 
         // Derive the destination path
-        $directory = storage_path() . '/' . \Config::get('assetprocessor::cache.directory') . '/' 
-            . $type . '/';
+        $directory =  static::storageFolder() . $type . '/';
 
         // Cycle through each of the files
         foreach($contents as $filename)
