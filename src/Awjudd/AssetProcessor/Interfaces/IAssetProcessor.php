@@ -1,4 +1,4 @@
-<?php namespace Awjudd\Asset\Interfaces;
+<?php namespace Awjudd\AssetProcessor\Interfaces;
 
 interface IAssetProcessor
 {
@@ -14,7 +14,7 @@ interface IAssetProcessor
      * Returns an instance of the file processor.
      * 
      * @param boolean $processingEnabled
-     * @return Awjudd\Asset\Interfaces\IAssetProcessor
+     * @return Awjudd\AssetProcessor\Interfaces\IAssetProcessor
      */
     public static function getInstance($processingEnabled);
 

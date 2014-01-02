@@ -1,8 +1,7 @@
-<?php namespace Awjudd\Asset\Processors;
+<?php namespace Awjudd\AssetProcessor\Processors;
 
-use CoffeeScript\Compiler;
 
-class CoffeeScriptProcessor extends BaseProcessor
+class CSSMinifierProcessor extends BaseProcessor
 {
     /**
      * An array containing all of the file extensions that this processor needs
@@ -10,7 +9,7 @@ class CoffeeScriptProcessor extends BaseProcessor
      * 
      * @var array
      */
-    public static $extensions = ['coffee'];
+    public static $extensions = ['less', 'scss', 'css'];
 
     /**
      * The type of processor this instance is.
@@ -19,7 +18,7 @@ class CoffeeScriptProcessor extends BaseProcessor
      */
     public static function getType()
     {
-        return 'Coffee Script Processor';
+        return 'CSS Minifier Processor';
     }
 
     /**
@@ -29,7 +28,7 @@ class CoffeeScriptProcessor extends BaseProcessor
      */
     public static function getDescription()
     {
-        return 'Used in order to process any of the provided Coffee Script files.';
+        return 'Used in order to minify the provided CSS files.';
     }
 
     /**
@@ -39,7 +38,7 @@ class CoffeeScriptProcessor extends BaseProcessor
      */
     public static function getAssetType()
     {
-        return 'js';
+        return 'css';
     }
 
     /**
@@ -56,8 +55,10 @@ class CoffeeScriptProcessor extends BaseProcessor
         {
             return $this->getFinalName($filename);
         }
-        
-        return $this->write(Compiler::compile(file_get_contents($filename)), $actualFileName);
+
+        $css = new \CssMinifier(file_get_contents($filename));
+
+        return $this->write($css->getMinified(), $actualFileName);
     }
 
     /**
@@ -67,6 +68,6 @@ class CoffeeScriptProcessor extends BaseProcessor
      */
     public function bypassProcess()
     {
-        return true;
+        return false;
     }
 }

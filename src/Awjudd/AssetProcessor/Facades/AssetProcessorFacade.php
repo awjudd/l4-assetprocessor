@@ -1,17 +1,17 @@
-<?php namespace Awjudd\Asset\Facades;
+<?php namespace Awjudd\AssetProcessor\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \Illuminate\View\Environment
  */
-class AssetFacade extends Facade {
+class AssetProcessorFacade extends Facade {
 
     /**
      * Get the registered name of the component.
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return 'asset'; }
+    protected static function getFacadeAccessor() { return 'assetprocessor'; }
 
 }

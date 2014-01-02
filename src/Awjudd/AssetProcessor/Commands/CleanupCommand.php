@@ -1,4 +1,4 @@
-<?php namespace Awjudd\Asset\Commands;
+<?php namespace Awjudd\AssetProcessor\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -10,7 +10,7 @@ class CleanupCommand extends Command
      *
      * @var string
      */
-    protected $name = 'asset:cleanup';
+    protected $name = 'assetprocessor:cleanup';
 
     /**
      * The console command description.
@@ -47,7 +47,7 @@ class CleanupCommand extends Command
         if($duration === null)
         {
             // It was, so grab it from the configuration
-            $duration = \Config::get('asset::cache.duration');
+            $duration = \Config::get('assetprocessor::cache.duration');
         }
 
         // 

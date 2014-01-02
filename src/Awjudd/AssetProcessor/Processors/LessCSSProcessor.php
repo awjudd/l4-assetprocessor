@@ -1,7 +1,7 @@
-<?php namespace Awjudd\Asset\Processors;
+<?php namespace Awjudd\AssetProcessor\Processors;
 
 
-class SassCSSProcessor extends BaseProcessor
+class LessCSSProcessor extends BaseProcessor
 {
     /**
      * An array containing all of the file extensions that this processor needs
@@ -9,7 +9,7 @@ class SassCSSProcessor extends BaseProcessor
      * 
      * @var array
      */
-    public static $extensions = ['scss'];
+    public static $extensions = ['less'];
 
     /**
      * The type of processor this instance is.
@@ -18,7 +18,7 @@ class SassCSSProcessor extends BaseProcessor
      */
     public static function getType()
     {
-        return 'SASS CSS Processor';
+        return 'LESS CSS Processor';
     }
 
     /**
@@ -28,7 +28,7 @@ class SassCSSProcessor extends BaseProcessor
      */
     public static function getDescription()
     {
-        return 'Used in order to process any of the provided SASS files.';
+        return 'Used in order to process any of the provided LESS files.';
     }
 
     /**
@@ -56,9 +56,9 @@ class SassCSSProcessor extends BaseProcessor
             return $this->getFinalName($filename);
         }
 
-        $sass = new \scssc();
+        $less = new \lessc();
 
-        return $this->write($sass->compile(file_get_contents($filename)), $actualFileName);
+        return $this->write($less->compileFile($filename), $actualFileName);
     }
 
     /**

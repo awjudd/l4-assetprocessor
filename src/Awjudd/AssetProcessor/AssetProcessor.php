@@ -1,6 +1,6 @@
-<?php namespace Awjudd\Asset;
+<?php namespace Awjudd\AssetProcessor;
 
-class Asset
+class AssetProcessor
 {
     /**
      * The processors that will be used for the rest of the work.
@@ -53,7 +53,7 @@ class Asset
         if(!file_exists($filename))
         {
             // The file doesn't exist, so throw an exception
-            throw new \Exception(\Lang::get('asset::errors.asset.file-not-found', ['file' => $filename]));
+            throw new \Exception(\Lang::get('assetprocessor::errors.asset.file-not-found', ['file' => $filename]));
         }
 
         // Grab the file information
@@ -89,13 +89,13 @@ class Asset
                     if($assetType !== null && $this->processors[$processor]->getAssetType() != $assetType)
                     {
                         // There is a mismatch, so throw an exception
-                        throw new \Exception(\Lang::get('asset::errors.asset.different-asset-types', ['file' => $file_to_process]));
+                        throw new \Exception(\Lang::get('assetprocessor::errors.asset.different-asset-types', ['file' => $file_to_process]));
                     }
                     // Was there a duplicate name, and we are erroring
-                    else if(isset($this->files[$assetType][$name]) && \Config::get('asset::file.error-on-duplicate-name', false))
+                    else if(isset($this->files[$assetType][$name]) && \Config::get('assetprocessor::file.error-on-duplicate-name', false))
                     {
                         // We are erroring because of the duplicate name, so throw an exception
-                        throw new \Exception(\Lang::get('asset::errors.asset.duplicate-name', ['name' => $name]));
+                        throw new \Exception(\Lang::get('assetprocessor::errors.asset.duplicate-name', ['name' => $name]));
                     }
 
                     // Check if we should be processing the file
@@ -113,7 +113,7 @@ class Asset
                 if($file_to_process!=$file->getRealPath())
                 {
                     // It was, so add it to the base folder
-                    $dest_path = storage_path() . '/' . \Config::get('asset::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
+                    $dest_path = storage_path() . '/' . \Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
                     copy($file_to_process, $dest_path);
                     $file_to_process = basename($dest_path);
                 }
@@ -155,10 +155,10 @@ class Asset
     public function retrieve($type)
     {
         $output = '';
-        $controller = \Config::get('asset::controller.name') . '@' . \Config::get('asset::controller.method');
+        $controller = \Config::get('assetprocessor::controller.name') . '@' . \Config::get('assetprocessor::controller.method');
 
         // Are we needing a single file?
-        if(\Config::get('asset::cache.singular') && $this->processingEnabled)
+        if(\Config::get('assetprocessor::cache.singular') && $this->processingEnabled)
         {
             $assets = $this->files[$type];
 
@@ -260,7 +260,7 @@ class Asset
     private function deriveProcessingEnabled()
     {
         // Are they forcing it to be enabled?
-        if(\Config::get('asset::enabled.force', false))
+        if(\Config::get('assetprocessor::enabled.force', false))
         {
             // It was forced, so enable it
             $this->processingEnabled = true;
@@ -269,7 +269,7 @@ class Asset
         {
             // Otherwise derive it based on the environment that we are in
             $this->processingEnabled = in_array(\App::environment()
-                    , \Config::get('asset::enabled.environments', array()));
+                    , \Config::get('assetprocessor::enabled.environments', []));
         }
     }
 
@@ -280,7 +280,10 @@ class Asset
     private function setupLibraries()
     {
         // Get the list of processors
-        $processors = \Config::get('asset::processors', []);
+        $processors = \Config::get('assetprocessor::processors.types', []);
+
+        // Grab the interface we should be implementing
+        $interface = \Config::get('assetprocessor::processors.interface');
 
         // Iterate through the list
         foreach($processors as $name => $class)
@@ -288,11 +291,10 @@ class Asset
             // Get an instance of the processor
             $instance = $class::getInstance($this->processingEnabled);
 
-            // Ensure that it implements the "Awjudd\Asset\Interfaces\IAssetProcessor"
-            // interface
-            if(!($instance instanceof \Awjudd\Asset\Interfaces\IAssetProcessor))
+            // Ensure that it implements the correct interface
+            if(!($instance instanceof $interface))
             {
-                throw new \Exception(\Lang::get('asset:errors.asset.invalid-type', ['class' => $class, 'interface' => 'Awjudd\Asset\Interfaces\IAssetProcessor']));
+                throw new \Exception(\Lang::get('assetprocessor::errors.asset.invalid-type', ['class' => $class, 'interface' => $interface]));
             }
 
             // Add it into the array of processors
@@ -345,7 +347,7 @@ class Asset
         $file = '';
 
         // Derive the destination path
-        $directory = storage_path() . '/' . \Config::get('asset::cache.directory') . '/' 
+        $directory = storage_path() . '/' . \Config::get('assetprocessor::cache.directory') . '/' 
             . $type . '/';
 
         // Cycle through each of the files

@@ -1,4 +1,4 @@
-<?php namespace Awjudd\Asset\Processors;
+<?php namespace Awjudd\AssetProcessor\Processors;
 
 use JsMin\Minify;
 

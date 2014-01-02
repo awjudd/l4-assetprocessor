@@ -1,6 +1,6 @@
-<?php namespace Awjudd\Asset\Processors;
+<?php namespace Awjudd\AssetProcessor\Processors;
 
-use Awjudd\Asset\Interfaces\IAssetProcessor;
+use Awjudd\AssetProcessor\Interfaces\IAssetProcessor;
 
 abstract class BaseProcessor implements IAssetProcessor
 {

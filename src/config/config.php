@@ -1,7 +1,9 @@
 <?php
 return [
     /**
-     * Controller-specific 
+     * Controller-specific configurations
+     * 
+     * @var array
      */
     'controller' => [
         /**
@@ -26,11 +28,13 @@ return [
          * 
          * @var string
          */
-        'name' => '\Awjudd\Asset\Controllers\AssetController',
+        'name' => '\Awjudd\AssetProcessor\Controllers\AssetProcessorController',
     ],
 
     /**
      * All of the cache settings
+     * 
+     * @var array
      */
     'cache' => [
         /**
@@ -59,6 +63,8 @@ return [
 
     /**
      * Is the processing of these assets enabled?
+     * 
+     * @var array
      */
     'enabled' => [
         /**
@@ -76,6 +82,11 @@ return [
         'force' => false,
     ],
 
+    /**
+     * Contains any file related options
+     * 
+     * @var array
+     */
     'file' => [
         /**
          * Should the application error when there is a duplicate name.
@@ -86,13 +97,30 @@ return [
     /**
      * An array containing all of the processors that the application will
      * be using.
+     * 
+     * @var array
      */
     'processors' => [
-        'coffee'    => '\Awjudd\Asset\Processors\CoffeeScriptProcessor',
-        'jsmin'     => '\Awjudd\Asset\Processors\JsMinifierProcessor',
-        'sasscss'   => '\Awjudd\Asset\Processors\SassCSSProcessor',
-        'lesscss'   => '\Awjudd\Asset\Processors\LessCSSProcessor',
-        'cssmin'    => '\Awjudd\Asset\Processors\CSSMinifierProcessor',
+
+        /**
+         * The name of the interface that all of the processors should implement.
+         * 
+         * @var string
+         */
+        'interface' => 'Awjudd\AssetProcessor\Interfaces\IAssetProcessor',
+
+        /**
+         * Contains all of the processors that the Asset Processor will use.
+         * 
+         * @var array
+         */
+        'types'     => [
+            'coffee'    => '\Awjudd\AssetProcessor\Processors\CoffeeScriptProcessor',
+            'jsmin'     => '\Awjudd\AssetProcessor\Processors\JsMinifierProcessor',
+            'sasscss'   => '\Awjudd\AssetProcessor\Processors\SassCSSProcessor',
+            'lesscss'   => '\Awjudd\AssetProcessor\Processors\LessCSSProcessor',
+            'cssmin'    => '\Awjudd\AssetProcessor\Processors\CSSMinifierProcessor',
+        ]
     ],
 
 ];
