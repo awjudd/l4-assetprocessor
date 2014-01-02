@@ -1,11 +1,13 @@
 <?php
 return [
+
     /**
      * Controller-specific configurations
      * 
      * @var array
      */
     'controller' => [
+
         /**
          * All of available asset types and their corresponding content types.
          * 
@@ -37,6 +39,7 @@ return [
      * @var array
      */
     'cache' => [
+
         /**
          * How long should the file remain cached for? (in seconds)
          * 
@@ -67,6 +70,7 @@ return [
      * @var array
      */
     'enabled' => [
+
         /**
          * What environments is this processing enabled in?  The environment name
          * here should match that from App::environment()
@@ -76,8 +80,11 @@ return [
         'environments' => [
             'production'
         ],
+
         /**
          * Should we force the processor to process the files?
+         * 
+         * @var boolean
          */
         'force' => false,
     ],
@@ -88,6 +95,7 @@ return [
      * @var array
      */
     'file' => [
+
         /**
          * Should the application error when there is a duplicate name.
          */
