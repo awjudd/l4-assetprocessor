@@ -99,6 +99,9 @@ abstract class BaseProcessor implements IAssetProcessor
             return true;
         }
 
+        // Touch the file so that we know it's up-to-date
+        touch($destination);
+
         // We don't need to process the file (the old version will do)
         return false;
     }
