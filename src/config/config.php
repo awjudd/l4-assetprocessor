@@ -51,7 +51,7 @@ return [
         /**
          * Should we be using a single file for each asset, or multiple?
          * 
-         * @var boolean TRUE - one file per provided source file
+         * @var boolean true - one file per provided source file
          *              FALSE - combine all of the same-type of asset files together
          */
         'singular' => true,

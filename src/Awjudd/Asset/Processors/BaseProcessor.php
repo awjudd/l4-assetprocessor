@@ -17,7 +17,7 @@ abstract class BaseProcessor implements IAssetProcessor
      * 
      * @var boolean
      */
-    protected $processingEnabled = FALSE;
+    protected $processingEnabled = false;
 
     /**
      * The instance of the object that will be handling the processing of the input files.
@@ -136,7 +136,7 @@ abstract class BaseProcessor implements IAssetProcessor
         if(!file_exists($directory))
         {
             // It doesn't, so make it (allow us to write)
-            mkdir($directory, 0777, TRUE);
+            mkdir($directory, 0777, true);
         }
 
         // Write the file to disk

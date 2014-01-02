@@ -24,7 +24,7 @@ class Asset
      * 
      * @var boolean
      */
-    private $processingEnabled = FALSE;
+    private $processingEnabled = false;
 
     /**
      * The list of files that are being processed by the asset handler.
@@ -81,20 +81,20 @@ class Asset
                 $file_to_process = $file->getRealPath();
 
                 // Keep track of the actual asset type that is being processed
-                $assetType = NULL;
+                $assetType = null;
 
                 // There was something linked to it, so iterate through
                 foreach($this->extensionMapping[$file->getExtension()] as $processor)
                 {
                     // Check the processor type to make sure we aren't classifying
                     // it as two different types
-                    if($assetType !== NULL && $this->processors[$processor]->getAssetType() != $assetType)
+                    if($assetType !== null && $this->processors[$processor]->getAssetType() != $assetType)
                     {
                         // There is a mismatch, so throw an exception
                         throw new \Exception(\Lang::get('asset::errors.asset.different-asset-types', ['file' => $file_to_process]));
                     }
                     // Was there a duplicate name, and we are erroring
-                    else if(isset($this->files[$assetType][$name]) && \Config::get('asset::file.error-on-duplicate-name', FALSE))
+                    else if(isset($this->files[$assetType][$name]) && \Config::get('asset::file.error-on-duplicate-name', false))
                     {
                         // We are erroring because of the duplicate name, so throw an exception
                         throw new \Exception(\Lang::get('asset::errors.asset.duplicate-name', ['name' => $name]));
@@ -262,10 +262,10 @@ class Asset
     private function deriveProcessingEnabled()
     {
         // Are they forcing it to be enabled?
-        if(\Config::get('asset::enabled.force', FALSE))
+        if(\Config::get('asset::enabled.force', false))
         {
             // It was forced, so enable it
-            $this->processingEnabled = TRUE;
+            $this->processingEnabled = true;
         }
         else
         {
@@ -363,7 +363,7 @@ class Asset
         if(!file_exists($directory))
         {
             // It doesn't, so make it (allow us to write)
-            mkdir($directory, 0777, TRUE);
+            mkdir($directory, 0777, true);
         }
 
         // Write the file to disk
