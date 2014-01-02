@@ -69,6 +69,7 @@ class CleanupCommand extends Command
                 // Check if the directory containing this file is empty
                 if(count(scandir(dirname($file))) == 2)
                 {
+                    // It was empty, so just remove it
                     rmdir(dirname($file));
                 }
             }
@@ -77,9 +78,10 @@ class CleanupCommand extends Command
     }
 
     /**
-     * 
+     * Used internally in order to build a full list of all of the files to build.
      *
-     * @return array
+     * @param string $folder The folder to scan through
+     * @return array An array of all of the files to check.
      */
     private function buildFileList($folder)
     {
