@@ -10,5 +10,7 @@ return [
         'file-not-found' => 'The specified asset file (:name) was not found.',
         'invalid-type' => 'The specified type (:type) of asset is invalid.',
         'file-name' => 'Invalid file name (:name) provided.'
-    ]
+    ],
+    'command' => [
+    ],
 ];
