@@ -1,11 +1,31 @@
 <?php
 return [
+    /**
+     * Controller-specific 
+     */
     'controller' => [
+        /**
+         * All of available asset types and their corresponding content types.
+         * 
+         * @var array
+         */
         'content-types' => [
             'css' => 'text/css',
             'js' => 'text/javascript',
         ],
+
+        /**
+         * The name of the controller method used to handle the assets.
+         * 
+         * @var string
+         */
         'method' => 'getIndex',
+
+        /**
+         * The name of the controller used to handle the assets.
+         * 
+         * @var string
+         */
         'name' => '\Awjudd\Asset\Controllers\AssetController',
     ],
 
@@ -60,7 +80,7 @@ return [
         /**
          * Should the application error when there is a duplicate name.
          */
-        'error-on-duplicate-name' => TRUE
+        'error-on-duplicate-name' => true,
     ],
 
     /**
