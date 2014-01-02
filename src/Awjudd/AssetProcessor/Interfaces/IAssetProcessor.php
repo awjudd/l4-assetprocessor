@@ -53,6 +53,7 @@ interface IAssetProcessor
      * if needed.
      * 
      * @param string $filename
+     * @param string $actualFileName
      * @return string
      */
     public function process($filename, $actualFileName);

@@ -47,17 +47,22 @@ class LessCSSProcessor extends BaseProcessor
      * if needed.
      * 
      * @param string $filename
+     * @param string $actualFileName
      * @return string
      */
     public function process($filename, $actualFileName)
     {
+        // Check if the processing should be done
         if(!$this->shouldProcess($filename))
         {
+            // No need to process the file, so bypass
             return $this->getFinalName($filename);
         }
 
+        // Get an instance of the LESS compiler
         $less = new \lessc();
 
+        // Otherwise write the file and return the new file name
         return $this->write($less->compileFile($filename), $actualFileName);
     }
 
