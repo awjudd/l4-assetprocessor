@@ -55,7 +55,7 @@ class Asset
         if(!file_exists($filename))
         {
             // The file doesn't exist, so throw an exception
-            throw new \Exception(\Lang::get('asset::errors.file-not-found', ['file' => $filename]));
+            throw new \Exception(\Lang::get('asset::errors.asset.file-not-found', ['file' => $filename]));
         }
 
         // Grab the file information
@@ -91,13 +91,13 @@ class Asset
                     if($assetType !== NULL && $this->processors[$processor]->getAssetType() != $assetType)
                     {
                         // There is a mismatch, so throw an exception
-                        throw new \Exception(\Lang::get('asset::errors.different-asset-types', ['file' => $file_to_process]));
+                        throw new \Exception(\Lang::get('asset::errors.asset.different-asset-types', ['file' => $file_to_process]));
                     }
                     // Was there a duplicate name, and we are erroring
                     else if(isset($this->files[$assetType][$name]) && \Config::get('asset::file.error-on-duplicate-name', FALSE))
                     {
                         // We are erroring because of the duplicate name, so throw an exception
-                        throw new \Exception(\Lang::get('asset::errors.duplicate-name', ['name' => $name]));
+                        throw new \Exception(\Lang::get('asset::errors.asset.duplicate-name', ['name' => $name]));
                     }
 
                     // Check if we should be processing the file
@@ -294,7 +294,7 @@ class Asset
             // interface
             if(!($instance instanceof \Awjudd\Asset\Interfaces\IAssetProcessor))
             {
-                throw new \Exception(\Lang::get('asset:errors.invalid-type', ['class' => $class, 'interface' => 'Awjudd\Asset\Interfaces\IAssetProcessor']));
+                throw new \Exception(\Lang::get('asset:errors.asset.invalid-type', ['class' => $class, 'interface' => 'Awjudd\Asset\Interfaces\IAssetProcessor']));
             }
 
             // Add it into the array of processors
