@@ -45,6 +45,7 @@ class AssetProcessor
      * 
      * @param string $name
      * @param string $filename
+     * @return void
      * @throws \Exception
      */
     public function add($name, $filename)
@@ -114,7 +115,11 @@ class AssetProcessor
                 {
                     // It was, so add it to the base folder
                     $dest_path = storage_path() . '/' . \Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
+
+                    // Copy the file over
                     copy($file_to_process, $dest_path);
+
+                    // Grab the file name to add to our asset list
                     $file_to_process = basename($dest_path);
                 }
 
@@ -154,7 +159,10 @@ class AssetProcessor
      */
     public function retrieve($type)
     {
+        // The string which will be emitted with all of the information
         $output = '';
+
+        // The controller and method that will be used to emit the processed files
         $controller = \Config::get('assetprocessor::controller.name') . '@' . \Config::get('assetprocessor::controller.method');
 
         // Are we needing a single file?
@@ -276,6 +284,8 @@ class AssetProcessor
     /**
      * Used internally in order to set up an instance of each of the processors
      * that we will need.
+     * 
+     * @return void
      */
     private function setupLibraries()
     {
@@ -315,6 +325,8 @@ class AssetProcessor
     /**
      * Used internally in order to derive the list of extensions that are used
      * by a particular processor.
+     * 
+     * @return void
      */
     private function deriveExtensionMapping($name, array $extensions)
     {
