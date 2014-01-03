@@ -1,4 +1,4 @@
-Laravel 4 - Asset Processor
+Laravel 4.1 - Asset Processor
 ========
 
 [![Build Status](https://api.travis-ci.org/awjudd/l4-assetprocessor.png)](https://travis-ci.org/awjudd/l4-assetprocessor)
