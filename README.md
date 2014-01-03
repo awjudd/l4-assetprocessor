@@ -142,7 +142,7 @@ The previous command will make it so that it will remove any assets that were no
 
  - Coffeescript - coffee
  - JsMinifier - coffee, js
- - SASS - scss
+ - SCSS - scss
  - LESS - less
  - CSSMinifier - scss, less, css
 
