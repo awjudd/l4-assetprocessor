@@ -28,7 +28,7 @@ A quick and easy way to manage and process assets in **Laravel 4**
 In the `require` key of `composer.json` file add the following
 
 ```json
-"awjudd/l4-assetprocessor": "*"
+"awjudd/l4-assetprocessor": "dev-master"
 ```
 
 Run the Composer update command
