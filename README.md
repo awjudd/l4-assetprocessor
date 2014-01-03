@@ -138,6 +138,14 @@ Or if you want to change the duration:
 
 The previous command will make it so that it will remove any assets that were not touched within the last minute.
 
+### Current Processors And Their Associated File Extensions
+
+ - Coffeescript - coffee
+ - JsMinifier - coffee, js
+ - SASS - scss
+ - LESS - less
+ - CSSMinifier - scss, less, css
+
 ## License
 
 Asset Processor is free software distributed under the terms of the MIT license
