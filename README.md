@@ -19,7 +19,7 @@ A quick and easy way to manage and process assets in **Laravel 4**
  - Allows for asset bundling by type
  - Environment aware to allow for easier debugging
  - Assets are cached until changes are made to the file and then automatically updated
-    - Users will not need to refresh cache to get the latest updates
+    - Users get a unique URL to assets for each build, so you never have to worry about user's seeing older cached files
  - Easy to extend in order to add in your own processors
  - Built-in commands to help clean up files that are no longer being used
 
