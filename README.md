@@ -52,7 +52,7 @@ Also update `aliases` part of the `config/app.php` to include `'Awjudd\AssetProc
         'Artisan'         => 'Illuminate\Support\Facades\Artisan',
         ...
 
-        // To make this line, and your code even shorter, you could alias this to `'Asset'` instead.
+        // To make this line, and your code even shorter, you could alias this to 'Asset' instead.
         'AssetProcessor'  => 'Awjudd\AssetProcessor\Facades\AssetProcessorFacade',
     ),
 
