@@ -35,26 +35,26 @@ Run the Composer update command
 
 In your `config/app.php` add `'Awjudd\AssetProcessor\AssetProcessorServiceProvider'` to the end of the `$providers` array
 
-    'providers' => array(
+```php 'providers' => array(
 
-        'Illuminate\Foundation\Providers\ArtisanServiceProvider',
-        'Illuminate\Auth\AuthServiceProvider',
-        ...
-        'Awjudd\AssetProcessor\AssetProcessorServiceProvider',
+    'Illuminate\Foundation\Providers\ArtisanServiceProvider',
+    'Illuminate\Auth\AuthServiceProvider',
+    ...
+    'Awjudd\AssetProcessor\AssetProcessorServiceProvider',
 
-    ),
+),```
 
 Also update `aliases` part of the `config/app.php` to include `'Awjudd\AssetProcessor\Facades\AssetProcessorFacade'`.
 
-    'aliases' => array(
+```php 'aliases' => array(
 
-        'App'             => 'Illuminate\Support\Facades\App',
-        'Artisan'         => 'Illuminate\Support\Facades\Artisan',
-        ...
+    'App'             => 'Illuminate\Support\Facades\App',
+    'Artisan'         => 'Illuminate\Support\Facades\Artisan',
+    ...
 
-        // To make this line, and your code even shorter, you could alias this to `'Asset'` instead.
-        'AssetProcessor'  => 'Awjudd\AssetProcessor\Facades\AssetProcessorFacade',
-    ),
+    // To make this line, and your code even shorter, you could alias this to `'Asset'` instead.
+    'AssetProcessor'  => 'Awjudd\AssetProcessor\Facades\AssetProcessorFacade',
+),```
 
 ## Setup
 
@@ -68,7 +68,7 @@ To add this in, add the following line of code to your `routes.php` file.
 
 ### Publishing the Configuration
 
-The next to installing this plugin is to publish the configuration file by doing the following:
+The next step to installing this plugin is to publish the configuration file by doing the following:
 
     $ php artisan config:publish awjudd/assetprocessor
 
@@ -80,25 +80,25 @@ Within the `'cache'` section of the `config.php` file, you may want to adjust th
 
 The only other configuration values that one generally needs to be aware of are the ones in the `'enabled'` section.
 
-    'enabled' => [
+```php 'enabled' => [
 
-        /**
-         * What environments is this processing enabled in?  The environment name
-         * here should match that from App::environment()
-         * 
-         * @var array
-         */
-        'environments' => [
-            'production'
-        ],
-
-        /**
-         * Should we force the processor to process the files?
-         * 
-         * @var boolean
-         */
-        'force' => false,
+    /**
+     * What environments is this processing enabled in?  The environment name
+     * here should match that from App::environment()
+     * 
+     * @var array
+     */
+    'environments' => [
+        'production'
     ],
+
+    /**
+     * Should we force the processor to process the files?
+     * 
+     * @var boolean
+     */
+    'force' => false,
+],```
 
 Any environments that are set up in the `'environments'` section will automatically have all assets processed on them.  Any other environments will only process the files that need pre-processing (i.e. LESS, SASS and CoffeeScript) in order to be executed.  However, if you want to, you are able to force the processing of all of the files by flipping the `'force'` value to true.
 
