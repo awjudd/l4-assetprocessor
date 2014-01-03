@@ -167,12 +167,12 @@ class AssetProcessor
     }
 
     /**
-     * Used to retrieve a single string to used to retrieve all of the required assets.
+     * Used internally to retrieve a single string to used to retrieve all of the required assets.
      * 
      * @param string $type
      * @return string
      */
-    public function retrieve($type)
+    private function retrieve($type)
     {
         // The string which will be emitted with all of the information
         $output = '';
