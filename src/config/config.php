@@ -125,7 +125,7 @@ return [
         'types'     => [
             'coffee'    => '\Awjudd\AssetProcessor\Processors\CoffeeScriptProcessor',
             'jsmin'     => '\Awjudd\AssetProcessor\Processors\JsMinifierProcessor',
-            'sasscss'   => '\Awjudd\AssetProcessor\Processors\SassCSSProcessor',
+            'sasscss'   => '\Awjudd\AssetProcessor\Processors\ScssCSSProcessor',
             'lesscss'   => '\Awjudd\AssetProcessor\Processors\LessCSSProcessor',
             'cssmin'    => '\Awjudd\AssetProcessor\Processors\CSSMinifierProcessor',
         ]

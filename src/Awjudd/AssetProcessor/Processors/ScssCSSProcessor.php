@@ -1,7 +1,7 @@
 <?php namespace Awjudd\AssetProcessor\Processors;
 
 
-class SassCSSProcessor extends BaseProcessor
+class ScssCSSProcessor extends BaseProcessor
 {
     /**
      * An array containing all of the file extensions that this processor needs
@@ -18,7 +18,7 @@ class SassCSSProcessor extends BaseProcessor
      */
     public static function getType()
     {
-        return 'SASS CSS Processor';
+        return 'SCSS CSS Processor';
     }
 
     /**
@@ -28,7 +28,7 @@ class SassCSSProcessor extends BaseProcessor
      */
     public static function getDescription()
     {
-        return 'Used in order to process any of the provided SASS files.';
+        return 'Used in order to process any of the provided SCSS files.';
     }
 
     /**
