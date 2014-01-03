@@ -10,12 +10,12 @@ A quick and easy way to manage and process assets in **Laravel 4**
 
  - Easy to add assets to the project (able to add assets single files at a time or in a folder)
  - Supports asset pre-processing and generation for the following:
-    - LESS (leafo/lessphp)
-    - SASS (leafo/scssphp)
-    - CoffeeScript (coffeescript/coffeescript)
+    - [LESS](http://lesscss.org/) (via leafo/lessphp)
+    - [SASS](http://sass-lang.com/) (via leafo/scssphp)
+    - [CoffeeScript](http://coffeescript.org/) (via coffeescript/coffeescript)
  - Supports asset minimizing:
-    - CSS (natxet/CssMin)
-    - JavaScript (werkint/jsmin)
+    - CSS (via natxet/CssMin)
+    - JavaScript (via werkint/jsmin)
  - Allows for asset bundling by type
  - Environment aware to allow for easier debugging
  - Assets are cached until changes are made to the file and then automatically updated
@@ -27,34 +27,43 @@ A quick and easy way to manage and process assets in **Laravel 4**
 
 In the `require` key of `composer.json` file add the following
 
-    "awjudd/l4-assetprocessor": "*"
+```json
+"awjudd/l4-assetprocessor": "*"
+```
 
 Run the Composer update command
 
-    $ composer update
+```
+$ composer update
+```
 
 In your `config/app.php` add `'Awjudd\AssetProcessor\AssetProcessorServiceProvider'` to the end of the `$providers` array
 
-    'providers' => array(
+```php
+'providers' => array(
 
-        'Illuminate\Foundation\Providers\ArtisanServiceProvider',
-        'Illuminate\Auth\AuthServiceProvider',
-        ...
-        'Awjudd\AssetProcessor\AssetProcessorServiceProvider',
+    'Illuminate\Foundation\Providers\ArtisanServiceProvider',
+    'Illuminate\Auth\AuthServiceProvider',
+    ...
+    'Awjudd\AssetProcessor\AssetProcessorServiceProvider',
 
-    ),
+),
+```
 
 Also update `aliases` part of the `config/app.php` to include `'Awjudd\AssetProcessor\Facades\AssetProcessorFacade'`.
 
-    'aliases' => array(
+```php
+'aliases' => array(
 
-        'App'             => 'Illuminate\Support\Facades\App',
-        'Artisan'         => 'Illuminate\Support\Facades\Artisan',
-        ...
+    'App'             => 'Illuminate\Support\Facades\App',
+    'Artisan'         => 'Illuminate\Support\Facades\Artisan',
+    ...
 
-        // To make this line, and your code even shorter, you could alias this to 'Asset' instead.
-        'AssetProcessor'  => 'Awjudd\AssetProcessor\Facades\AssetProcessorFacade',
-    ),
+    // To make this line, and your code even shorter, you could alias this to 'Asset' instead.
+    'AssetProcessor'  => 'Awjudd\AssetProcessor\Facades\AssetProcessorFacade',
+    
+),
+```
 
 ## Setup
 
@@ -64,13 +73,17 @@ This plugin uses the storage folder fairly heavily while processing the assets, 
 
 To add this in, add the following line of code to your `routes.php` file.
 
-    Route::get('/assets/{type}/{name}', \Config::get('assetprocessor::controller.name') . '@' . \Config::get('assetprocessor::controller.method'));
+```php
+Route::get('/assets/{type}/{name}', \Config::get('assetprocessor::controller.name') . '@' . \Config::get('assetprocessor::controller.method'));
+```
 
 ### Publishing the Configuration
 
 The next step to installing this plugin is to publish the configuration file by doing the following:
 
-    $ php artisan config:publish awjudd/assetprocessor
+```
+$ php artisan config:publish awjudd/assetprocessor
+```
 
 ### Configuration Values
 
@@ -80,25 +93,27 @@ Within the `'cache'` section of the `config.php` file, you may want to adjust th
 
 The only other configuration values that one generally needs to be aware of are the ones in the `'enabled'` section.
 
-    'enabled' => [
+```php
+'enabled' => [
 
-        /**
-         * What environments is this processing enabled in?  The environment name
-         * here should match that from App::environment()
-         * 
-         * @var array
-         */
-        'environments' => [
-            'production'
-        ],
-
-        /**
-         * Should we force the processor to process the files?
-         * 
-         * @var boolean
-         */
-        'force' => false,
+    /**
+     * What environments is this processing enabled in?  The environment name
+     * here should match that from App::environment()
+     * 
+     * @var array
+     */
+    'environments' => [
+        'production'
     ],
+
+    /**
+     * Should we force the processor to process the files?
+     * 
+     * @var boolean
+     */
+    'force' => false,
+],
+```
 
 Any environments that are set up in the `'environments'` section will automatically have all assets processed on them.  Any other environments will only process the files that need pre-processing (i.e. LESS, SASS and CoffeeScript) in order to be executed.  However, if you want to, you are able to force the processing of all of the files by flipping the `'force'` value to true.
 
@@ -106,15 +121,19 @@ Any environments that are set up in the `'environments'` section will automatica
 
 Adding assets to use is fairly straightforward.  All you need to do is call the following:
 
-    // Works with both files and directories
-    AssetProcessor::add('name', '/path/to/asset/file');
+```php
+// Works with both files and directories
+AssetProcessor::add('name', '/path/to/asset/file');
+```
 
 ### Emitting Assets
 
 This will then automatically add in and determine the type of the file that was just loaded.  Once all of your assets are loaded into the plugin, in order to emit them to the browser (with the appropriate tags) you will need to call the following (in your view):
 
-    {{ AssetProcessor::styles() }}
-    {{ AssetProcessor::scripts() }}
+```php
+{{ AssetProcessor::styles() }}
+{{ AssetProcessor::scripts() }}
+```
 
 ### File Caching
 
@@ -130,11 +149,15 @@ As assets change, and so do the generated asset files.  Because of this there is
 
 In order to run the cleanup, all you need to do is run the following command:
 
-    $ php artisan assetprocessor:cleanup
+```
+$ php artisan assetprocessor:cleanup
+```
 
 Or if you want to change the duration:
 
-    $ php artisan assetprocessor:cleanup --duration=60
+```
+$ php artisan assetprocessor:cleanup --duration=60
+```
 
 The previous command will make it so that it will remove any assets that were not touched within the last minute.
 
