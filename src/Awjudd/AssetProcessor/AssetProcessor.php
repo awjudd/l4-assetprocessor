@@ -228,7 +228,8 @@ class AssetProcessor
                 // Check if the asset is internal
                 if(\Str::contains($file, public_path()))
                 {
-                    $asset = str_replace(public_path(), '', $file);
+                    // Replace any backslashes with a regular slash (Windows support)
+                    $asset = str_replace('\\', '/', str_replace(public_path(), '', $file));
 
                     // It is external, so just emit it
                     // Add in the asset
