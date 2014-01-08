@@ -168,6 +168,6 @@ abstract class BaseProcessor implements IAssetProcessor
      */
     protected function getOutputFileName($assetFileName)
     {
-        return md5(static::getType() . $assetFileName);
+        return md5(static::getType() . basename($assetFileName));
     }
 }
