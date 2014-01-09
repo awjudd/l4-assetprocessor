@@ -2,6 +2,21 @@
 return [
 
     /**
+     * All attributse that ara available and their default options.
+     * 
+     * @var array
+     */
+    'attributes' => [
+
+        /**
+         * The group name that is used by default.
+         * 
+         * @var string
+         */
+        'group' => 'default',
+    ],
+
+    /**
      * Controller-specific configurations
      * 
      * @var array

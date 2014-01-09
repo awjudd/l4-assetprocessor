@@ -56,10 +56,11 @@ class AssetProcessor
      * 
      * @param string $name
      * @param string $filename
+     * @param array $attributes
      * @return void
      * @throws \Exception
      */
-    public function add($name, $filename)
+    public function add($name, $filename, array $attributes = [])
     {
         // Check if the file exists
         if(!file_exists($filename))
@@ -67,6 +68,9 @@ class AssetProcessor
             // The file doesn't exist, so throw an exception
             throw new \Exception(\Lang::get('assetprocessor::errors.asset.file-not-found', ['file' => $filename]));
         }
+
+        // Figure out which asset group we are in
+        $group = isset($attributes['group']) ? $attributes['group'] : \Config::get('assetprocessor::attributes.group');
 
         // Grab the file information
         $file = new \SplFileInfo($filename);
@@ -139,7 +143,7 @@ class AssetProcessor
                 }
 
                 // Add it to the list of files that we processed
-                $this->files[$assetType][$name] = $file_to_process;
+                $this->files[$assetType][$group][$name] = $file_to_process;
             }
         }
     }
@@ -149,10 +153,11 @@ class AssetProcessor
      * needed for your application.
      * 
      * @return string
+     * @throws \Exception
      */
-    public function styles()
+    public function styles($group = NULL)
     {
-        return $this->retrieve('css');
+        return $this->retrieve('css', $group);
     }
 
     /**
@@ -160,10 +165,11 @@ class AssetProcessor
      * needed for your application.
      * 
      * @return string
+     * @throws \Exception
      */
-    public function scripts()
+    public function scripts($group = NULL)
     {
-        return $this->retrieve('js');
+        return $this->retrieve('js', $group);
     }
 
     /**
@@ -179,12 +185,12 @@ class AssetProcessor
     /**
      * Generates a singular file that contains all of the specific asset files.
      * 
-     * @return string
+     * @return string The file name
      */
-    public function generateSingularFile($type)
+    public function generateSingularFile($type, $group)
     {
         // Grab the associated assets
-        $assets = $this->files[$type];
+        $assets = $this->files[$type][$group];
 
         // Write out the files
         return $this->write($type, $assets);
@@ -195,9 +201,27 @@ class AssetProcessor
      * 
      * @param string $type
      * @return string
+     * @throws \Exception
      */
-    private function retrieve($type)
+    private function retrieve($type, $group)
     {
+        // Check if the group is provided
+        if($group === NULL)
+        {
+            // It wasn't so default it
+            $group = \Config::get('assetprocessor::attributes.group');
+        }
+
+        // Check if the group exists
+        if(!isset($this->files[$type][$group]))
+        {
+            // It doesn't so give them an error
+            throw new \Exception(\Lang::get('assetprocessor::erros.asset.asset-group-not-found', [
+                    'type' => $type,
+                    'group' => $group,
+                ]));
+        }
+
         // The string which will be emitted with all of the information
         $output = '';
 
@@ -207,7 +231,7 @@ class AssetProcessor
         // Are we needing a single file?
         if(\Config::get('assetprocessor::cache.singular') && $this->processingEnabled)
         {
-            $assets = $this->files[$type];
+            $assets = $this->files[$type][$group];
 
             // We only want a single file per type, so combine all of them together
             if(count($assets) == 1)
@@ -230,7 +254,7 @@ class AssetProcessor
             {
                 // There was more than one file, so we need to combine them all
                 // into one file
-                $file = $this->generateSingularFile($type);
+                $file = $this->generateSingularFile($type, $group);
 
                 // Add in a bypass since there is no point in re-processing the file
                 switch($type)
@@ -247,7 +271,7 @@ class AssetProcessor
         else
         {
             // We want several files for each, so return each.
-            foreach($this->files[$type] as $file)
+            foreach($this->files[$type][$group] as $file)
             {
                 // Check if the asset is internal
                 if(\Str::contains($file, public_path()))

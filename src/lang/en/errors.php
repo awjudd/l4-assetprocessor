@@ -5,6 +5,7 @@ return [
         'duplicate-name' => 'The specified name (:name) has been duplicated.',
         'file-not-found' => 'The specified file (:file) was not found.',
         'invalid-type' => 'Invalid asset class provided (:class) must implement ":interface".',
+        'asset-group-not-found' => 'The specifed asset group (:group) was not found for the specified asset type (:type).'
     ],
     'controller' => [
         'file-not-found' => 'The specified asset file (:name) was not found.',
