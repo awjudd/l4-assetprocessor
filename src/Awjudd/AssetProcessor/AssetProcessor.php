@@ -216,7 +216,7 @@ class AssetProcessor
         if(!isset($this->files[$type][$group]))
         {
             // It doesn't so give them an error
-            throw new \Exception(\Lang::get('assetprocessor::erros.asset.asset-group-not-found', [
+            throw new \Exception(\Lang::get('assetprocessor::errors.asset.asset-group-not-found', [
                     'type' => $type,
                     'group' => $group,
                 ]));
