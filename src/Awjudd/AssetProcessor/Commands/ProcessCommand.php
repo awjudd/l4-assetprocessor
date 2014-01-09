@@ -38,11 +38,18 @@ class ProcessCommand extends Command
      * Execute the console command.
      *
      * @return void
+     * @throws Exception
      */
     public function fire()
     {
         // Grab the files
         $files = $this->option('file');
+
+        // Check if any files existed
+        if(count($files)==0)
+        {
+            throw new \Exception(\Lang::get('assetprocessor::errors.command.process.asset-files-required'));
+        }
 
         // Force the processing of all files
         \Config::set('assetprocessor::enabled.force', true);

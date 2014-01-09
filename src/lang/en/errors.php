@@ -12,5 +12,8 @@ return [
         'file-name' => 'Invalid file name (:name) provided.'
     ],
     'command' => [
+        'process' => [
+            'asset-files-required' => 'You need to specify files to process.',
+        ],
     ],
 ];
