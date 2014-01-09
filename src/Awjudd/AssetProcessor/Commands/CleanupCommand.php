@@ -18,7 +18,7 @@ class CleanupCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Processes any clean up any asset files that are no longer needed.';
+    protected $description = 'Removes any asset files that are no longer needed.';
 
     /**
      * Get the console command arguments.
@@ -30,7 +30,7 @@ class CleanupCommand extends Command
         $app = app();
 
         return array(
-            array('duration', '-d', InputOption::VALUE_OPTIONAL, 'The length of time (in seconds) that a file needs to be left untouched prior to deleting.'),
+            array('duration', '-d', InputOption::VALUE_OPTIONAL, 'The length of time (in seconds) that a file needs to be left untouched prior to deleting.', \Config::get('assetprocessor::cache.duration')),
         );
     }
 
@@ -43,14 +43,7 @@ class CleanupCommand extends Command
     {
         // Grab the duration
         $duration = $this->option('duration');
-
-        // Check if the duration was provided
-        if($duration === null)
-        {
-            // It was, so grab it from the configuration
-            $duration = \Config::get('assetprocessor::cache.duration');
-        }
-
+        
         // Grab the minimum acceptable timestamp
         $timestamp = time() - $duration;
 
