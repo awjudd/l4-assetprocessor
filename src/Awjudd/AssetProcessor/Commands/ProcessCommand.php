@@ -44,11 +44,18 @@ class ProcessCommand extends Command
         // Grab the files
         $files = $this->option('file');
 
+        // Force the processing of all files
+        \Config::set('assetprocessor::enabled.force', true);
+
         // Cycle through all of the files
         foreach($files as $file)
         {
             // Add in the assets provided
             \AssetProcessor::add($file, $file);
         }
+
+        // Generate the single file
+        \AssetProcessor::generateSingularFile('js');
+        \AssetProcessor::generateSingularFile('css');
     }
 }

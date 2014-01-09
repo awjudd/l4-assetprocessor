@@ -167,6 +167,30 @@ class AssetProcessor
     }
 
     /**
+     * Whether or not asset processing is enabled.
+     * 
+     * @return boolean
+     */
+    public function getProcessingEnabled()
+    {
+        return $this->processingEnabled;
+    }
+
+    /**
+     * Generates a singular file that contains all of the specific asset files.
+     * 
+     * @return string
+     */
+    public function generateSingularFile($type)
+    {
+        // Grab the associated assets
+        $assets = $this->files[$type];
+
+        // Write out the files
+        return $this->write($type, $assets);
+    }
+
+    /**
      * Used internally to retrieve a single string to used to retrieve all of the required assets.
      * 
      * @param string $type
@@ -206,7 +230,7 @@ class AssetProcessor
             {
                 // There was more than one file, so we need to combine them all
                 // into one file
-                $file = $this->write($type, $assets);
+                $file = $this->generateSingularFile($type);
 
                 // Add in a bypass since there is no point in re-processing the file
                 switch($type)
@@ -265,16 +289,6 @@ class AssetProcessor
         }
 
         return $output;
-    }
-
-    /**
-     * Whether or not asset processing is enabled.
-     * 
-     * @return boolean
-     */
-    public function getProcessingEnabled()
-    {
-        return $this->processingEnabled;
     }
 
     /**
