@@ -1,6 +1,7 @@
 <?php namespace Awjudd\AssetProcessor;
 
 use Awjudd\AssetProcessor\Commands\CleanupCommand;
+use Awjudd\AssetProcessor\Commands\ProcessCommand;
 use Illuminate\Support\ServiceProvider;
 
 class AssetProcessorServiceProvider extends ServiceProvider
@@ -72,6 +73,15 @@ class AssetProcessorServiceProvider extends ServiceProvider
 
         $this->commands(
             'command.assetprocessor.cleanup'
+        );
+
+        $this->app['command.assetprocessor.process'] = $this->app->share(function($app)
+        {
+            return new ProcessCommand($app);
+        });
+
+        $this->commands(
+            'command.assetprocessor.process'
         );
     }
 
