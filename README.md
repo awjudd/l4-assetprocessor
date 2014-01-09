@@ -143,6 +143,22 @@ Once an asset file is generated (for the last time), the file name it is given i
 
 Each step of the processing is also cached in order to help to reduce the overhead of regenerating the files.  This means that the file is only read IF the actual asset file has changed.
 
+### File Pre-Processing
+
+In order to support the manual pre-processing of the asset files required, you are now able to use the following command:
+
+```
+$ php artisan assetprocessor:process
+```
+
+This accepts an array of files to process.  To run, use the following command:
+
+```
+$ php artisan assetprocessor:process --file=/path/to/file1.css --file=/path/to/file2.css
+```
+
+This will complete any processing that is required and then for all of the selected files, combine them into a singule file (by asset type).
+
 ### File Cleanup
 
 As assets change, and so do the generated asset files.  Because of this there is a built-in cleanup command that will remove any assets which were not touched within the last day (duration can be changed in either the configuration variable, or the `--duration` flag that is provided).
