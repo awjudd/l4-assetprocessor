@@ -135,6 +135,20 @@ This will then automatically add in and determine the type of the file that was 
 {{ AssetProcessor::scripts() }}
 ```
 
+### Asset Groups
+
+If you want to group a bunch of assets together, you are able to provide a third parameter to the `add` method.  The third parameter is an "attributes" array.  In order to use an asset group, you can provide the "group".  For example:
+
+```php
+AssetProcessor::add('name', '/path/to/asset/file', ['group' => 'foo']);
+```
+
+This will make the asset file provided only available in that asset group.  To retrieve the asset, you will need to do the following (assuming the file was a CSS file)s:
+
+```php
+{{ AssetProcessor::styles('foo') }}
+```
+
 ### File Caching
 
 ** All of the files that are generated are stored in the `app/storage/assets` folder by default **
@@ -192,3 +206,19 @@ Asset Processor is free software distributed under the terms of the MIT license
 ## Additional Information
 
 Any issues, please [report here](https://github.com/awjudd/l4-assetprocessor/issues)
+
+## Release Notes:
+
+1.0.0:
+ - Initial Release
+
+1.0.1:
+ - Adding in a new command to allow for the pre-processing of asset files (assetprocessor:process)
+ - Bug Fixes:
+   - Windows support - resolving the issue where on Windows it wouldn't give you the correct link
+   - File caching issue resolved
+
+1.0.2:
+ - Adding in support for asset groups
+ ** Please Note: **
+  This release adds an 'attributes' array into the configuration file.  You will need to re-publish the configuration files if you are using a previous version.
