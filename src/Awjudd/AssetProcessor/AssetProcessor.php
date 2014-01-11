@@ -98,6 +98,16 @@ class AssetProcessor
             {
                 $file_to_process = $file->getRealPath();
 
+                // Whether or not we at least generate a file
+                $generateFile = true;
+
+                // Check if the file is in webroot
+                if(!\Str::contains($file_to_process, public_path()))
+                {
+                    // It isn't, so force the processing
+                    $generateFile = true;
+                }
+
                 // Keep track of the actual asset type that is being processed
                 $assetType = null;
 
@@ -130,7 +140,7 @@ class AssetProcessor
                 }
 
                 // Check if the file was processed
-                if($file_to_process!=$file->getRealPath())
+                if($file_to_process != $file->getRealPath())
                 {
                     // It was, so add it to the base folder
                     $dest_path = storage_path() . '/' . \Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
@@ -140,6 +150,15 @@ class AssetProcessor
 
                     // Grab the file name to add to our asset list
                     $file_to_process = basename($dest_path);
+                }
+                // Check if we need to generate a files
+                else if($file_to_process == $file->getRealPath() && $generateFile)
+                {
+                    // Figure out the type of the file
+                    $type = $file->getExtension();
+
+                    // We need to generate the file, so make a copy of it in the storage folder
+                    $file_to_process = $this->write($type, $file_to_process);
                 }
 
                 // Add it to the list of files that we processed
@@ -404,10 +423,10 @@ class AssetProcessor
      * into a single file.
      * 
      * @param string $type The type of asset that we are making
-     * @param array $contents An array of all of the files to combine
+     * @param mixed $contents An array of all of the files to combine OR a single file to write
      * @return string The new file name
      */
-    private function write($type, array $contents)
+    private function write($type, $contents)
     {
         // Will contain all of the files put together
         $file = '';
@@ -415,11 +434,32 @@ class AssetProcessor
         // Derive the destination path
         $directory =  static::storageFolder() . $type . '/';
 
-        // Cycle through each of the files
-        foreach($contents as $filename)
+        // Do we have one file or multiple?
+        if(is_array($contents))
         {
-            // Keep appending the file's contents
-            $file .= file_get_contents($directory . $filename);
+            // Cycle through each of the files
+            foreach($contents as $filename)
+            {
+                // Check if the file exists on it's own
+                if(!file_exists($filename))
+                {
+                    $filename = $directory . $filename;    
+                }
+                
+                // Keep appending the file's contents
+                $file .= file_get_contents($filename);
+            }
+        }
+        else
+        {
+            // Check if the file exists on it's own
+            if(!file_exists($contents))
+            {
+                $contents = $directory . $contents;    
+            }
+            
+            // Otherwise just read in the file
+            $file .= file_get_contents($contents);
         }
 
         $filename = md5($file);
