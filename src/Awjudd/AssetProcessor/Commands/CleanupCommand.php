@@ -1,6 +1,10 @@
 <?php namespace Awjudd\AssetProcessor\Commands;
 
-use Awjudd\AssetProcessor\AssetProcessor;
+use AssetProcessor;
+use Config;
+use DirectoryIterator;
+
+use AwjuddAssetProcessorAssetProcessor;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -30,7 +34,7 @@ class CleanupCommand extends Command
         $app = app();
 
         return array(
-            array('duration', '-d', InputOption::VALUE_OPTIONAL, 'The length of time (in seconds) that a file needs to be left untouched prior to deleting.', \Config::get('assetprocessor::cache.duration')),
+            array('duration', '-d', InputOption::VALUE_OPTIONAL, 'The length of time (in seconds) that a file needs to be left untouched prior to deleting.', Config::get('assetprocessor::cache.duration')),
         );
     }
 
@@ -48,7 +52,7 @@ class CleanupCommand extends Command
         $timestamp = time() - $duration;
 
         // Get the full list of files
-        $files = $this->buildFileList(\AssetProcessor::storageFolder());
+        $files = $this->buildFileList(AssetProcessor::storageFolder());
 
         // Cycle through the list checking their creation dates
         foreach($files as $file)
@@ -79,11 +83,11 @@ class CleanupCommand extends Command
     private function buildFileList($folder)
     {
         // The list of files to use
-        $files = [];
+        $files = array();
 
         // Cycle through all of the files in our storage folder removing
         // any files that exceed the cache duration.
-        $directory = new \DirectoryIterator($folder);
+        $directory = new DirectoryIterator($folder);
 
         foreach ($directory as $file)
         {

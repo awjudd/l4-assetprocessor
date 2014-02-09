@@ -10,7 +10,7 @@ abstract class BaseProcessor implements IAssetProcessor
      * 
      * @var array
      */
-    public static $extensions = [];
+    public static $extensions = array();
 
     /**
      * Whether or not once we acquire the file, we will be processing it.
@@ -24,7 +24,7 @@ abstract class BaseProcessor implements IAssetProcessor
      * 
      * @var Object
      */
-    protected static $instance = [];
+    protected static $instance = array();
 
     /**
      * The default constructor.

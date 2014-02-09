@@ -1,5 +1,15 @@
 <?php namespace Awjudd\AssetProcessor;
 
+use App;
+use Config;
+use DirectoryIterator;
+use Exception;
+use HTML;
+use URL;
+use Lang;
+use SplFileInfo;
+use Str;
+
 class AssetProcessor
 {
     /**
@@ -7,7 +17,7 @@ class AssetProcessor
      * 
      * @var array
      */
-    protected $processors = [];
+    protected $processors = array();
 
     /**
      * An array that will map all of the associated extensions to a specific
@@ -15,7 +25,7 @@ class AssetProcessor
      * 
      * @var array
      */
-    private $extensionMapping = [];
+    private $extensionMapping = array();
 
     /**
      * Whether or not processing is enabled for the packages.
@@ -29,7 +39,7 @@ class AssetProcessor
      * 
      * @var array
      */
-    private $files = [];
+    private $files = array();
 
     /**
      * Returns the base storage folder for any files.
@@ -38,7 +48,7 @@ class AssetProcessor
      */
     public static function storageFolder()
     {
-        return storage_path() . '/' . \Config::get('assetprocessor::cache.directory') . '/';
+        return storage_path() . '/' . Config::get('assetprocessor::cache.directory') . '/';
     }
 
 
@@ -58,28 +68,28 @@ class AssetProcessor
      * @param string $filename
      * @param array $attributes
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
-    public function add($name, $filename, array $attributes = [])
+    public function add($name, $filename, array $attributes = array())
     {
         // Check if the file exists
         if(!file_exists($filename))
         {
             // The file doesn't exist, so throw an exception
-            throw new \Exception(\Lang::get('assetprocessor::errors.asset.file-not-found', ['file' => $filename]));
+            throw new Exception(Lang::get('assetprocessor::errors.asset.file-not-found', ['file' => $filename]));
         }
 
         // Figure out which asset group we are in
-        $group = isset($attributes['group']) ? $attributes['group'] : \Config::get('assetprocessor::attributes.group');
+        $group = isset($attributes['group']) ? $attributes['group'] : Config::get('assetprocessor::attributes.group');
 
         // Grab the file information
-        $file = new \SplFileInfo($filename);
+        $file = new SplFileInfo($filename);
 
         // Check if the file is a directory
         if($file->isDir())
         {
             // It was a directory, so iterate through it
-            $directory = new \DirectoryIterator($filename);
+            $directory = new DirectoryIterator($filename);
 
             foreach ($directory as $file)
             {
@@ -102,7 +112,7 @@ class AssetProcessor
                 $generateFile = true;
 
                 // Check if the file is in webroot
-                if(!\Str::contains($file_to_process, public_path()))
+                if(!Str::contains($file_to_process, public_path()))
                 {
                     // It isn't, so force the processing
                     $generateFile = true;
@@ -119,13 +129,13 @@ class AssetProcessor
                     if($assetType !== null && $this->processors[$processor]->getAssetType() != $assetType)
                     {
                         // There is a mismatch, so throw an exception
-                        throw new \Exception(\Lang::get('assetprocessor::errors.asset.different-asset-types', ['file' => $file_to_process]));
+                        throw new Exception(Lang::get('assetprocessor::errors.asset.different-asset-types', ['file' => $file_to_process]));
                     }
                     // Was there a duplicate name, and we are erroring
-                    else if(isset($this->files[$assetType][$name]) && \Config::get('assetprocessor::file.error-on-duplicate-name', false))
+                    else if(isset($this->files[$assetType][$name]) && Config::get('assetprocessor::file.error-on-duplicate-name', false))
                     {
                         // We are erroring because of the duplicate name, so throw an exception
-                        throw new \Exception(\Lang::get('assetprocessor::errors.asset.duplicate-name', ['name' => $name]));
+                        throw new Exception(Lang::get('assetprocessor::errors.asset.duplicate-name', ['name' => $name]));
                     }
 
                     // Check if we should be processing the file
@@ -143,7 +153,7 @@ class AssetProcessor
                 if($file_to_process != $file->getRealPath())
                 {
                     // It was, so add it to the base folder
-                    $dest_path = storage_path() . '/' . \Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
+                    $dest_path = storage_path() . '/' . Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
 
                     // Copy the file over
                     copy($file_to_process, $dest_path);
@@ -172,7 +182,7 @@ class AssetProcessor
      * needed for your application.
      * 
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function styles($group = NULL)
     {
@@ -184,7 +194,7 @@ class AssetProcessor
      * needed for your application.
      * 
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function scripts($group = NULL)
     {
@@ -208,6 +218,13 @@ class AssetProcessor
      */
     public function generateSingularFile($type, $group)
     {
+        // Check if the group exists
+        if(!isset($this->files[$type][$group]))
+        {
+            // It doesn't so we are done
+            return null;
+        }
+
         // Grab the associated assets
         $assets = $this->files[$type][$group];
 
@@ -220,7 +237,7 @@ class AssetProcessor
      * 
      * @param string $type
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     private function retrieve($type, $group)
     {
@@ -228,14 +245,14 @@ class AssetProcessor
         if($group === NULL)
         {
             // It wasn't so default it
-            $group = \Config::get('assetprocessor::attributes.group');
+            $group = Config::get('assetprocessor::attributes.group');
         }
 
         // Check if the group exists
         if(!isset($this->files[$type][$group]))
         {
             // It doesn't so give them an error
-            throw new \Exception(\Lang::get('assetprocessor::errors.asset.asset-group-not-found', [
+            throw new Exception(Lang::get('assetprocessor::errors.asset.asset-group-not-found', [
                     'type' => $type,
                     'group' => $group,
                 ]));
@@ -245,10 +262,10 @@ class AssetProcessor
         $output = '';
 
         // The controller and method that will be used to emit the processed files
-        $controller = \Config::get('assetprocessor::controller.name') . '@' . \Config::get('assetprocessor::controller.method');
+        $controller = Config::get('assetprocessor::controller.name') . '@' . Config::get('assetprocessor::controller.method');
 
         // Are we needing a single file?
-        if(\Config::get('assetprocessor::cache.singular') && $this->processingEnabled)
+        if(Config::get('assetprocessor::cache.singular') && $this->processingEnabled)
         {
             $assets = $this->files[$type][$group];
 
@@ -262,10 +279,10 @@ class AssetProcessor
                 switch($type)
                 {
                     case 'js':
-                        $output .= \HTML::script(\URL::action($controller, array($type, $asset)));
+                        $output .= HTML::script(URL::action($controller, array($type, $asset)));
                         break;
                     case 'css':
-                        $output .= \HTML::style(\URL::action($controller, array($type, $asset)));
+                        $output .= HTML::style(URL::action($controller, array($type, $asset)));
                         break;
                 }
             }
@@ -279,10 +296,10 @@ class AssetProcessor
                 switch($type)
                 {
                     case 'js':
-                        $output .= \HTML::script(\URL::action($controller, array($type, $file)));
+                        $output .= HTML::script(URL::action($controller, array($type, $file)));
                         break;
                     case 'css':
-                        $output .= \HTML::style(\URL::action($controller, array($type, $file)));
+                        $output .= HTML::style(URL::action($controller, array($type, $file)));
                         break;
                 }
             }
@@ -293,7 +310,7 @@ class AssetProcessor
             foreach($this->files[$type][$group] as $file)
             {
                 // Check if the asset is internal
-                if(\Str::contains($file, public_path()))
+                if(Str::contains($file, public_path()))
                 {
                     // Replace any backslashes with a regular slash (Windows support)
                     $asset = str_replace('\\', '/', str_replace(public_path(), '', $file));
@@ -303,10 +320,10 @@ class AssetProcessor
                     switch($type)
                     {
                         case 'js':
-                            $output .= \HTML::script($asset);
+                            $output .= HTML::script($asset);
                             break;
                         case 'css':
-                            $output .= \HTML::style($asset);
+                            $output .= HTML::style($asset);
                             break;
                     }
                 }
@@ -319,10 +336,10 @@ class AssetProcessor
                     switch($type)
                     {
                         case 'js':
-                            $output .= \HTML::script(\URL::action($controller, array($type, $actual_name)));
+                            $output .= HTML::script(URL::action($controller, array($type, $actual_name)));
                             break;
                         case 'css':
-                            $output .= \HTML::style(\URL::action($controller, array($type, $actual_name)));
+                            $output .= HTML::style(URL::action($controller, array($type, $actual_name)));
                             break;
                     }
                 }
@@ -341,7 +358,7 @@ class AssetProcessor
     private function deriveProcessingEnabled()
     {
         // Are they forcing it to be enabled?
-        if(\Config::get('assetprocessor::enabled.force', false))
+        if(Config::get('assetprocessor::enabled.force', false))
         {
             // It was forced, so enable it
             $this->processingEnabled = true;
@@ -349,8 +366,9 @@ class AssetProcessor
         else
         {
             // Otherwise derive it based on the environment that we are in
-            $this->processingEnabled = in_array(\App::environment()
-                    , \Config::get('assetprocessor::enabled.environments', []));
+            $this->processingEnabled = in_array(App::environment()
+                    , Config::get('assetprocessor::enabled.environments', array())
+                );
         }
     }
 
@@ -363,10 +381,10 @@ class AssetProcessor
     private function setupLibraries()
     {
         // Get the list of processors
-        $processors = \Config::get('assetprocessor::processors.types', []);
+        $processors = Config::get('assetprocessor::processors.types', array());
 
         // Grab the interface we should be implementing
-        $interface = \Config::get('assetprocessor::processors.interface');
+        $interface = Config::get('assetprocessor::processors.interface');
 
         // Iterate through the list
         foreach($processors as $name => $class)
@@ -377,7 +395,7 @@ class AssetProcessor
             // Ensure that it implements the correct interface
             if(!($instance instanceof $interface))
             {
-                throw new \Exception(\Lang::get('assetprocessor::errors.asset.invalid-type', ['class' => $class, 'interface' => $interface]));
+                throw new Exception(Lang::get('assetprocessor::errors.asset.invalid-type', ['class' => $class, 'interface' => $interface]));
             }
 
             // Add it into the array of processors
@@ -390,7 +408,7 @@ class AssetProcessor
             if(!isset($this->files[$instance->getAssetType()]))
             {
                 // Asset type didn't exist, so add it into the mapping
-                $this->files[$instance->getAssetType()] = [];
+                $this->files[$instance->getAssetType()] = array();
             }
         }
     }
@@ -410,7 +428,7 @@ class AssetProcessor
             if(!isset($this->extensionMapping[$extension]))
             {
                 // It doesn't, so initialize it
-                $this->extensionMapping[$extension] = [];
+                $this->extensionMapping[$extension] = array();
             }
 
             // Add a mapping between the two

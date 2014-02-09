@@ -1,12 +1,12 @@
 <?php
-return [
+return array(
 
     /**
      * All attributse that ara available and their default options.
      * 
      * @var array
      */
-    'attributes' => [
+    'attributes' => array(
 
         /**
          * The group name that is used by default.
@@ -14,24 +14,24 @@ return [
          * @var string
          */
         'group' => 'default',
-    ],
+    ),
 
     /**
      * Controller-specific configurations
      * 
      * @var array
      */
-    'controller' => [
+    'controller' => array(
 
         /**
          * All of available asset types and their corresponding content types.
          * 
          * @var array
          */
-        'content-types' => [
+        'content-types' => array(
             'css' => 'text/css',
             'js' => 'text/javascript',
-        ],
+        ),
 
         /**
          * The name of the controller method used to handle the assets.
@@ -46,14 +46,14 @@ return [
          * @var string
          */
         'name' => '\Awjudd\AssetProcessor\Controllers\AssetProcessorController',
-    ],
+    ),
 
     /**
      * All of the cache settings
      * 
      * @var array
      */
-    'cache' => [
+    'cache' => array(
 
         /**
          * How long should the file remain cached for? (in seconds)
@@ -77,14 +77,14 @@ return [
          *              false - combine all of the same-type of asset files together
          */
         'singular' => true,
-    ],
+    ),
 
     /**
      * Is the processing of these assets enabled?
      * 
      * @var array
      */
-    'enabled' => [
+    'enabled' => array(
 
         /**
          * What environments is this processing enabled in?  The environment name
@@ -92,9 +92,9 @@ return [
          * 
          * @var array
          */
-        'environments' => [
+        'environments' => array(
             'production'
-        ],
+        ),
 
         /**
          * Should we force the processor to process the files?
@@ -102,20 +102,20 @@ return [
          * @var boolean
          */
         'force' => false,
-    ],
+    ),
 
     /**
      * Contains any file related options
      * 
      * @var array
      */
-    'file' => [
+    'file' => array(
 
         /**
          * Should the application error when there is a duplicate name.
          */
         'error-on-duplicate-name' => true,
-    ],
+    ),
 
     /**
      * An array containing all of the processors that the application will
@@ -123,7 +123,7 @@ return [
      * 
      * @var array
      */
-    'processors' => [
+    'processors' => array(
 
         /**
          * The name of the interface that all of the processors should implement.
@@ -137,13 +137,13 @@ return [
          * 
          * @var array
          */
-        'types'     => [
+        'types'     => array(
             'coffee'    => '\Awjudd\AssetProcessor\Processors\CoffeeScriptProcessor',
             'jsmin'     => '\Awjudd\AssetProcessor\Processors\JsMinifierProcessor',
             'sasscss'   => '\Awjudd\AssetProcessor\Processors\ScssCSSProcessor',
             'lesscss'   => '\Awjudd\AssetProcessor\Processors\LessCSSProcessor',
             'cssmin'    => '\Awjudd\AssetProcessor\Processors\CSSMinifierProcessor',
-        ]
-    ],
+        ),
+    ),
 
-];
+);

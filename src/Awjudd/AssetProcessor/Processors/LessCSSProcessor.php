@@ -1,5 +1,6 @@
 <?php namespace Awjudd\AssetProcessor\Processors;
 
+use lessc;
 
 class LessCSSProcessor extends BaseProcessor
 {
@@ -60,7 +61,7 @@ class LessCSSProcessor extends BaseProcessor
         }
 
         // Get an instance of the LESS compiler
-        $less = new \lessc();
+        $less = new lessc();
 
         // Otherwise write the file and return the new file name
         return $this->write($less->compileFile($filename), $actualFileName);

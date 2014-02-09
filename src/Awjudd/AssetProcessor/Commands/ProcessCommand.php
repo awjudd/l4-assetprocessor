@@ -1,6 +1,10 @@
 <?php namespace Awjudd\AssetProcessor\Commands;
 
-use Awjudd\AssetProcessor\AssetProcessor;
+use AssetProcessor;
+use Config;
+use Exception;
+use Lang;
+
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -48,21 +52,21 @@ class ProcessCommand extends Command
         // Check if any files existed
         if(count($files)==0)
         {
-            throw new \Exception(\Lang::get('assetprocessor::errors.command.process.asset-files-required'));
+            throw new Exception(Lang::get('assetprocessor::errors.command.process.asset-files-required'));
         }
 
         // Force the processing of all files
-        \Config::set('assetprocessor::enabled.force', true);
+        Config::set('assetprocessor::enabled.force', true);
 
         // Cycle through all of the files
         foreach($files as $file)
         {
             // Add in the assets provided
-            \AssetProcessor::add($file, $file);
+            AssetProcessor::add($file, $file);
         }
 
         // Generate the single file
-        \AssetProcessor::generateSingularFile('js');
-        \AssetProcessor::generateSingularFile('css');
+        AssetProcessor::generateSingularFile('js', 'default');
+        AssetProcessor::generateSingularFile('css', 'default');
     }
 }
