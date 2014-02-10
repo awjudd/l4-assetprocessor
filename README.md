@@ -94,7 +94,7 @@ Within the `'cache'` section of the `config.php` file, you may want to adjust th
 The only other configuration values that one generally needs to be aware of are the ones in the `'enabled'` section.
 
 ```php
-'enabled' => [
+'enabled' => array(
 
     /**
      * What environments is this processing enabled in?  The environment name
@@ -102,9 +102,9 @@ The only other configuration values that one generally needs to be aware of are 
      * 
      * @var array
      */
-    'environments' => [
+    'environments' => array(
         'production'
-    ],
+    ),
 
     /**
      * Should we force the processor to process the files?
@@ -112,7 +112,7 @@ The only other configuration values that one generally needs to be aware of are 
      * @var boolean
      */
     'force' => false,
-],
+),
 ```
 
 Any environments that are set up in the `'environments'` section will automatically have all assets processed on them.  Any other environments will only process the files that need pre-processing (i.e. LESS, SASS and CoffeeScript) in order to be executed.  However, if you want to, you are able to force the processing of all of the files by flipping the `'force'` value to true.
