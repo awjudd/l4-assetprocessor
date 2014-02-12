@@ -10,7 +10,7 @@ class CoffeeScriptProcessor extends BaseProcessor
      * 
      * @var array
      */
-    public static $extensions = ['coffee'];
+    public static $extensions = array('coffee');
 
     /**
      * The type of processor this instance is.

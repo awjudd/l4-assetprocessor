@@ -9,7 +9,7 @@ class CSSMinifierProcessor extends BaseProcessor
      * 
      * @var array
      */
-    public static $extensions = ['less', 'scss', 'css'];
+    public static $extensions = array('less', 'scss', 'css');
 
     /**
      * The type of processor this instance is.

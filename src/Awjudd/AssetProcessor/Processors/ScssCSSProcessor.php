@@ -9,7 +9,7 @@ class ScssCSSProcessor extends BaseProcessor
      * 
      * @var array
      */
-    public static $extensions = ['scss'];
+    public static $extensions = array('scss');
 
     /**
      * The type of processor this instance is.

@@ -10,7 +10,7 @@ class JsMinifierProcessor extends BaseProcessor
      * 
      * @var array
      */
-    public static $extensions = ['js', 'coffee'];
+    public static $extensions = array('js', 'coffee');
 
     /**
      * The type of processor this instance is.

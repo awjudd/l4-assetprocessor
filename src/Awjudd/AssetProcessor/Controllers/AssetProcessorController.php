@@ -20,7 +20,7 @@ class AssetProcessorController extends Controller
             // Verify that the name is an MD5
             if(!preg_match('/[A-Za-z0-9]{32}/', $name))
             {
-                throw new Exception(Lang::get('assetprocessor::errors.controller.file-name', ['name' => $name]));
+                throw new Exception(Lang::get('assetprocessor::errors.controller.file-name', array('name' => $name)));
             }
 
             // It was valid, so verify the file name
@@ -29,7 +29,7 @@ class AssetProcessorController extends Controller
             // Check that it exists
             if(!file_exists($filename))
             {
-                throw new Exception(Lang::get('assetprocessor::errors.controller.file-not-found', ['name' => $name]));
+                throw new Exception(Lang::get('assetprocessor::errors.controller.file-not-found', array('name' => $name)));
             }
 
             // Everything validates, so spit it out
@@ -39,7 +39,7 @@ class AssetProcessorController extends Controller
         }
         else
         {
-            throw new Exception(Lang::get('assetprocessor::errors.controller.invalid-type', ['type' => $type]));
+            throw new Exception(Lang::get('assetprocessor::errors.controller.invalid-type', array('type' => $type));
         }
     }
 }

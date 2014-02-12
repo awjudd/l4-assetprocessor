@@ -1,5 +1,6 @@
 <?php namespace Awjudd\AssetProcessor\Processors;
 
+use File;
 use Awjudd\AssetProcessor\Interfaces\IAssetProcessor;
 
 abstract class BaseProcessor implements IAssetProcessor
@@ -82,15 +83,15 @@ abstract class BaseProcessor implements IAssetProcessor
         $destination = $this->getFinalName($filename);
 
         // Does the destination file exist?
-        if(!\File::exists($destination))
+        if(!File::exists($destination))
         {
             // It doesn't exist, so we will need to process
             return true;
         }
 
         // Otherwise compare the date stamps
-        $destinationChanged = \File::lastModified($destination);
-        $currentChanged = \File::lastModified($filename);
+        $destinationChanged = File::lastModified($destination);
+        $currentChanged = File::lastModified($filename);
 
         // Which one was last modified later
         if($currentChanged > $destinationChanged)

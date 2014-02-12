@@ -76,7 +76,7 @@ class AssetProcessor
         if(!file_exists($filename))
         {
             // The file doesn't exist, so throw an exception
-            throw new Exception(Lang::get('assetprocessor::errors.asset.file-not-found', ['file' => $filename]));
+            throw new Exception(Lang::get('assetprocessor::errors.asset.file-not-found', array('file' => $filename)));
         }
 
         // Figure out which asset group we are in
@@ -129,13 +129,13 @@ class AssetProcessor
                     if($assetType !== null && $this->processors[$processor]->getAssetType() != $assetType)
                     {
                         // There is a mismatch, so throw an exception
-                        throw new Exception(Lang::get('assetprocessor::errors.asset.different-asset-types', ['file' => $file_to_process]));
+                        throw new Exception(Lang::get('assetprocessor::errors.asset.different-asset-types', array('file' => $file_to_process)));
                     }
                     // Was there a duplicate name, and we are erroring
                     else if(isset($this->files[$assetType][$name]) && Config::get('assetprocessor::file.error-on-duplicate-name', false))
                     {
                         // We are erroring because of the duplicate name, so throw an exception
-                        throw new Exception(Lang::get('assetprocessor::errors.asset.duplicate-name', ['name' => $name]));
+                        throw new Exception(Lang::get('assetprocessor::errors.asset.duplicate-name', array('name' => $name)));
                     }
 
                     // Check if we should be processing the file
@@ -252,10 +252,10 @@ class AssetProcessor
         if(!isset($this->files[$type][$group]))
         {
             // It doesn't so give them an error
-            throw new Exception(Lang::get('assetprocessor::errors.asset.asset-group-not-found', [
+            throw new Exception(Lang::get('assetprocessor::errors.asset.asset-group-not-found', array(
                     'type' => $type,
                     'group' => $group,
-                ]));
+                )));
         }
 
         // The string which will be emitted with all of the information
@@ -395,7 +395,7 @@ class AssetProcessor
             // Ensure that it implements the correct interface
             if(!($instance instanceof $interface))
             {
-                throw new Exception(Lang::get('assetprocessor::errors.asset.invalid-type', ['class' => $class, 'interface' => $interface]));
+                throw new Exception(Lang::get('assetprocessor::errors.asset.invalid-type', array('class' => $class, 'interface' => $interface)));
             }
 
             // Add it into the array of processors

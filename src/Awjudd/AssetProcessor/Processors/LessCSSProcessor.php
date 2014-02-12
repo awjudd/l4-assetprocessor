@@ -10,7 +10,7 @@ class LessCSSProcessor extends BaseProcessor
      * 
      * @var array
      */
-    public static $extensions = ['less'];
+    public static $extensions = array('less');
 
     /**
      * The type of processor this instance is.
