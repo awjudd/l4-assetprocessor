@@ -222,3 +222,13 @@ Any issues, please [report here](https://github.com/awjudd/l4-assetprocessor/iss
  - Adding in support for asset groups
  ** Please Note: **
   This release adds an 'attributes' array into the configuration file.  You will need to re-publish the configuration files if you are using a previous version.
+
+1.0.3:
+ - Added in the processing of internal asset files to make them available when not doing any other processing on them.
+
+1.0.4:
+ - Changing arrays to use array() syntax
+ - Bug fix which was introduced with the asset bundles (default value was erroring if nothing was provided)
+
+1.0.5:
+ -  Adding in better cache support for the assets
