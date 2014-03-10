@@ -1,8 +1,10 @@
 <?php namespace Awjudd\AssetProcessor\Controllers;
 
+use Carbon\Carbon;
 use Config;
 use Exception;
 use Lang;
+use Request;
 use Response;
 
 use Illuminate\Routing\Controller;
@@ -32,14 +34,30 @@ class AssetProcessorController extends Controller
                 throw new Exception(Lang::get('assetprocessor::errors.controller.file-not-found', array('name' => $name)));
             }
 
+            // When was the file last modified?
+            $modified = Carbon::createFromTimeStamp(filemtime($filename));
+
+            // Check if there is a modified date provided
+            if(Request::header('If-None-Match') == $name)
+            {
+                return Response::make('', 304);
+            }
+
             // Everything validates, so spit it out
             $output = file_get_contents($filename);
 
-            return Response::make($output, 200, array('Content-Type' => $available[$type]));
+            return Response::make($output, 200, array(
+                    'Content-Type' => $available[$type],
+                    'Cache-Control' => 'max-age=9999, public',
+                    'expires' => Carbon::now()->addYears(2),
+                    'Last-Modified' => $modified,
+                    'etag' => $name,
+                )
+            );
         }
         else
         {
-            throw new Exception(Lang::get('assetprocessor::errors.controller.invalid-type', array('type' => $type));
+            throw new Exception(Lang::get('assetprocessor::errors.controller.invalid-type', array('type' => $type)));
         }
     }
 }
