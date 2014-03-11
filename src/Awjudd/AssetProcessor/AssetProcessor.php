@@ -298,7 +298,7 @@ class AssetProcessor
                     )));
             }
             
-            return '';
+            return $output;
         }
 
         // Are we looking at CDNs?
