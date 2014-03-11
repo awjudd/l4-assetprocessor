@@ -289,11 +289,16 @@ class AssetProcessor
         // Check if the group exists
         if(!isset($this->files[$type][$group]))
         {
-            // It doesn't so give them an error
-            throw new Exception(Lang::get('assetprocessor::errors.asset.asset-group-not-found', array(
-                    'type' => $type,
-                    'group' => $group,
-                )));
+            if(Config::get('assetprocessor::file.error-on-missing-group', true))
+            {
+                // It doesn't so give them an error
+                throw new Exception(Lang::get('assetprocessor::errors.asset.asset-group-not-found', array(
+                        'type' => $type,
+                        'group' => $group,
+                    )));
+            }
+            
+            return '';
         }
 
         // Are we looking at CDNs?

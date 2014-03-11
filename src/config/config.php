@@ -129,8 +129,17 @@ return array(
 
         /**
          * Should the application error when there is a duplicate name.
+         * 
+         * @var boolean
          */
         'error-on-duplicate-name' => true,
+
+        /**
+         * Whether or not the application should error if an asset group doesn't exist
+         * 
+         * @var boolean
+         */
+        'error-on-missing-group' => false,
     ),
 
     /**
