@@ -9,11 +9,27 @@ return array(
     'attributes' => array(
 
         /**
-         * The group name that is used by default.
+         * All of the group-related information
          * 
-         * @var string
+         * @var array
          */
-        'group' => 'default',
+        'group' => array( 
+
+            /**
+             * The group name that all CDN related items will be grouped under
+             * 
+             * @var string
+             */
+            'cdn' => 'cdn',
+
+            /**
+             * The group name that is used by default.
+             * 
+             * @var string
+             */
+            'default' => 'default',
+
+        ),
     ),
 
     /**

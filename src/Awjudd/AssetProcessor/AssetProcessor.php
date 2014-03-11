@@ -62,6 +62,31 @@ class AssetProcessor
     }
 
     /**
+     * Used in order to allow for the use of a CDN for assets.
+     * 
+     * @param string $name The name of the asset file
+     * @param string $url The URL that we'll be retrieving the assets from
+     * @param string $type Whether the file is a JavaScript file or a CSS file (if not provided 
+     *          it will derive off of the name)
+     * @return void
+     */
+    public function cdn($name, $url, $type = null)
+    {
+        // Check if there is a type provided
+        if($type === null)
+        {
+            // No type provided, so derive it
+            $type = substr(strrchr($url, '.'), 1);
+        }
+
+        // Grab the CDN group
+        $group = Config::get('assetprocessor::attributes.group.cdn', 'cdn');
+
+        // Add the asset type
+        $this->files[$type][$group][$name] = $url;
+    }
+
+    /**
      * Used in order to add a file to the asset management system.
      * 
      * @param string $name
@@ -80,7 +105,7 @@ class AssetProcessor
         }
 
         // Figure out which asset group we are in
-        $group = isset($attributes['group']) ? $attributes['group'] : Config::get('assetprocessor::attributes.group');
+        $group = isset($attributes['group']) ? $attributes['group'] : Config::get('assetprocessor::attributes.group.default');
 
         // Grab the file information
         $file = new SplFileInfo($filename);
@@ -241,11 +266,24 @@ class AssetProcessor
      */
     private function retrieve($type, $group)
     {
+        // The string which will be emitted with all of the information
+        $output = '';
+
         // Check if the group is provided
         if($group === NULL)
         {
             // It wasn't so default it
-            $group = Config::get('assetprocessor::attributes.group');
+            $group = Config::get('assetprocessor::attributes.group.default');
+
+            // Grab the group name for the CDN
+            $cdn = Config::get('assetprocessor::attributes.group.cdn');
+
+            // Check if the CDN group is set
+            if(isset($this->files[$type][$cdn]))
+            {
+                // No asset group, so check if there is a CDN, and add it in
+                $output .= $this->retrieve($type, $cdn);
+            }
         }
 
         // Check if the group exists
@@ -258,8 +296,27 @@ class AssetProcessor
                 )));
         }
 
-        // The string which will be emitted with all of the information
-        $output = '';
+        // Are we looking at CDNs?
+        if($group == Config::get('assetprocessor::attributes.group.cdn'))
+        {
+            // Loop through all of the files and spit out the link
+            foreach($this->files[$type][$group] as $file)
+            {
+                // Add in a bypass since there is no point in re-processing the file
+                switch($type)
+                {
+                    case 'js':
+                        $output .= HTML::script($file);
+                        break;
+                    case 'css':
+                        $output .= HTML::style($file);
+                        break;
+                }
+            }
+
+            // CDN support is done, so return
+            return $output;
+        }
 
         // The controller and method that will be used to emit the processed files
         $controller = Config::get('assetprocessor::controller.name') . '@' . Config::get('assetprocessor::controller.method');
@@ -312,6 +369,7 @@ class AssetProcessor
                 // Check if the asset is internal
                 if(Str::contains($file, public_path()))
                 {
+                    dd('here');
                     // Replace any backslashes with a regular slash (Windows support)
                     $asset = str_replace('\\', '/', str_replace(public_path(), '', $file));
 
