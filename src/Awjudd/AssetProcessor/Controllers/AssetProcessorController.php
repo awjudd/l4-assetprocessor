@@ -26,7 +26,7 @@ class AssetProcessorController extends Controller
             }
 
             // It was valid, so verify the file name
-            $filename = Config::get('assetprocessor::cache.external') . '/' . $type . '/' . $name;
+            $filename = Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory')) . '/' . $type . '/' . $name;
 
             // Check that it exists
             if(!file_exists($filename))

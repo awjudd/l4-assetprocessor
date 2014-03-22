@@ -214,13 +214,13 @@ class AssetProcessor
             }
 
             // Does the final location for the file match the current path?
-            if(Config::get('assetprocessor::cache.directory') != Config::get('assetprocessor::cache.external'))
+            if(Config::get('assetprocessor::cache.directory') != Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory')))
             {
                 // Derive the source path
                 $source = Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
 
                 // Derive the destination path
-                $destination = Config::get('assetprocessor::cache.external') . '/' . $assetType . '/' . basename($file_to_process) . '.' . $assetType;
+                $destination = Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory')) . '/' . $assetType . '/' . basename($file_to_process) . '.' . $assetType;
 
                 // Copy the file over
                 copy($source, $destination);
@@ -408,7 +408,7 @@ class AssetProcessor
             {
                 // There was more than one file, so we need to combine them all
                 // into one file
-                $external = Config::get('assetprocessor::cache.external');
+                $external = Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory'));
                 $file = $this->generateSingularFile($type, $group, $external);
 
                 // Check if the asset is internal
@@ -672,21 +672,21 @@ class AssetProcessor
         }
 
         // Check if the external directory is available
-        if(!file_exists($dir = Config::get('assetprocessor::cache.external')))
+        if(!file_exists($dir = Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory'))))
         {
             // It doesn't, so make the folder
             mkdir($dir, 0777, true);
         }
 
         // Check if the external directory is available (CSS)
-        if(!file_exists($dir = Config::get('assetprocessor::cache.external') . '/css'))
+        if(!file_exists($dir = Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory')) . '/css'))
         {
             // It doesn't, so make the folder
             mkdir($dir, 0777, true);
         }
 
         // Check if the external directory is available (JavaScript)
-        if(!file_exists($dir = Config::get('assetprocessor::cache.external') . '/js'))
+        if(!file_exists($dir = Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory')) . '/js'))
         {
             // It doesn't, so make the folder
             mkdir($dir, 0777, true);
