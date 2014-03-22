@@ -42,6 +42,13 @@ class AssetProcessor
     private $files = array();
 
     /**
+     * Which asset types have had the CDN retrieved for it?
+     * 
+     * @var array
+     */
+    private $cdnRetrieved = array();
+
+    /**
      * Returns the base storage folder for any files.
      * 
      * @return string
@@ -279,10 +286,13 @@ class AssetProcessor
             $cdn = Config::get('assetprocessor::attributes.group.cdn');
 
             // Check if the CDN group is set
-            if(isset($this->files[$type][$cdn]))
+            if(isset($this->files[$type][$cdn]) && !in_array($type, $this->cdnRetrieved))
             {
                 // No asset group, so check if there is a CDN, and add it in
                 $output .= $this->retrieve($type, $cdn);
+
+                // Mark the CDN as retrieved
+                $this->cdnRetrieved[] = $type;
             }
         }
 
