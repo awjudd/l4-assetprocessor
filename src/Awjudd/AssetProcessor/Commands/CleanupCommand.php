@@ -45,14 +45,26 @@ class CleanupCommand extends Command
      */
     public function fire()
     {
+        // Remove the files from the cache directory
+        $this->removeFiles($this->buildFileList(Config::get('assetprocessor::cache.directory')));
+
+        // Remove the files from the external directory
+        $this->removeFiles($this->buildFileList(Config::get('assetprocessor::cache.external')));
+        
+    }
+
+    /**
+     * Used internally in order to cycle through all of the files and remove them.
+     * 
+     * @return void
+     */
+    private function removeFiles($files)
+    {
         // Grab the duration
         $duration = $this->option('duration');
         
         // Grab the minimum acceptable timestamp
         $timestamp = time() - $duration;
-
-        // Get the full list of files
-        $files = $this->buildFileList(AssetProcessor::storageFolder());
 
         // Cycle through the list checking their creation dates
         foreach($files as $file)
@@ -71,7 +83,6 @@ class CleanupCommand extends Command
                 }
             }
         }
-        
     }
 
     /**
