@@ -66,6 +66,9 @@ class AssetProcessor
 
         // Set up all of the libraries that we need
         $this->setupLibraries();
+
+        // Auto-load any of the assets that were specified
+        $this->autoLoadAssets();
     }
 
     /**
@@ -567,5 +570,27 @@ class AssetProcessor
 
         // Return the file name
         return $filename;
+    }
+
+    /**
+     * Used internally in order to help with the auto-loading of all of the assets.
+     * 
+     * @return void
+     */
+    private function autoLoadAssets()
+    {
+        // Add in the CDN-typed assets
+        foreach(Config::get('assetprocessor::autoload.cdn', array()) as $asset)
+        {
+            // Add in the asset
+            self::cdn($asset, $asset);
+        }
+
+        // Add in the local assets
+        foreach(Config::get('assetprocessor::autoload.local', array()) as $asset)
+        {
+            // Add in the asset
+            self::add($asset, $asset);
+        }        
     }
 }

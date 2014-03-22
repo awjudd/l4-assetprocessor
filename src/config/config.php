@@ -33,6 +33,30 @@ return array(
     ),
 
     /**
+     * Any assets that should be auto-loaded.
+     * 
+     * @var array
+     */
+    'autoload' => array(
+
+        /**
+         * Any CDN-type assets to auto-load
+         * 
+         * @var array
+         */
+        'cdn' => array(
+        ),
+
+        /**
+         * Any local assets that will need processing.
+         * 
+         * @var array
+         */
+        'local' => array(
+        ),
+    ),
+
+    /**
      * Controller-specific configurations
      * 
      * @var array
