@@ -55,7 +55,7 @@ class AssetProcessor
      */
     public static function storageFolder()
     {
-        return Config::get('assetprocessor::cache.external') . '/';
+        return Config::get('assetprocessor::cache.directory') . '/';
     }
 
 
@@ -220,7 +220,7 @@ class AssetProcessor
                 $source = Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
 
                 // Derive the destination path
-                $destination = Config::get('assetprocessor::cache.external') . '/' . $assetType . '/' . basename($file_to_process);
+                $destination = Config::get('assetprocessor::cache.external') . '/' . $assetType . '/' . basename($file_to_process) . '.' . $assetType;
 
                 // Copy the file over
                 copy($source, $destination);
