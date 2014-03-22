@@ -235,4 +235,5 @@ Any issues, please [report here](https://github.com/awjudd/l4-assetprocessor/iss
 
 1.0.6:
  - CDN Support - You are now able to used the `AssetProcessor::cdn()` function in order to use a CDN instead of relying on the actual asset processor for everything
+  - This section will automatically be emitted if it exists and you call the `AssetProcessor::scripts()` or `AssetProcessor::styles()` function with it's default values
  - Added a configuration value `'file.error-on-missing-group'` to allow you to bypass the error message if there is a missing asset group requested
