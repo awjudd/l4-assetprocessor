@@ -1,5 +1,6 @@
 <?php namespace Awjudd\AssetProcessor\Processors;
 
+use Config;
 use File;
 use Awjudd\AssetProcessor\Interfaces\IAssetProcessor;
 
@@ -158,7 +159,7 @@ abstract class BaseProcessor implements IAssetProcessor
      */
     protected function getOutputDirectory($assetFileName)
     {
-        return storage_path() . '/' . \Config::get('assetprocessor::cache.directory') . '/' 
+        return Config::get('assetprocessor::cache.directory') . '/' 
             . static::getAssetType() . '/' . basename($assetFileName) . '/';
     }
 

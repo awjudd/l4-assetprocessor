@@ -108,7 +108,14 @@ return array(
          * 
          * @var string
          */
-        'directory' => 'assets',
+        'directory' => storage_path('assets'),
+
+        /**
+         * The external path that is the final resting spot for the assets.
+         * 
+         * @var string
+         */
+        'external' => public_path('assets/generated'),
 
         /**
          * Should we be using a single file for each asset, or multiple?

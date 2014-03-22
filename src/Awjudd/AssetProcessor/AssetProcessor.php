@@ -55,7 +55,7 @@ class AssetProcessor
      */
     public static function storageFolder()
     {
-        return storage_path() . '/' . Config::get('assetprocessor::cache.directory') . '/';
+        return Config::get('assetprocessor::cache.external') . '/';
     }
 
 
@@ -66,6 +66,9 @@ class AssetProcessor
 
         // Set up all of the libraries that we need
         $this->setupLibraries();
+
+        // Set up the required directories
+        $this->setupDirectories();
 
         // Auto-load any of the assets that were specified
         $this->autoLoadAssets();
@@ -188,7 +191,7 @@ class AssetProcessor
                 if($file_to_process != $file->getRealPath())
                 {
                     // It was, so add it to the base folder
-                    $dest_path = storage_path() . '/' . Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
+                    $dest_path = Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
 
                     // Copy the file over
                     copy($file_to_process, $dest_path);
@@ -208,6 +211,25 @@ class AssetProcessor
 
                 // Add it to the list of files that we processed
                 $this->files[$assetType][$group][$name] = $file_to_process;
+            }
+
+            // Does the final location for the file match the current path?
+            if(Config::get('assetprocessor::cache.directory') != Config::get('assetprocessor::cache.external'))
+            {
+                // Derive the source path
+                $source = Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
+
+                // Derive the destination path
+                $destination = Config::get('assetprocessor::cache.external') . '/' . $assetType . '/' . basename($file_to_process);
+
+                // Copy the file over
+                copy($source, $destination);
+
+                // Overwrite the path (only if it is a public URL)
+                if(Str::contains($destination, public_path()))
+                {
+                    $this->files[$assetType][$group][$name] = $destination;
+                }
             }
         }
     }
@@ -251,7 +273,7 @@ class AssetProcessor
      * 
      * @return string The file name
      */
-    public function generateSingularFile($type, $group)
+    public function generateSingularFile($type, $group, $directory)
     {
         // Check if the group exists
         if(!isset($this->files[$type][$group]))
@@ -264,7 +286,7 @@ class AssetProcessor
         $assets = $this->files[$type][$group];
 
         // Write out the files
-        return $this->write($type, $assets);
+        return $this->write($type, $assets, $directory);
     }
 
     /**
@@ -350,32 +372,77 @@ class AssetProcessor
                 // There is only one, so just grab it
                 $asset = current($assets);
 
-                // Add in a bypass since there is no point in re-processing the file
-                switch($type)
+                // Check if the asset is internal
+                if(Str::contains($asset, public_path()))
                 {
-                    case 'js':
-                        $output .= HTML::script(URL::action($controller, array($type, $asset)));
-                        break;
-                    case 'css':
-                        $output .= HTML::style(URL::action($controller, array($type, $asset)));
-                        break;
+                    // Replace any backslashes with a regular slash (Windows support)
+                    $asset = str_replace('\\', '/', str_replace(public_path(), '', $asset));
+
+                    // It is external, so just emit it
+                    // Add in the asset
+                    switch($type)
+                    {
+                        case 'js':
+                            $output .= HTML::script($asset);
+                            break;
+                        case 'css':
+                            $output .= HTML::style($asset);
+                            break;
+                    }
+                }
+                else
+                {
+                    // Add in a bypass since there is no point in re-processing the file
+                    switch($type)
+                    {
+                        case 'js':
+                            $output .= HTML::script(URL::action($controller, array($type, $asset)));
+                            break;
+                        case 'css':
+                            $output .= HTML::style(URL::action($controller, array($type, $asset)));
+                            break;
+                    }
                 }
             }
             else
             {
                 // There was more than one file, so we need to combine them all
                 // into one file
-                $file = $this->generateSingularFile($type, $group);
+                $external = Config::get('assetprocessor::cache.external');
+                $file = $this->generateSingularFile($type, $group, $external);
 
-                // Add in a bypass since there is no point in re-processing the file
-                switch($type)
+                // Check if the asset is internal
+                if(Str::contains($external, public_path()))
                 {
-                    case 'js':
-                        $output .= HTML::script(URL::action($controller, array($type, $file)));
-                        break;
-                    case 'css':
-                        $output .= HTML::style(URL::action($controller, array($type, $file)));
-                        break;
+                    $asset = $external . '/' . $type . '/' . $file;
+
+                    // Replace any backslashes with a regular slash (Windows support)
+                    $asset = str_replace('\\', '/', str_replace(public_path(), '', $asset));
+
+                    // It is external, so just emit it
+                    // Add in the asset
+                    switch($type)
+                    {
+                        case 'js':
+                            $output .= HTML::script($asset);
+                            break;
+                        case 'css':
+                            $output .= HTML::style($asset);
+                            break;
+                    }
+                }
+                else
+                {
+                    // Add in a bypass since there is no point in re-processing the file
+                    switch($type)
+                    {
+                        case 'js':
+                            $output .= HTML::script(URL::action($controller, array($type, $file)));
+                            break;
+                        case 'css':
+                            $output .= HTML::style(URL::action($controller, array($type, $file)));
+                            break;
+                    }
                 }
             }
         }
@@ -387,7 +454,6 @@ class AssetProcessor
                 // Check if the asset is internal
                 if(Str::contains($file, public_path()))
                 {
-                    dd('here');
                     // Replace any backslashes with a regular slash (Windows support)
                     $asset = str_replace('\\', '/', str_replace(public_path(), '', $file));
 
@@ -518,15 +584,17 @@ class AssetProcessor
      * 
      * @param string $type The type of asset that we are making
      * @param mixed $contents An array of all of the files to combine OR a single file to write
+     * @param string $directory The name of the directory to store the files in
      * @return string The new file name
      */
-    private function write($type, $contents)
+    private function write($type, $contents, $directory = null)
     {
         // Will contain all of the files put together
         $file = '';
 
         // Derive the destination path
-        $directory =  static::storageFolder() . $type . '/';
+        $directory = $directory === null ? static::storageFolder() : ($directory . '/');
+        $directory .= $type . '/';
 
         // Do we have one file or multiple?
         if(is_array($contents))
@@ -592,5 +660,36 @@ class AssetProcessor
             // Add in the asset
             self::add($asset, $asset);
         }        
+    }
+
+    private function setupDirectories()
+    {
+        // Check if the internal directory is present
+        if(!file_exists($dir = Config::get('assetprocessor::cache.directory')))
+        {
+            // It doesn't, so make the folder
+            mkdir($dir, 0777, true);
+        }
+
+        // Check if the external directory is available
+        if(!file_exists($dir = Config::get('assetprocessor::cache.external')))
+        {
+            // It doesn't, so make the folder
+            mkdir($dir, 0777, true);
+        }
+
+        // Check if the external directory is available (CSS)
+        if(!file_exists($dir = Config::get('assetprocessor::cache.external') . '/css'))
+        {
+            // It doesn't, so make the folder
+            mkdir($dir, 0777, true);
+        }
+
+        // Check if the external directory is available (JavaScript)
+        if(!file_exists($dir = Config::get('assetprocessor::cache.external') . '/js'))
+        {
+            // It doesn't, so make the folder
+            mkdir($dir, 0777, true);
+        }
     }
 }
