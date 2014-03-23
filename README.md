@@ -117,13 +117,54 @@ The only other configuration values that one generally needs to be aware of are 
 
 Any environments that are set up in the `'environments'` section will automatically have all assets processed on them.  Any other environments will only process the files that need pre-processing (i.e. LESS, SASS and CoffeeScript) in order to be executed.  However, if you want to, you are able to force the processing of all of the files by flipping the `'force'` value to true.
 
-### Adding Assets
+### Adding CDN Assets
+
+Need to use a file that is stored on a Content Delivery Network (CDN)?  No problem!  Just use:
+
+```php
+AssetProcessor::cdn('name', 'http://full/url/to/cdn')
+```
+
+It will automatically be emitted at the very beginning of the corresponding asset section.
+
+### Adding Local Assets
 
 Adding assets to use is fairly straightforward.  All you need to do is call the following:
 
 ```php
 // Works with both files and directories
 AssetProcessor::add('name', '/path/to/asset/file');
+```
+
+### Asset Auto-Loading
+
+If you know that you need to assets that are automatically loaded on every page (i.e. assets that are core to your layout), then you can use the new section in the configuration file to load them.
+
+```php
+/**
+ * Any assets that should be auto-loaded.
+ * 
+ * @var array
+ */
+'autoload' => array(
+
+    /**
+     * Any CDN-type assets to auto-load
+     * 
+     * @var array
+     */
+    'cdn' => array(
+    ),
+
+    /**
+     * Any local assets that will need processing.
+     * 
+     * @var array
+     */
+    'local' => array(
+    ),
+),
+
 ```
 
 ### Emitting Assets
@@ -156,6 +197,21 @@ This will make the asset file provided only available in that asset group.  To r
 Once an asset file is generated (for the last time), the file name it is given is a hash of the actual contents of the file.  This means that if the contents change, so does the file name.  Because of this, it will automatically force the browser to read the new asset instead of the old file (eliminating the need to have users to refresh cache).
 
 Each step of the processing is also cached in order to help to reduce the overhead of regenerating the files.  This means that the file is only read IF the actual asset file has changed.
+
+### External-Access File Caching
+
+There were a few minor performance issues if you were to retrieve assets through the controller (caused by the fact that Laravel had to boot up), so now Asset Processor will be able to push files out into the web root (assuming you give the folder the proper permissions).  This will mean your pages will load a lot faster!
+
+By default it writes to: `public_path('assets/generated')` however, you are able to modify this in the `'cache'` section of your configuration file.
+
+```php
+/**
+ * The external path that is the final resting spot for the assets.
+ * 
+ * @var string
+ */
+'external' => public_path('assets/generated'),
+```
 
 ### File Pre-Processing
 
@@ -237,3 +293,7 @@ Any issues, please [report here](https://github.com/awjudd/l4-assetprocessor/iss
  - CDN Support - You are now able to used the `AssetProcessor::cdn()` function in order to use a CDN instead of relying on the actual asset processor for everything
   - This section will automatically be emitted if it exists and you call the `AssetProcessor::scripts()` or `AssetProcessor::styles()` function with it's default values
  - Added a configuration value `'file.error-on-missing-group'` to allow you to bypass the error message if there is a missing asset group requested
+
+1.0.7:
+ - Asset Auto-Loading - added in a new section to the config file which will allow you to specify any CDN/local assets to auto-load (cleans up your BaseController)
+ - Asset Caching - added in the ability to have the assets available outside of your actual application, this will allow you to have assets available without booting up Laravel
