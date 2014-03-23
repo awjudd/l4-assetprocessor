@@ -416,6 +416,12 @@ class AssetProcessor
                 {
                     $asset = $external . '/' . $type . '/' . $file;
 
+                    // Make a copy of the file with the proper extension
+                    copy($asset, $asset . '.' . $type);
+
+                    // Append the file extension
+                    $asset .= '.' . $type;
+
                     // Replace any backslashes with a regular slash (Windows support)
                     $asset = str_replace('\\', '/', str_replace(public_path(), '', $asset));
 
@@ -662,6 +668,11 @@ class AssetProcessor
         }        
     }
 
+    /**
+     * Sets up all of the base directories that the plugin will need to run.
+     * 
+     * @return void
+     */
     private function setupDirectories()
     {
         // Check if the internal directory is present
