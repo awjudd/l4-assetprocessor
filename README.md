@@ -293,7 +293,5 @@ Any issues, please [report here](https://github.com/awjudd/l4-assetprocessor/iss
  - CDN Support - You are now able to used the `AssetProcessor::cdn()` function in order to use a CDN instead of relying on the actual asset processor for everything
   - This section will automatically be emitted if it exists and you call the `AssetProcessor::scripts()` or `AssetProcessor::styles()` function with it's default values
  - Added a configuration value `'file.error-on-missing-group'` to allow you to bypass the error message if there is a missing asset group requested
-
-1.0.7:
  - Asset Auto-Loading - added in a new section to the config file which will allow you to specify any CDN/local assets to auto-load (cleans up your BaseController)
  - Asset Caching - added in the ability to have the assets available outside of your actual application, this will allow you to have assets available without booting up Laravel
