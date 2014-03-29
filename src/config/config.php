@@ -120,8 +120,8 @@ return array(
         /**
          * Should we be using a single file for each asset, or multiple?
          * 
-         * @var boolean true - one file per provided source file
-         *              false - combine all of the same-type of asset files together
+         * @var boolean true - combine all of the same-type of asset files together
+         *              false - one file per provided source file
          */
         'singular' => true,
     ),
