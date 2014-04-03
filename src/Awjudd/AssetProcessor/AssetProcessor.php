@@ -190,8 +190,11 @@ class AssetProcessor
                 // Check if the file was processed
                 if($file_to_process != $file->getRealPath())
                 {
+                    // Derive the new file name
+                    $output = md5(file_get_contents($file_to_process));
+
                     // It was, so add it to the base folder
-                    $dest_path = Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
+                    $dest_path = Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . $output;
 
                     // Copy the file over
                     copy($file_to_process, $dest_path);
