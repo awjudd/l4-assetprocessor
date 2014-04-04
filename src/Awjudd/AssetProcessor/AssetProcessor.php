@@ -215,6 +215,9 @@ class AssetProcessor
                     {
                         // Otherwise, just read the metadata file
                         $file_to_process = file_get_contents($metadata);
+
+                        // Touch the file, so we know it's active
+                        touch($metadata);
                     }
 
                 }
@@ -246,6 +249,11 @@ class AssetProcessor
                 {
                     // Copy the file over
                     copy($source, $destination);
+                }
+                else
+                {
+                    // If the file did exist, and nothing has changed, just touch it
+                    touch($destination);
                 }
 
                 // Overwrite the path (only if it is a public URL)
