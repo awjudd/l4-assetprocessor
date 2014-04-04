@@ -190,17 +190,33 @@ class AssetProcessor
                 // Check if the file was processed
                 if($file_to_process != $file->getRealPath())
                 {
-                    // Derive the new file name
-                    $output = md5(file_get_contents($file_to_process));
+                    // Build the metadata file name
+                    $metadata = dirname($file_to_process) . '/metadata';
 
-                    // It was, so add it to the base folder
-                    $dest_path = Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . $output;
+                    // Does the file exist?
+                    if(!file_exists($metadata) || (file_exists($metadata) && filemtime($metadata) < filemtime($file_to_process)))
+                    {
+                        // Derive the new file name
+                        $output = md5(file_get_contents($file_to_process));
 
-                    // Copy the file over
-                    copy($file_to_process, $dest_path);
+                        // Write out the metadata file for next time
+                        file_put_contents($metadata, $output);
 
-                    // Grab the file name to add to our asset list
-                    $file_to_process = basename($dest_path);
+                        // It was, so add it to the base folder
+                        $dest_path = Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . $output;
+
+                        // Copy the file over
+                        copy($file_to_process, $dest_path);
+
+                        // Grab the file name to add to our asset list
+                        $file_to_process = basename($dest_path);
+                    }
+                    else
+                    {
+                        // Otherwise, just read the metadata file
+                        $file_to_process = file_get_contents($metadata);
+                    }
+
                 }
                 // Check if we need to generate a files
                 else if($file_to_process == $file->getRealPath() && $generateFile)
@@ -225,8 +241,12 @@ class AssetProcessor
                 // Derive the destination path
                 $destination = Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory')) . '/' . $assetType . '/' . basename($file_to_process) . '.' . $assetType;
 
-                // Copy the file over
-                copy($source, $destination);
+                // Was the final resting spot written later than the regular file?
+                if(!file_exists($destination) || (filemtime($source) < filemtime($destination)))
+                {
+                    // Copy the file over
+                    copy($source, $destination);
+                }
 
                 // Overwrite the path (only if it is a public URL)
                 if(Str::contains($destination, public_path()))
