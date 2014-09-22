@@ -1,10 +1,10 @@
-Laravel 4.1 - Asset Processor
+Laravel 5 - Asset Processor
 ========
 
 [![Build Status](https://api.travis-ci.org/awjudd/l4-assetprocessor.png)](https://travis-ci.org/awjudd/l4-assetprocessor)
 [![ProjectStatus](http://stillmaintained.com/awjudd/l4-assetprocessor.png)](http://stillmaintained.com/awjudd/l4-assetprocessor)
 
-A quick and easy way to manage and process assets in **Laravel 4**
+A quick and easy way to manage and process assets in **Laravel 5**
 
 ## Features
 
@@ -45,6 +45,7 @@ In your `config/app.php` add `'Awjudd\AssetProcessor\AssetProcessorServiceProvid
     'Illuminate\Foundation\Providers\ArtisanServiceProvider',
     'Illuminate\Auth\AuthServiceProvider',
     ...
+    'Illuminate\Html\HtmlServiceProvider',
     'Awjudd\AssetProcessor\AssetProcessorServiceProvider',
 
 ),
@@ -59,6 +60,7 @@ Also update `aliases` part of the `config/app.php` to include `'Awjudd\AssetProc
     'Artisan'         => 'Illuminate\Support\Facades\Artisan',
     ...
 
+    'HTML'      => 'Illuminate\Html\HtmlFacade',
     // To make this line, and your code even shorter, you could alias this to 'Asset' instead.
     'AssetProcessor'  => 'Awjudd\AssetProcessor\Facades\AssetProcessorFacade',
     
@@ -172,8 +174,8 @@ If you know that you need to assets that are automatically loaded on every page 
 This will then automatically add in and determine the type of the file that was just loaded.  Once all of your assets are loaded into the plugin, in order to emit them to the browser (with the appropriate tags) you will need to call the following (in your view):
 
 ```php
-{{ AssetProcessor::styles() }}
-{{ AssetProcessor::scripts() }}
+{!! AssetProcessor::styles() !!}
+{!! AssetProcessor::scripts() !!}
 ```
 
 ### Asset Groups
@@ -187,7 +189,7 @@ AssetProcessor::add('name', '/path/to/asset/file', ['group' => 'foo']);
 This will make the asset file provided only available in that asset group.  To retrieve the asset, you will need to do the following (assuming the file was a CSS file)s:
 
 ```php
-{{ AssetProcessor::styles('foo') }}
+{!! AssetProcessor::styles('foo') !!}
 ```
 
 ### File Caching
