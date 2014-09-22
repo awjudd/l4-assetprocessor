@@ -1,6 +1,6 @@
 {
     "name": "awjudd/assetprocessor",
-    "description": "A quick and easy way to managing and processing assets in Laravel 4",
+    "description": "A quick and easy way to managing and processing assets in Laravel 5",
     "authors": [
         {
             "name": "Andrew Judd",
@@ -21,7 +21,8 @@
     "license": "MIT",
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": ">=4.1",
+        "illuminate/support": "~5",
+        "illuminate/html": "~5",
         "leafo/lessphp": "0.4.0",
         "leafo/scssphp": "0.0.8",
         "werkint/jsmin": "1.0.0",

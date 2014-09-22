@@ -8,7 +8,7 @@ use HTML;
 use URL;
 use Lang;
 use SplFileInfo;
-use Str;
+use Illuminate\Support\Str;
 
 class AssetProcessor
 {
@@ -17,7 +17,7 @@ class AssetProcessor
      * 
      * @var array
      */
-    protected $processors = array();
+    protected $processors = [];
 
     /**
      * An array that will map all of the associated extensions to a specific
@@ -25,7 +25,7 @@ class AssetProcessor
      * 
      * @var array
      */
-    private $extensionMapping = array();
+    private $extensionMapping = [];
 
     /**
      * Whether or not processing is enabled for the packages.
@@ -39,14 +39,14 @@ class AssetProcessor
      * 
      * @var array
      */
-    private $files = array();
+    private $files = [];
 
     /**
      * Which asset types have had the CDN retrieved for it?
      * 
      * @var array
      */
-    private $cdnRetrieved = array();
+    private $cdnRetrieved = [];
 
     /**
      * Returns the base storage folder for any files.
