@@ -15,6 +15,16 @@ class AssetProcessorServiceProvider extends ServiceProvider
     protected $defer = false;
 
     /**
+     * Bootstrap the service provider.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->package('awjudd/assetprocessor');
+    }
+
+    /**
      * Register the service provider.
      *
      * @return void
