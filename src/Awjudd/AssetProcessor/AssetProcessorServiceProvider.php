@@ -21,7 +21,7 @@ class AssetProcessorServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->package('awjudd/assetprocessor');
+        $this->registerConfiguration();
     }
 
     /**
@@ -85,4 +85,18 @@ class AssetProcessorServiceProvider extends ServiceProvider
         );
     }
 
+    /**
+     * Register configuration files, with L5 fallback
+     */
+    protected function registerConfiguration()
+    {
+        // Is it possible to register the config?
+        if (method_exists($this->app['config'], 'package')) {
+            $this->app['config']->package('awjudd/assetprocessor', __DIR__ . '/config');
+        } else {
+            // Load the config for now..
+            $config = $this->app['files']->getRequire(__DIR__ .'/config/config.php');
+            $this->app['config']->set('assetprocessor::config', $config);
+        }
+    }
 }
