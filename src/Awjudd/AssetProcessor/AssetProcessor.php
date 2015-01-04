@@ -55,7 +55,7 @@ class AssetProcessor
      */
     public static function storageFolder()
     {
-        return Config::get('assetprocessor::cache.directory') . '/';
+        return Config::get('assetprocessor::config.cache.directory') . '/';
     }
 
 
@@ -93,7 +93,7 @@ class AssetProcessor
         }
 
         // Grab the CDN group
-        $group = Config::get('assetprocessor::attributes.group.cdn', 'cdn');
+        $group = Config::get('assetprocessor::config.attributes.group.cdn', 'cdn');
 
         // Add the asset type
         $this->files[$type][$group][$name] = $url;
@@ -118,7 +118,7 @@ class AssetProcessor
         }
 
         // Figure out which asset group we are in
-        $group = isset($attributes['group']) ? $attributes['group'] : Config::get('assetprocessor::attributes.group.default');
+        $group = isset($attributes['group']) ? $attributes['group'] : Config::get('assetprocessor::config.attributes.group.default');
 
         // Grab the file information
         $file = new SplFileInfo($filename);
@@ -170,7 +170,7 @@ class AssetProcessor
                         throw new Exception(Lang::get('assetprocessor::errors.asset.different-asset-types', array('file' => $file_to_process)));
                     }
                     // Was there a duplicate name, and we are erroring
-                    else if(isset($this->files[$assetType][$name]) && Config::get('assetprocessor::file.error-on-duplicate-name', false))
+                    else if(isset($this->files[$assetType][$name]) && Config::get('assetprocessor::config.file.error-on-duplicate-name', false))
                     {
                         // We are erroring because of the duplicate name, so throw an exception
                         throw new Exception(Lang::get('assetprocessor::errors.asset.duplicate-name', array('name' => $name)));
@@ -203,7 +203,7 @@ class AssetProcessor
                         file_put_contents($metadata, $output);
 
                         // It was, so add it to the base folder
-                        $dest_path = Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . $output;
+                        $dest_path = Config::get('assetprocessor::config.cache.directory') . '/' . $assetType . '/' . $output;
 
                         // Copy the file over
                         copy($file_to_process, $dest_path);
@@ -236,13 +236,13 @@ class AssetProcessor
             }
 
             // Does the final location for the file match the current path?
-            if(Config::get('assetprocessor::cache.directory') != Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory')))
+            if(Config::get('assetprocessor::config.cache.directory') != Config::get('assetprocessor::config.cache.external', Config::get('assetprocessor::config.cache.directory')))
             {
                 // Derive the source path
-                $source = Config::get('assetprocessor::cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
+                $source = Config::get('assetprocessor::config.cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
 
                 // Derive the destination path
-                $destination = Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory')) . '/' . $assetType . '/' . basename($file_to_process) . '.' . $assetType;
+                $destination = Config::get('assetprocessor::config.cache.external', Config::get('assetprocessor::config.cache.directory')) . '/' . $assetType . '/' . basename($file_to_process) . '.' . $assetType;
 
                 // Was the final resting spot written later than the regular file?
                 if(!file_exists($destination) || (filemtime($source) < filemtime($destination)))
@@ -336,10 +336,10 @@ class AssetProcessor
         if($group === NULL)
         {
             // It wasn't so default it
-            $group = Config::get('assetprocessor::attributes.group.default');
+            $group = Config::get('assetprocessor::config.attributes.group.default');
 
             // Grab the group name for the CDN
-            $cdn = Config::get('assetprocessor::attributes.group.cdn');
+            $cdn = Config::get('assetprocessor::config.attributes.group.cdn');
 
             // Check if the CDN group is set
             if(isset($this->files[$type][$cdn]) && !in_array($type, $this->cdnRetrieved))
@@ -355,7 +355,7 @@ class AssetProcessor
         // Check if the group exists
         if(!isset($this->files[$type][$group]))
         {
-            if(Config::get('assetprocessor::file.error-on-missing-group', true))
+            if(Config::get('assetprocessor::config.file.error-on-missing-group', true))
             {
                 // It doesn't so give them an error
                 throw new Exception(Lang::get('assetprocessor::errors.asset.asset-group-not-found', array(
@@ -368,7 +368,7 @@ class AssetProcessor
         }
 
         // Are we looking at CDNs?
-        if($group == Config::get('assetprocessor::attributes.group.cdn'))
+        if($group == Config::get('assetprocessor::config.attributes.group.cdn'))
         {
             // Loop through all of the files and spit out the link
             foreach($this->files[$type][$group] as $file)
@@ -390,10 +390,10 @@ class AssetProcessor
         }
 
         // The controller and method that will be used to emit the processed files
-        $controller = Config::get('assetprocessor::controller.name') . '@' . Config::get('assetprocessor::controller.method');
+        $controller = Config::get('assetprocessor::config.controller.name') . '@' . Config::get('assetprocessor::config.controller.method');
 
         // Are we needing a single file?
-        if(Config::get('assetprocessor::cache.singular') && $this->processingEnabled)
+        if(Config::get('assetprocessor::config.cache.singular') && $this->processingEnabled)
         {
             $assets = $this->files[$type][$group];
 
@@ -439,7 +439,7 @@ class AssetProcessor
             {
                 // There was more than one file, so we need to combine them all
                 // into one file
-                $external = Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory'));
+                $external = Config::get('assetprocessor::config.cache.external', Config::get('assetprocessor::config.cache.directory'));
                 $file = $this->generateSingularFile($type, $group, $external);
 
                 // Check if the asset is internal
@@ -537,7 +537,7 @@ class AssetProcessor
     private function deriveProcessingEnabled()
     {
         // Are they forcing it to be enabled?
-        if(Config::get('assetprocessor::enabled.force', false))
+        if(Config::get('assetprocessor::config.enabled.force', false))
         {
             // It was forced, so enable it
             $this->processingEnabled = true;
@@ -546,7 +546,7 @@ class AssetProcessor
         {
             // Otherwise derive it based on the environment that we are in
             $this->processingEnabled = in_array(App::environment()
-                    , Config::get('assetprocessor::enabled.environments', array())
+                    , Config::get('assetprocessor::config.enabled.environments', array())
                 );
         }
     }
@@ -560,10 +560,10 @@ class AssetProcessor
     private function setupLibraries()
     {
         // Get the list of processors
-        $processors = Config::get('assetprocessor::processors.types', array());
+        $processors = Config::get('assetprocessor::config.processors.types', array());
 
         // Grab the interface we should be implementing
-        $interface = Config::get('assetprocessor::processors.interface');
+        $interface = Config::get('assetprocessor::config.processors.interface');
 
         // Iterate through the list
         foreach($processors as $name => $class)
@@ -685,14 +685,14 @@ class AssetProcessor
     private function autoLoadAssets()
     {
         // Add in the CDN-typed assets
-        foreach(Config::get('assetprocessor::autoload.cdn', array()) as $asset)
+        foreach(Config::get('assetprocessor::config.autoload.cdn', array()) as $asset)
         {
             // Add in the asset
             self::cdn($asset, $asset);
         }
 
         // Add in the local assets
-        foreach(Config::get('assetprocessor::autoload.local', array()) as $asset)
+        foreach(Config::get('assetprocessor::config.autoload.local', array()) as $asset)
         {
             // Add in the asset
             self::add($asset, $asset);
@@ -707,28 +707,28 @@ class AssetProcessor
     private function setupDirectories()
     {
         // Check if the internal directory is present
-        if(!file_exists($dir = Config::get('assetprocessor::cache.directory')))
+        if(!file_exists($dir = Config::get('assetprocessor::config.cache.directory')))
         {
             // It doesn't, so make the folder
             mkdir($dir, 0777, true);
         }
 
         // Check if the external directory is available
-        if(!file_exists($dir = Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory'))))
+        if(!file_exists($dir = Config::get('assetprocessor::config.cache.external', Config::get('assetprocessor::config.cache.directory'))))
         {
             // It doesn't, so make the folder
             mkdir($dir, 0777, true);
         }
 
         // Check if the external directory is available (CSS)
-        if(!file_exists($dir = Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory')) . '/css'))
+        if(!file_exists($dir = Config::get('assetprocessor::config.cache.external', Config::get('assetprocessor::config.cache.directory')) . '/css'))
         {
             // It doesn't, so make the folder
             mkdir($dir, 0777, true);
         }
 
         // Check if the external directory is available (JavaScript)
-        if(!file_exists($dir = Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory')) . '/js'))
+        if(!file_exists($dir = Config::get('assetprocessor::config.cache.external', Config::get('assetprocessor::config.cache.directory')) . '/js'))
         {
             // It doesn't, so make the folder
             mkdir($dir, 0777, true);
