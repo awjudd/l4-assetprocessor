@@ -76,7 +76,7 @@ This plugin uses the storage folder fairly heavily while processing the assets, 
 To add this in, add the following line of code to your `routes.php` file.
 
 ```php
-Route::get('/assets/{type}/{name}', \Config::get('assetprocessor::controller.name') . '@' . \Config::get('assetprocessor::controller.method'));
+Route::get('/assets/{type}/{name}', \Config::get('assetprocessor::config.controller.name') . '@' . \Config::get('assetprocessor::config.controller.method'));
 ```
 
 ### Publishing the Configuration

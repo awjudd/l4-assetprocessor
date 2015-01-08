@@ -46,10 +46,10 @@ class CleanupCommand extends Command
     public function fire()
     {
         // Remove the files from the cache directory
-        $this->removeFiles($this->buildFileList(Config::get('assetprocessor::cache.directory')));
+        $this->removeFiles($this->buildFileList(Config::get('assetprocessor::config.cache.directory')));
 
         // Remove the files from the external directory
-        $this->removeFiles($this->buildFileList(Config::get('assetprocessor::cache.external')));
+        $this->removeFiles($this->buildFileList(Config::get('assetprocessor::config.cache.external')));
         
     }
 

@@ -26,7 +26,7 @@ class AssetProcessorController extends Controller
             }
 
             // It was valid, so verify the file name
-            $filename = Config::get('assetprocessor::cache.external', Config::get('assetprocessor::cache.directory')) . '/' . $type . '/' . $name;
+            $filename = Config::get('assetprocessor::cache.external', Config::get('assetprocessor::config.cache.directory')) . '/' . $type . '/' . $name;
 
             // Check that it exists
             if(!file_exists($filename))
@@ -57,7 +57,7 @@ class AssetProcessorController extends Controller
         }
         else
         {
-            throw new Exception(Lang::get('assetprocessor::errors.controller.invalid-type', array('type' => $type)));
+            throw new Exception(Lang::get('assetprocessor::config.errors.controller.invalid-type', array('type' => $type)));
         }
     }
 }
