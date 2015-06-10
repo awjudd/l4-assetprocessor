@@ -412,6 +412,9 @@ class AssetProcessor
                             break;
                     }
                 }
+
+                // We are done here, so skip to the next iteration
+                continue;
             }
 
             // Are we needing a single file?
