@@ -1,7 +1,6 @@
 <?php namespace Awjudd\AssetProcessor\Commands;
 
 use AssetProcessor;
-use Config;
 use DirectoryIterator;
 
 use AwjuddAssetProcessorAssetProcessor;
@@ -34,7 +33,13 @@ class CleanupCommand extends Command
         $app = app();
 
         return array(
-            array('duration', '-d', InputOption::VALUE_OPTIONAL, 'The length of time (in seconds) that a file needs to be left untouched prior to deleting.', Config::get('assetprocessor::cache.duration')),
+            array(
+                'duration',
+                '-d',
+                InputOption::VALUE_OPTIONAL,
+                'The length of time (in seconds) that a file needs to be left untouched prior to deleting.',
+                config('assetprocessor.duration')
+            ),
         );
     }
 
@@ -46,10 +51,10 @@ class CleanupCommand extends Command
     public function fire()
     {
         // Remove the files from the cache directory
-        $this->removeFiles($this->buildFileList(Config::get('assetprocessor::config.cache.directory')));
+        $this->removeFiles($this->buildFileList(config('assetprocessor.cache.directory')));
 
         // Remove the files from the external directory
-        $this->removeFiles($this->buildFileList(Config::get('assetprocessor::config.cache.external')));
+        $this->removeFiles($this->buildFileList(config('assetprocessor.cache.external')));
         
     }
 
