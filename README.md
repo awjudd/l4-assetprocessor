@@ -28,7 +28,7 @@ A quick and easy way to manage and process assets in **Laravel 5**
 In the `require` key of `composer.json` file add the following
 
 ```json
-"awjudd/assetprocessor": "1.2.*"
+"awjudd/assetprocessor": "1.3.*"
 ```
 
 Run the Composer update command
@@ -289,8 +289,11 @@ Any issues, please [report here](https://github.com/awjudd/l4-assetprocessor/iss
  - Asset Caching - added in the ability to have the assets available outside of your actual application, this will allow you to have assets available without booting up Laravel
 
 1.1.0
- - Laravel 5 Support
+ - Laravel 4.1 Support
 
 1.2.0
+ - Laravel 5 Support
+
+1.3.0
  - More Laravel 5 Support
  - Adding in more flexibility with asset groups so that now you can group the commonly used assets together
