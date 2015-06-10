@@ -31,10 +31,15 @@ class AssetProcessorServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // Merge the configurations
+         $this->mergeConfigFrom(
+            __DIR__.'/../../../config/assetprocessor.php', 'assetprocessor'
+        );
+
         // Register the application bindings
         $this->registerBindings();
 
-        // Register the artisan commenads
+        // Register the artisan commands
         $this->registerCommands();
     }
 
@@ -90,25 +95,8 @@ class AssetProcessorServiceProvider extends ServiceProvider
      */
     protected function registerConfiguration()
     {
-        // Is it possible to register the config?
-        if(method_exists($this->app['config'], 'package'))
-        {
-            $this->app['config']->package('awjudd/assetprocessor', __DIR__ . '/../../config');
-        }
-        else
-        {
-            // Derive the full path to the user's config
-            $userConfig = app()->configPath() . '/packages/awjudd/assetprocessor/config.php';
-
-            // Check if the user-configuration exists
-            if(!file_exists($userConfig))
-            {
-                $userConfig = __DIR__ .'/../../config/config.php';
-            }
-
-            // Load the config for now..
-            $config = $this->app['files']->getRequire($userConfig);
-            $this->app['config']->set('assetprocessor::config', $config);
-        }
+        $this->publishes([
+            __DIR__.'/../../../config/assetprocessor.php' => config_path('assetprocessor.php'),
+        ]);
     }
 }

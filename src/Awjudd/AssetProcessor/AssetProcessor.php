@@ -1,10 +1,9 @@
 <?php namespace Awjudd\AssetProcessor;
 
 use App;
-use Config;
 use DirectoryIterator;
 use Exception;
-use HTML;
+use Html;
 use URL;
 use Lang;
 use SplFileInfo;
@@ -49,13 +48,20 @@ class AssetProcessor
     private $cdnRetrieved = [];
 
     /**
+     * What is the current group that we are on?
+     * 
+     * @var string
+     */
+    private $currentGroup = null;
+
+    /**
      * Returns the base storage folder for any files.
      * 
      * @return string
      */
     public static function storageFolder()
     {
-        return Config::get('assetprocessor::config.cache.directory') . '/';
+        return config('assetprocessor.cache.directory') . '/';
     }
 
 
@@ -72,6 +78,28 @@ class AssetProcessor
 
         // Auto-load any of the assets that were specified
         $this->autoLoadAssets();
+    }
+
+    /**
+     * Sets the current group that we are on
+     * 
+     * @param string $group
+     */
+    public function setGroup($group)
+    {
+        $this->currentGroup = $group;
+    }
+
+    /**
+     * Retrieves the group that the user is currently looking at.
+     * 
+     * @return string
+     */
+    public function getGroup()
+    {
+        return $this->currentGroup === null 
+                    ? config('assetprocessor.attributes.group.default')
+                    : $this->currentGroup;
     }
 
     /**
@@ -93,7 +121,7 @@ class AssetProcessor
         }
 
         // Grab the CDN group
-        $group = Config::get('assetprocessor::config.attributes.group.cdn', 'cdn');
+        $group = config('assetprocessor.attributes.group.cdn', 'cdn');
 
         // Add the asset type
         $this->files[$type][$group][$name] = $url;
@@ -118,7 +146,7 @@ class AssetProcessor
         }
 
         // Figure out which asset group we are in
-        $group = isset($attributes['group']) ? $attributes['group'] : Config::get('assetprocessor::config.attributes.group.default');
+        $group = isset($attributes['group']) ? $attributes['group'] : $this->getGroup();
 
         // Grab the file information
         $file = new SplFileInfo($filename);
@@ -170,7 +198,7 @@ class AssetProcessor
                         throw new Exception(Lang::get('assetprocessor::errors.asset.different-asset-types', array('file' => $file_to_process)));
                     }
                     // Was there a duplicate name, and we are erroring
-                    else if(isset($this->files[$assetType][$name]) && Config::get('assetprocessor::config.file.error-on-duplicate-name', false))
+                    else if(isset($this->files[$assetType][$name]) && config('assetprocessor.file.error-on-duplicate-name', false))
                     {
                         // We are erroring because of the duplicate name, so throw an exception
                         throw new Exception(Lang::get('assetprocessor::errors.asset.duplicate-name', array('name' => $name)));
@@ -203,7 +231,7 @@ class AssetProcessor
                         file_put_contents($metadata, $output);
 
                         // It was, so add it to the base folder
-                        $dest_path = Config::get('assetprocessor::config.cache.directory') . '/' . $assetType . '/' . $output;
+                        $dest_path = config('assetprocessor.cache.directory') . '/' . $assetType . '/' . $output;
 
                         // Copy the file over
                         copy($file_to_process, $dest_path);
@@ -236,13 +264,13 @@ class AssetProcessor
             }
 
             // Does the final location for the file match the current path?
-            if(Config::get('assetprocessor::config.cache.directory') != Config::get('assetprocessor::config.cache.external', Config::get('assetprocessor::config.cache.directory')))
+            if(config('assetprocessor.cache.directory') != config('assetprocessor.cache.external', config('assetprocessor.cache.directory')))
             {
                 // Derive the source path
-                $source = Config::get('assetprocessor::config.cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
+                $source = config('assetprocessor.cache.directory') . '/' . $assetType . '/' . basename($file_to_process);
 
                 // Derive the destination path
-                $destination = Config::get('assetprocessor::config.cache.external', Config::get('assetprocessor::config.cache.directory')) . '/' . $assetType . '/' . basename($file_to_process) . '.' . $assetType;
+                $destination = config('assetprocessor.cache.external', config('assetprocessor.cache.directory')) . '/' . $assetType . '/' . basename($file_to_process) . '.' . $assetType;
 
                 // Was the final resting spot written later than the regular file?
                 if(!file_exists($destination) || (filemtime($source) < filemtime($destination)))
@@ -269,6 +297,7 @@ class AssetProcessor
      * Used to retrieve a single string which will contain all styles that are
      * needed for your application.
      * 
+     * @param $group boolean|string The group that we are looking for
      * @return string
      * @throws Exception
      */
@@ -281,6 +310,7 @@ class AssetProcessor
      * Used to retrieve a single string which will contain all JavaScript that are
      * needed for your application.
      * 
+     * @param $group boolean|string The group that we are looking for
      * @return string
      * @throws Exception
      */
@@ -332,198 +362,196 @@ class AssetProcessor
         // The string which will be emitted with all of the information
         $output = '';
 
+        // The groups we will be loading
+        $groups = array();
+
         // Check if the group is provided
         if($group === NULL)
         {
-            // It wasn't so default it
-            $group = Config::get('assetprocessor::config.attributes.group.default');
-
-            // Grab the group name for the CDN
-            $cdn = Config::get('assetprocessor::config.attributes.group.cdn');
-
-            // Check if the CDN group is set
-            if(isset($this->files[$type][$cdn]) && !in_array($type, $this->cdnRetrieved))
-            {
-                // No asset group, so check if there is a CDN, and add it in
-                $output .= $this->retrieve($type, $cdn);
-
-                // Mark the CDN as retrieved
-                $this->cdnRetrieved[] = $type;
-            }
+            // No groups were specified, so dump all of them
+            $groups = array_keys($this->files[$type]);
+        }
+        else
+        {
+            // There was a group specified, so only do the one
+            $groups[] = $group;
         }
 
-        // Check if the group exists
-        if(!isset($this->files[$type][$group]))
+        foreach($groups as $group)
         {
-            if(Config::get('assetprocessor::config.file.error-on-missing-group', true))
+            // Check if the group exists
+            if(!isset($this->files[$type][$group]))
             {
-                // It doesn't so give them an error
-                throw new Exception(Lang::get('assetprocessor::errors.asset.asset-group-not-found', array(
-                        'type' => $type,
-                        'group' => $group,
-                    )));
-            }
-            
-            return $output;
-        }
-
-        // Are we looking at CDNs?
-        if($group == Config::get('assetprocessor::config.attributes.group.cdn'))
-        {
-            // Loop through all of the files and spit out the link
-            foreach($this->files[$type][$group] as $file)
-            {
-                // Add in a bypass since there is no point in re-processing the file
-                switch($type)
+                if(config('assetprocessor.file.error-on-missing-group', true))
                 {
-                    case 'js':
-                        $output .= HTML::script($file);
-                        break;
-                    case 'css':
-                        $output .= HTML::style($file);
-                        break;
+                    // It doesn't so give them an error
+                    throw new Exception(Lang::get('assetprocessor::errors.asset.asset-group-not-found', array(
+                            'type' => $type,
+                            'group' => $group,
+                        )));
                 }
+                
+                return $output;
             }
 
-            // CDN support is done, so return
-            return $output;
-        }
-
-        // The controller and method that will be used to emit the processed files
-        $controller = Config::get('assetprocessor::config.controller.name') . '@' . Config::get('assetprocessor::config.controller.method');
-
-        // Are we needing a single file?
-        if(Config::get('assetprocessor::config.cache.singular') && $this->processingEnabled)
-        {
-            $assets = $this->files[$type][$group];
-
-            // We only want a single file per type, so combine all of them together
-            if(count($assets) == 1)
+            // Are we looking at CDNs?
+            if($group == config('assetprocessor.attributes.group.cdn'))
             {
-                // There is only one, so just grab it
-                $asset = current($assets);
-
-                // Check if the asset is internal
-                if(Str::contains($asset, public_path()))
-                {
-                    // Replace any backslashes with a regular slash (Windows support)
-                    $asset = str_replace('\\', '/', str_replace(public_path(), '', $asset));
-
-                    // It is external, so just emit it
-                    // Add in the asset
-                    switch($type)
-                    {
-                        case 'js':
-                            $output .= HTML::script($asset);
-                            break;
-                        case 'css':
-                            $output .= HTML::style($asset);
-                            break;
-                    }
-                }
-                else
+                // Loop through all of the files and spit out the link
+                foreach($this->files[$type][$group] as $file)
                 {
                     // Add in a bypass since there is no point in re-processing the file
                     switch($type)
                     {
                         case 'js':
-                            $output .= HTML::script(URL::action($controller, array($type, $asset)));
+                            $output .= Html::script($file);
                             break;
                         case 'css':
-                            $output .= HTML::style(URL::action($controller, array($type, $asset)));
+                            $output .= Html::style($file);
                             break;
+                    }
+                }
+
+                // CDN support is done, so return
+                return $output;
+            }
+
+            // The controller and method that will be used to emit the processed files
+            $controller = config('assetprocessor.controller.name') . '@' . config('assetprocessor.controller.method');
+
+            // Are we needing a single file?
+            if(config('assetprocessor.cache.singular') && $this->processingEnabled)
+            {
+                $assets = $this->files[$type][$group];
+
+                // We only want a single file per type, so combine all of them together
+                if(count($assets) == 1)
+                {
+                    // There is only one, so just grab it
+                    $asset = current($assets);
+
+                    // Check if the asset is internal
+                    if(Str::contains($asset, public_path()))
+                    {
+                        // Replace any backslashes with a regular slash (Windows support)
+                        $asset = str_replace('\\', '/', str_replace(public_path(), '', $asset));
+
+                        // It is external, so just emit it
+                        // Add in the asset
+                        switch($type)
+                        {
+                            case 'js':
+                                $output .= Html::script($asset);
+                                break;
+                            case 'css':
+                                $output .= Html::style($asset);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        // Add in a bypass since there is no point in re-processing the file
+                        switch($type)
+                        {
+                            case 'js':
+                                $output .= Html::script(URL::action($controller, array($type, $asset)));
+                                break;
+                            case 'css':
+                                $output .= Html::style(URL::action($controller, array($type, $asset)));
+                                break;
+                        }
+                    }
+                }
+                else
+                {
+                    // There was more than one file, so we need to combine them all
+                    // into one file
+                    $external = config('assetprocessor.cache.external', config('assetprocessor.cache.directory'));
+                    $file = $this->generateSingularFile($type, $group, $external);
+
+                    // Check if the asset is internal
+                    if(Str::contains($external, public_path()))
+                    {
+                        $asset = $external . '/' . $type . '/' . $file;
+
+                        // Make a copy of the file with the proper extension
+                        copy($asset, $asset . '.' . $type);
+
+                        // Append the file extension
+                        $asset .= '.' . $type;
+
+                        // Replace any backslashes with a regular slash (Windows support)
+                        $asset = str_replace('\\', '/', str_replace(public_path(), '', $asset));
+
+                        // It is external, so just emit it
+                        // Add in the asset
+                        switch($type)
+                        {
+                            case 'js':
+                                $output .= Html::script($asset);
+                                break;
+                            case 'css':
+                                $output .= Html::style($asset);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        // Add in a bypass since there is no point in re-processing the file
+                        switch($type)
+                        {
+                            case 'js':
+                                $output .= Html::script(URL::action($controller, array($type, $file)));
+                                break;
+                            case 'css':
+                                $output .= Html::style(URL::action($controller, array($type, $file)));
+                                break;
+                        }
                     }
                 }
             }
             else
             {
-                // There was more than one file, so we need to combine them all
-                // into one file
-                $external = Config::get('assetprocessor::config.cache.external', Config::get('assetprocessor::config.cache.directory'));
-                $file = $this->generateSingularFile($type, $group, $external);
-
-                // Check if the asset is internal
-                if(Str::contains($external, public_path()))
+                // We want several files for each, so return each.
+                foreach($this->files[$type][$group] as $file)
                 {
-                    $asset = $external . '/' . $type . '/' . $file;
-
-                    // Make a copy of the file with the proper extension
-                    copy($asset, $asset . '.' . $type);
-
-                    // Append the file extension
-                    $asset .= '.' . $type;
-
-                    // Replace any backslashes with a regular slash (Windows support)
-                    $asset = str_replace('\\', '/', str_replace(public_path(), '', $asset));
-
-                    // It is external, so just emit it
-                    // Add in the asset
-                    switch($type)
+                    // Check if the asset is internal
+                    if(Str::contains($file, public_path()))
                     {
-                        case 'js':
-                            $output .= HTML::script($asset);
-                            break;
-                        case 'css':
-                            $output .= HTML::style($asset);
-                            break;
-                    }
-                }
-                else
-                {
-                    // Add in a bypass since there is no point in re-processing the file
-                    switch($type)
-                    {
-                        case 'js':
-                            $output .= HTML::script(URL::action($controller, array($type, $file)));
-                            break;
-                        case 'css':
-                            $output .= HTML::style(URL::action($controller, array($type, $file)));
-                            break;
-                    }
-                }
-            }
-        }
-        else
-        {
-            // We want several files for each, so return each.
-            foreach($this->files[$type][$group] as $file)
-            {
-                // Check if the asset is internal
-                if(Str::contains($file, public_path()))
-                {
-                    // Replace any backslashes with a regular slash (Windows support)
-                    $asset = str_replace('\\', '/', str_replace(public_path(), '', $file));
+                        // Replace any backslashes with a regular slash (Windows support)
+                        $asset = str_replace('\\', '/', str_replace(public_path(), '', $file));
 
-                    // It is external, so just emit it
-                    // Add in the asset
-                    switch($type)
-                    {
-                        case 'js':
-                            $output .= HTML::script($asset);
-                            break;
-                        case 'css':
-                            $output .= HTML::style($asset);
-                            break;
+                        // It is external, so just emit it
+                        // Add in the asset
+                        switch($type)
+                        {
+                            case 'js':
+                                $output .= Html::script($asset);
+                                break;
+                            case 'css':
+                                $output .= Html::style($asset);
+                                break;
+                        }
                     }
-                }
-                else
-                {
-                    $actual_name = substr($file, -32);
-
-                    // It is internal, so emit with the asset controller
-                    // Add in the asset
-                    switch($type)
+                    else
                     {
-                        case 'js':
-                            $output .= HTML::script(URL::action($controller, array($type, $actual_name)));
-                            break;
-                        case 'css':
-                            $output .= HTML::style(URL::action($controller, array($type, $actual_name)));
-                            break;
-                    }
-                }
+                        $actual_name = substr($file, -32);
 
-                
+                        // It is internal, so emit with the asset controller
+                        // Add in the asset
+                        switch($type)
+                        {
+                            case 'js':
+                                $output .= Html::script(URL::action($controller, array($type, $actual_name)));
+                                break;
+                            case 'css':
+                                $output .= Html::style(URL::action($controller, array($type, $actual_name)));
+                                break;
+                        }
+                    }
+
+                    
+                }
             }
         }
 
@@ -537,7 +565,7 @@ class AssetProcessor
     private function deriveProcessingEnabled()
     {
         // Are they forcing it to be enabled?
-        if(Config::get('assetprocessor::config.enabled.force', false))
+        if(config('assetprocessor.enabled.force', false))
         {
             // It was forced, so enable it
             $this->processingEnabled = true;
@@ -546,7 +574,7 @@ class AssetProcessor
         {
             // Otherwise derive it based on the environment that we are in
             $this->processingEnabled = in_array(App::environment()
-                    , Config::get('assetprocessor::config.enabled.environments', array())
+                    , config('assetprocessor.enabled.environments', array())
                 );
         }
     }
@@ -560,10 +588,10 @@ class AssetProcessor
     private function setupLibraries()
     {
         // Get the list of processors
-        $processors = Config::get('assetprocessor::config.processors.types', array());
+        $processors = config('assetprocessor.processors.types', array());
 
         // Grab the interface we should be implementing
-        $interface = Config::get('assetprocessor::config.processors.interface');
+        $interface = config('assetprocessor.processors.interface');
 
         // Iterate through the list
         foreach($processors as $name => $class)
@@ -685,14 +713,14 @@ class AssetProcessor
     private function autoLoadAssets()
     {
         // Add in the CDN-typed assets
-        foreach(Config::get('assetprocessor::config.autoload.cdn', array()) as $asset)
+        foreach(config('assetprocessor.autoload.cdn', array()) as $asset)
         {
             // Add in the asset
             self::cdn($asset, $asset);
         }
 
         // Add in the local assets
-        foreach(Config::get('assetprocessor::config.autoload.local', array()) as $asset)
+        foreach(config('assetprocessor.autoload.local', array()) as $asset)
         {
             // Add in the asset
             self::add($asset, $asset);
@@ -707,28 +735,28 @@ class AssetProcessor
     private function setupDirectories()
     {
         // Check if the internal directory is present
-        if(!file_exists($dir = Config::get('assetprocessor::config.cache.directory')))
+        if(!file_exists($dir = config('assetprocessor.cache.directory')))
         {
             // It doesn't, so make the folder
             mkdir($dir, 0777, true);
         }
 
         // Check if the external directory is available
-        if(!file_exists($dir = Config::get('assetprocessor::config.cache.external', Config::get('assetprocessor::config.cache.directory'))))
+        if(!file_exists($dir = config('assetprocessor.cache.external', config('assetprocessor.cache.directory'))))
         {
             // It doesn't, so make the folder
             mkdir($dir, 0777, true);
         }
 
         // Check if the external directory is available (CSS)
-        if(!file_exists($dir = Config::get('assetprocessor::config.cache.external', Config::get('assetprocessor::config.cache.directory')) . '/css'))
+        if(!file_exists($dir = config('assetprocessor.cache.external', config('assetprocessor.cache.directory')) . '/css'))
         {
             // It doesn't, so make the folder
             mkdir($dir, 0777, true);
         }
 
         // Check if the external directory is available (JavaScript)
-        if(!file_exists($dir = Config::get('assetprocessor::config.cache.external', Config::get('assetprocessor::config.cache.directory')) . '/js'))
+        if(!file_exists($dir = config('assetprocessor.cache.external', config('assetprocessor.cache.directory')) . '/js'))
         {
             // It doesn't, so make the folder
             mkdir($dir, 0777, true);
