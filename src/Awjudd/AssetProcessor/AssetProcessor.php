@@ -370,6 +370,7 @@ class AssetProcessor
         {
             // No groups were specified, so dump all of them
             $groups = array_keys($this->files[$type]);
+            sort($groups);
         }
         else
         {
@@ -411,13 +412,7 @@ class AssetProcessor
                             break;
                     }
                 }
-
-                // CDN support is done, so return
-                return $output;
             }
-
-            // The controller and method that will be used to emit the processed files
-            $controller = config('assetprocessor.controller.name') . '@' . config('assetprocessor.controller.method');
 
             // Are we needing a single file?
             if(config('assetprocessor.cache.singular') && $this->processingEnabled)
@@ -430,36 +425,19 @@ class AssetProcessor
                     // There is only one, so just grab it
                     $asset = current($assets);
 
-                    // Check if the asset is internal
-                    if(Str::contains($asset, public_path()))
-                    {
-                        // Replace any backslashes with a regular slash (Windows support)
-                        $asset = str_replace('\\', '/', str_replace(public_path(), '', $asset));
+                    // Replace any backslashes with a regular slash (Windows support)
+                    $asset = str_replace('\\', '/', str_replace(public_path(), '', $asset));
 
-                        // It is external, so just emit it
-                        // Add in the asset
-                        switch($type)
-                        {
-                            case 'js':
-                                $output .= Html::script($asset);
-                                break;
-                            case 'css':
-                                $output .= Html::style($asset);
-                                break;
-                        }
-                    }
-                    else
+                    // It is external, so just emit it
+                    // Add in the asset
+                    switch($type)
                     {
-                        // Add in a bypass since there is no point in re-processing the file
-                        switch($type)
-                        {
-                            case 'js':
-                                $output .= Html::script(URL::action($controller, array($type, $asset)));
-                                break;
-                            case 'css':
-                                $output .= Html::style(URL::action($controller, array($type, $asset)));
-                                break;
-                        }
+                        case 'js':
+                            $output .= Html::script($asset);
+                            break;
+                        case 'css':
+                            $output .= Html::style($asset);
+                            break;
                     }
                 }
                 else
@@ -469,44 +447,27 @@ class AssetProcessor
                     $external = config('assetprocessor.cache.external', config('assetprocessor.cache.directory'));
                     $file = $this->generateSingularFile($type, $group, $external);
 
-                    // Check if the asset is internal
-                    if(Str::contains($external, public_path()))
+                    $asset = $external . '/' . $type . '/' . $file;
+
+                    // Make a copy of the file with the proper extension
+                    copy($asset, $asset . '.' . $type);
+
+                    // Append the file extension
+                    $asset .= '.' . $type;
+
+                    // Replace any backslashes with a regular slash (Windows support)
+                    $asset = str_replace('\\', '/', str_replace(public_path(), '', $asset));
+
+                    // It is external, so just emit it
+                    // Add in the asset
+                    switch($type)
                     {
-                        $asset = $external . '/' . $type . '/' . $file;
-
-                        // Make a copy of the file with the proper extension
-                        copy($asset, $asset . '.' . $type);
-
-                        // Append the file extension
-                        $asset .= '.' . $type;
-
-                        // Replace any backslashes with a regular slash (Windows support)
-                        $asset = str_replace('\\', '/', str_replace(public_path(), '', $asset));
-
-                        // It is external, so just emit it
-                        // Add in the asset
-                        switch($type)
-                        {
-                            case 'js':
-                                $output .= Html::script($asset);
-                                break;
-                            case 'css':
-                                $output .= Html::style($asset);
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        // Add in a bypass since there is no point in re-processing the file
-                        switch($type)
-                        {
-                            case 'js':
-                                $output .= Html::script(URL::action($controller, array($type, $file)));
-                                break;
-                            case 'css':
-                                $output .= Html::style(URL::action($controller, array($type, $file)));
-                                break;
-                        }
+                        case 'js':
+                            $output .= Html::script($asset);
+                            break;
+                        case 'css':
+                            $output .= Html::style($asset);
+                            break;
                     }
                 }
             }
@@ -515,42 +476,20 @@ class AssetProcessor
                 // We want several files for each, so return each.
                 foreach($this->files[$type][$group] as $file)
                 {
-                    // Check if the asset is internal
-                    if(Str::contains($file, public_path()))
+                    // Replace any backslashes with a regular slash (Windows support)
+                    $asset = str_replace('\\', '/', str_replace(public_path(), '', $file));
+
+                    // It is external, so just emit it
+                    // Add in the asset
+                    switch($type)
                     {
-                        // Replace any backslashes with a regular slash (Windows support)
-                        $asset = str_replace('\\', '/', str_replace(public_path(), '', $file));
-
-                        // It is external, so just emit it
-                        // Add in the asset
-                        switch($type)
-                        {
-                            case 'js':
-                                $output .= Html::script($asset);
-                                break;
-                            case 'css':
-                                $output .= Html::style($asset);
-                                break;
-                        }
+                        case 'js':
+                            $output .= Html::script($asset);
+                            break;
+                        case 'css':
+                            $output .= Html::style($asset);
+                            break;
                     }
-                    else
-                    {
-                        $actual_name = substr($file, -32);
-
-                        // It is internal, so emit with the asset controller
-                        // Add in the asset
-                        switch($type)
-                        {
-                            case 'js':
-                                $output .= Html::script(URL::action($controller, array($type, $actual_name)));
-                                break;
-                            case 'css':
-                                $output .= Html::style(URL::action($controller, array($type, $actual_name)));
-                                break;
-                        }
-                    }
-
-                    
                 }
             }
         }

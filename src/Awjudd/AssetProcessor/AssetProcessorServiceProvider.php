@@ -33,7 +33,7 @@ class AssetProcessorServiceProvider extends ServiceProvider
     {
         // Merge the configurations
          $this->mergeConfigFrom(
-            __DIR__.'/../../../config/assetprocessor.php', 'assetprocessor'
+            $this->baseConfigurationFile(), 'assetprocessor'
         );
 
         // Register the application bindings
@@ -96,7 +96,12 @@ class AssetProcessorServiceProvider extends ServiceProvider
     protected function registerConfiguration()
     {
         $this->publishes([
-            __DIR__.'/../../../config/assetprocessor.php' => config_path('assetprocessor.php'),
+            $this->baseConfigurationFile() => config_path('assetprocessor.php'),
         ]);
+    }
+
+    private function baseConfigurationFile()
+    {
+        return __DIR__.'/../../../config/assetprocessor.php';
     }
 }
