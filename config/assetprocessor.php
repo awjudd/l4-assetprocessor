@@ -57,38 +57,6 @@ return array(
     ),
 
     /**
-     * Controller-specific configurations
-     * 
-     * @var array
-     */
-    'controller' => array(
-
-        /**
-         * All of available asset types and their corresponding content types.
-         * 
-         * @var array
-         */
-        'content-types' => array(
-            'css' => 'text/css',
-            'js' => 'text/javascript',
-        ),
-
-        /**
-         * The name of the controller method used to handle the assets.
-         * 
-         * @var string
-         */
-        'method' => 'getIndex',
-
-        /**
-         * The name of the controller used to handle the assets.
-         * 
-         * @var string
-         */
-        'name' => '\Awjudd\AssetProcessor\Controllers\AssetProcessorController',
-    ),
-
-    /**
      * All of the cache settings
      * 
      * @var array
