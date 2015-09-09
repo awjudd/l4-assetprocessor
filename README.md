@@ -45,7 +45,6 @@ In your `config/app.php` add `'Awjudd\AssetProcessor\AssetProcessorServiceProvid
     'Illuminate\Foundation\Providers\ArtisanServiceProvider',
     'Illuminate\Auth\AuthServiceProvider',
     ...
-    'Collective\Html\HtmlServiceProvider',
     'Awjudd\AssetProcessor\AssetProcessorServiceProvider',
 
 ),
@@ -60,7 +59,6 @@ Also update `aliases` part of the `config/app.php` to include `'Awjudd\AssetProc
     'Artisan'         => 'Illuminate\Support\Facades\Artisan',
     ...
 
-    'Html'      => 'Illuminate\Html\HtmlFacade',
     // To make this line, and your code even shorter, you could alias this to 'Asset' instead.
     'AssetProcessor'  => 'Awjudd\AssetProcessor\Facades\AssetProcessorFacade',
     
