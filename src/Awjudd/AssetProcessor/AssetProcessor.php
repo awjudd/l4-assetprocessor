@@ -3,7 +3,6 @@
 use App;
 use DirectoryIterator;
 use Exception;
-use Html;
 use URL;
 use Lang;
 use SplFileInfo;
@@ -405,10 +404,10 @@ class AssetProcessor
                     switch($type)
                     {
                         case 'js':
-                            $output .= Html::script($file);
+                            $output .= $this->script($file);
                             break;
                         case 'css':
-                            $output .= Html::style($file);
+                            $output .= $this->style($file);
                             break;
                     }
                 }
@@ -436,10 +435,10 @@ class AssetProcessor
                     switch($type)
                     {
                         case 'js':
-                            $output .= Html::script($asset);
+                            $output .= $this->script($asset);
                             break;
                         case 'css':
-                            $output .= Html::style($asset);
+                            $output .= $this->style($asset);
                             break;
                     }
                 }
@@ -466,10 +465,10 @@ class AssetProcessor
                     switch($type)
                     {
                         case 'js':
-                            $output .= Html::script($asset);
+                            $output .= $this->script($asset);
                             break;
                         case 'css':
-                            $output .= Html::style($asset);
+                            $output .= $this->style($asset);
                             break;
                     }
                 }
@@ -487,10 +486,10 @@ class AssetProcessor
                     switch($type)
                     {
                         case 'js':
-                            $output .= Html::script($asset);
+                            $output .= $this->script($asset);
                             break;
                         case 'css':
-                            $output .= Html::style($asset);
+                            $output .= $this->style($asset);
                             break;
                     }
                 }
@@ -703,5 +702,31 @@ class AssetProcessor
             // It doesn't, so make the folder
             mkdir($dir, 0777, true);
         }
+    }
+
+    /**
+     * Returns the required HTML to render a script tag.
+     * 
+     * @return string
+     */
+    private function script($script)
+    {
+        return sprintf(
+            '<script type="text/javascript" src="%s"></script>',
+            $script
+        );
+    }
+
+    /**
+     * Returns the required HTML to render a style tag.
+     * 
+     * @return string
+     */
+    private function style($style)
+    {
+        return sprintf(
+            '<link rel="stylesheet" type="text/css" href="%s">',
+            $style
+        );
     }
 }

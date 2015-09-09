@@ -22,17 +22,15 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "~5",
-        "laravelcollective/html": "~5.0",
-        "leafo/lessphp": "0.4.0",
-        "leafo/scssphp": "0.0.8",
+        "leafo/lessphp": "0.5.0",
+        "leafo/scssphp": "0.3.0",
         "werkint/jsmin": "1.0.0",
-        "natxet/CssMin": "master",
-        "coffeescript/coffeescript": "master"
+        "natxet/CssMin": "3.0.x",
+        "coffeescript/coffeescript": "1.3.1"
     },
     "autoload": {
         "psr-0": {
             "Awjudd\\Asset": "src/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
