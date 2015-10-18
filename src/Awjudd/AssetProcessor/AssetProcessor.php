@@ -40,11 +40,11 @@ class AssetProcessor
     private $files = [];
 
     /**
-     * Which asset types have had the CDN retrieved for it?
+     * Which asset groups have already been retrieved?
      * 
      * @var array
      */
-    private $cdnRetrieved = [];
+    private $retrieved = [];
 
     /**
      * What is the current group that we are on?
@@ -362,7 +362,7 @@ class AssetProcessor
         $output = '';
 
         // The groups we will be loading
-        $groups = array();
+        $groups = [];
 
         // Check if the group is provided
         if($group === NULL)
@@ -374,7 +374,7 @@ class AssetProcessor
         else
         {
             // There was a group specified, so only do the one
-            $groups[] = $group;
+            $groups = [$group];
         }
 
         foreach($groups as $group)
@@ -393,6 +393,16 @@ class AssetProcessor
                 
                 return $output;
             }
+
+            // Check if the asset has already been emitted
+            if(isset($this->retrieved[$type]) && isset($this->retrieved[$type][$group]))
+            {
+                // It has already been emitted, so skip it
+                continue;
+            }
+
+            // Otherwise, mark it as processed
+            $this->retrieved[$type][$group] = true;
 
             // Are we looking at CDNs?
             if($group == config('assetprocessor.attributes.group.cdn'))
