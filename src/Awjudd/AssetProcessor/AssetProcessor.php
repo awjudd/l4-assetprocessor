@@ -162,7 +162,7 @@ class AssetProcessor
                 if(!$file->isDot())
                 {
                     // Recursively call the add function
-                    $this->add($name . $file->getFilename(), $file->getRealPath());
+                    $this->add($name . $file->getFilename(), $file->getRealPath(), $attributes);
                 }
             }
         }
@@ -414,10 +414,10 @@ class AssetProcessor
                     switch($type)
                     {
                         case 'js':
-                            $output .= $this->script($file);
+                            $output .= $this->script($file, $group);
                             break;
                         case 'css':
-                            $output .= $this->style($file);
+                            $output .= $this->style($file, $group);
                             break;
                     }
                 }
@@ -445,10 +445,10 @@ class AssetProcessor
                     switch($type)
                     {
                         case 'js':
-                            $output .= $this->script($asset);
+                            $output .= $this->script($asset, $group);
                             break;
                         case 'css':
-                            $output .= $this->style($asset);
+                            $output .= $this->style($asset, $group);
                             break;
                     }
                 }
@@ -475,10 +475,10 @@ class AssetProcessor
                     switch($type)
                     {
                         case 'js':
-                            $output .= $this->script($asset);
+                            $output .= $this->script($asset, $group);
                             break;
                         case 'css':
-                            $output .= $this->style($asset);
+                            $output .= $this->style($asset, $group);
                             break;
                     }
                 }
@@ -496,10 +496,10 @@ class AssetProcessor
                     switch($type)
                     {
                         case 'js':
-                            $output .= $this->script($asset);
+                            $output .= $this->script($asset, $group);
                             break;
                         case 'css':
-                            $output .= $this->style($asset);
+                            $output .= $this->style($asset, $group);
                             break;
                     }
                 }
@@ -719,11 +719,12 @@ class AssetProcessor
      * 
      * @return string
      */
-    private function script($script)
+    private function script($script, $group)
     {
         return sprintf(
-            '<script type="text/javascript" src="%s"></script>',
-            $script
+            '<script type="text/javascript" src="%s" data-group="%s"></script>',
+            $script,
+            $group
         );
     }
 
@@ -732,11 +733,12 @@ class AssetProcessor
      * 
      * @return string
      */
-    private function style($style)
+    private function style($style, $group)
     {
         return sprintf(
-            '<link rel="stylesheet" type="text/css" href="%s">',
-            $style
+            '<link rel="stylesheet" type="text/css" href="%s" data-group="%s">',
+            $style,
+            $group
         );
     }
 }
