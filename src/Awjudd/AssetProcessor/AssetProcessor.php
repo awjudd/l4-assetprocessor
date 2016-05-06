@@ -277,11 +277,6 @@ class AssetProcessor
                     // Copy the file over
                     copy($source, $destination);
                 }
-                else
-                {
-                    // If the file did exist, and nothing has changed, just touch it
-                    touch($destination);
-                }
 
                 // Overwrite the path (only if it is a public URL)
                 if(Str::contains($destination, public_path()))
