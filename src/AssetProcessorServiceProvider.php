@@ -14,6 +14,7 @@ class AssetProcessorServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->handleConfigs();
+        $this->setupProcessor();
     }
 
     /**
@@ -23,8 +24,13 @@ class AssetProcessorServiceProvider extends ServiceProvider
      */
     private function handleConfigs()
     {
-        $configPath = __DIR__ . '/../config/assetprocessor.php';
-        $this->publishes([$configPath => config_path('assetprocessor.php')]);
-        $this->mergeConfigFrom($configPath, 'assetprocessor');
+        $configPath = __DIR__ . '/../config/asset-processor.php';
+        $this->publishes([$configPath => config_path('asset-processor.php')]);
+        $this->mergeConfigFrom($configPath, 'asset-processor');
+    }
+
+    private function setupProcessor()
+    {
+        $this->app->singleton(AssetProcessor::class);
     }
 }
