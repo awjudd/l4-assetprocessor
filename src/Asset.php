@@ -106,7 +106,7 @@ class Asset
      */
     public function getExtension()
     {
-        return $this->file->getExtension();
+        return $this->_file->getExtension();
     }
 
     /**

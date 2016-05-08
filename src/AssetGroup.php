@@ -43,12 +43,32 @@ class AssetGroup
     }
 
     /**
+     * Determines whether or not an asset group is for CDNs
+     *
+     * @return     boolean  True if cdn, False otherwise.
+     */
+    public function isCdn()
+    {
+        return $this->_type == self::CDN;
+    }
+
+    /**
      * Adds a new file to the asset group.
      *
      * @param      string  $filename  The full path to the file
      */
     public function add($filename)
     {
-        $this->_assets[] = new Asset($filename, $this->_type == self::CDN);
+        $this->_assets[] = new Asset($filename, $this->isCdn());
+    }
+
+    /**
+     * Returns the complete list of assets.
+     *
+     * @return     array  Assets.
+     */
+    public function getAssets()
+    {
+        return $this->_assets;
     }
 }

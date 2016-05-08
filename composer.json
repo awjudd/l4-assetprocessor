@@ -34,7 +34,10 @@
     },
     "autoload": {
         "psr-4": {
-            "Awjudd\\Asset\\": "src/"
+            "Awjudd\\AssetProcessor\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "classmap": ["tests/TestCase.php"]   
     }
 }
