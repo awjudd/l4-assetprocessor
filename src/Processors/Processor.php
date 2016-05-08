@@ -23,6 +23,8 @@ class Processor
     {
         // Get the list of processors
         $processors = static::$getProcessorsForAsset($asset);
+
+        // Now that we have all of the processors, run them
     }
 
     private static function getProcessorsForAsset(Asset $asset)
@@ -40,7 +42,7 @@ class Processor
                 $assetProcessors[] = $processor;
             }
         }
-        
+
         // Return the specific processors
         return $assetProcessors;
     }

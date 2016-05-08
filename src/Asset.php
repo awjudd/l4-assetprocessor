@@ -2,6 +2,7 @@
 
 namespace Awjudd\AssetProcessor;
 
+use SplFileInfo;
 use Awjudd\AssetProcessor\Processor\Processor;
 
 class Asset
@@ -9,16 +10,30 @@ class Asset
     /**
      * The name of the file that will be processed
      * 
-     * @var        string
+     * @var        SplFileInfo
      */
-    private $_filename;
+    private $_file;
 
     /**
      * Whether or not the asset is a CDN asset.
      * 
      * @var        boolean
      */
-    private $_isCdn;
+    private $_isCdn = false;
+
+    /**
+     * Whether or not the file is JavaScript
+     *
+     * @var        boolean
+     */
+    private $_isJavaScript = false;
+
+    /**
+     * Whether or not the file is a StyleSheet
+     *
+     * @var        boolean
+     */
+    private $_isStyleSheet = false;
 
     /**
      * Instantiates the asset object
@@ -28,8 +43,11 @@ class Asset
      */
     public function __construct($filename, $isCdn)
     {
-        $this->_filename = $filename;
+        $this->_file = new SplFileInfo($filename);
         $this->_isCdn = $isCdn;
+
+        // Fill in the file metadata
+        $this->deriveFileMetadata();
     }
 
     /**
@@ -56,7 +74,7 @@ class Asset
      */
     public function isStylesheet()
     {
-        return false;
+        return $this->_isStyleSheet;
     }
 
     /**
@@ -66,11 +84,104 @@ class Asset
      */
     public function isJavaScript()
     {
-        return false;
+        return $this->_isJavaScript;
     }
 
-    public function get()
+    /**
+     * Retrieves the HTML which is related to this asset.
+     *
+     * @param      array   $attributes  Any extra attributes which are required
+     *
+     * @return     string
+     */
+    public function get(array $attributes = [])
     {
+        return $this->isStylesheet() ? $this->stylesheet($attributes) : $this->javascript($attributes);
+    }
 
+    /**
+     * Retrieves the extension of the file
+     *
+     * @return     string  Extension.
+     */
+    public function getExtension()
+    {
+        return $this->file->getExtension();
+    }
+
+    /**
+     * Retrieves the public path for the asset
+     *
+     * @return     string  Public path.
+     */
+    public function getPublicPath()
+    {
+        return '';
+    }
+
+    /**
+     * Retrieves the HTML required for a stylesheet
+     *
+     * @param      array  $attributes  Any extra attributes to provide
+     *
+     * @return     string  The HTML to emit
+     */
+    private function stylesheet(array $attributes)
+    {
+        return sprintf(
+            '<link rel="stylesheet" type="text/css" href="%s" %s>',
+            $this->getPublicPath(),
+            $this->deriveAttributes($attributes)
+        );
+    }
+
+    /**
+     * Retrieves the HTML required for a JavaScript
+     *
+     * @param      array  $attributes  Any extra attributes to provide
+     *
+     * @return     string  The HTML to emit
+     */
+    private function javascript(array $attributes)
+    {
+        return sprintf(
+            '<script type="text/javascript" src="%s" %s></script>',
+            $this->getPublicPath(),
+            $this->deriveAttributes($attributes)
+        );
+    }
+
+    /**
+     * Derives the key-value pair of attributes.
+     *
+     * @param      array   $attributes  The attributes to include
+     *                                  
+     * @return     string  The HTML to emit for any attributes.
+     */
+    private function deriveAttributes(array $attributes)
+    {
+        $text = '';
+
+        // Loop through any attributes
+        foreach($attributes as $key => $value) {
+            $text .= sprintf(
+                    '%s="%s"',
+                    $key,
+                    htmlentities($value)
+                );
+        }
+
+        return $text;
+    }
+
+    /**
+     * Derives the metadata that is required for the asset.
+     * 
+     * @return void
+     */
+    private function deriveFileMetadata()
+    {
+        $this->_isJavaScript = in_array($this->getExtension(), ['js', 'coffee']);
+        $this->_isStyleSheet = in_array($this->getExtension(), ['css', 'less', 'scss']);
     }
 }
