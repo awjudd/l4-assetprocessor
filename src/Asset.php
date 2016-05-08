@@ -118,8 +118,14 @@ class Asset
      *
      * @return     string  The HTML to emit
      */
-    public function stylesheet(array $attributes)
+    public function stylesheet(array $attributes = [])
     {
+        // Are we a stylesheet?
+        if(!$this->isStylesheet()) {
+            // We aren't, so we are done
+            return '';
+        }
+
         return sprintf(
             '<link rel="stylesheet" type="text/css" href="%s" %s />',
             $this->getPublicPath(),
@@ -134,8 +140,14 @@ class Asset
      *
      * @return     string  The HTML to emit
      */
-    public function javascript(array $attributes)
+    public function javascript(array $attributes = [])
     {
+        // Are we a JavaScript file?
+        if(!$this->isJavaScript()) {
+            // We aren't, so we are done
+            return '';
+        }
+
         return sprintf(
             '<script type="text/javascript" src="%s" %s></script>',
             $this->getPublicPath(),
