@@ -17,6 +17,8 @@ class Asset
      */
     private $_file;
 
+    private $_filename;
+
     /**
      * Whether or not the asset is a CDN asset.
      * 
@@ -46,22 +48,35 @@ class Asset
      */
     public function __construct($filename, $isCdn)
     {
-        $this->_file = new SplFileInfo($filename);
-
-        // Is the file valid?
-        if(!$this->_file->isFile() && !$this->_file->isDir()) {
-            // The user didn't provide a single file, so we can't handle it
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Invalid file provided (%s)', $filename
-                )
-            );
-        }
-
         $this->_isCdn = $isCdn;
 
+        $this->_filename = $filename;
+
+        if(!$isCdn) {
+            $this->_file = new SplFileInfo($filename);
+
+            // Is the file valid?
+            if(!$this->_file->isFile() && !$this->_file->isDir()) {
+                // The user didn't provide a single file, so we can't handle it
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Invalid file provided (%s)', $filename
+                    )
+                );
+            }
+        }
         // Fill in the file metadata
         $this->deriveMetadata();
+    }
+
+    /**
+     * Determine whether or not we are using a CDN
+     *
+     * @return     boolean  True if are using a CDN, False otherwise.
+     */
+    public function isCdn()
+    {
+        return $this->_isCdn;
     }
 
     /**
@@ -108,6 +123,12 @@ class Asset
      */
     public function getPublicPath()
     {
+        // Are we a CDN asset?
+        if($this->isCdn()) {
+            // Return the file name
+            return $this->_filename;
+        }
+
         return '';
     }
 
@@ -185,6 +206,17 @@ class Asset
      */
     private function deriveMetadata()
     {
+        // Are we looking at a CDN?
+        if($this->isCdn()) {
+            // We are, so just look at the filename
+            $extension = substr($this->_filename, strripos($this->_filename, '.') + 1);
+
+            $this->_isJavaScript = in_array($extension, ['js', 'coffee']);
+            $this->_isStyleSheet = in_array($extension, ['css', 'less', 'scss']);
+
+            return;
+        }
+
         $files = $this->getFiles();
 
         foreach($files as $file) {

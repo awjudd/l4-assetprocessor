@@ -71,9 +71,36 @@ class AssetTest extends TestCase
         $this->assertEquals('<script type="text/javascript" src="" foo="bar" foobar="&quot;foobar&quot;" ></script>', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
     }
 
+    /**
+     * @test
+     */
     public function ensure_invalid_file_is_caught()
     {
         $this->expectException(InvalidArgumentException::class);
         $asset = new Asset('foo.css', false);
+    }
+
+    /**
+     * @test
+     */
+    public function ensure_cdn_asset_metadata()
+    {
+        $asset = new Asset('//doesnt-exist.com/foo.js', true);
+
+        $this->assertTrue($asset->isJavaScript());
+        $this->assertFalse($asset->isStyleSheet());
+        $this->assertTrue($asset->isCdn());
+
+        $this->assertEquals('<script type="text/javascript" src="//doesnt-exist.com/foo.js" ></script>', $asset->javascript([]));
+        $this->assertEquals('<script type="text/javascript" src="//doesnt-exist.com/foo.js" foo="bar" foobar="&quot;foobar&quot;" ></script>', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
+
+        $asset = new Asset('//doesnt-exist.com/foo.css', true);
+
+        $this->assertFalse($asset->isJavaScript());
+        $this->assertTrue($asset->isStyleSheet());
+        $this->assertTrue($asset->isCdn());
+
+        $this->assertEquals('<link rel="stylesheet" type="text/css" href="//doesnt-exist.com/foo.css"  />', $asset->stylesheet([]));
+        $this->assertEquals('<link rel="stylesheet" type="text/css" href="//doesnt-exist.com/foo.css" foo="bar" foobar="&quot;foobar&quot;"  />', $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"']));
     }
 }
