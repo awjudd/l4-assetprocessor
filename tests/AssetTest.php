@@ -1,6 +1,5 @@
 <?php
 
-use InvalidArgumentException;
 use Awjudd\AssetProcessor\Asset;
 
 class AssetTest extends TestCase
@@ -22,8 +21,8 @@ class AssetTest extends TestCase
     public function ensure_emited_javascript_html_is_correct()
     {
         $asset = new Asset('testing/js/foo.js', false);
-        $this->assertEquals('<script type="text/javascript" src="" ></script>', $asset->get([]));
-        $this->assertEquals('<script type="text/javascript" src="" foo="bar" foobar="&quot;foobar&quot;" ></script>', $asset->get(['foo' => 'bar', 'foobar' => '"foobar"']));
+        $this->assertEquals('<script type="text/javascript" src="" ></script>', $asset->javascript([]));
+        $this->assertEquals('<script type="text/javascript" src="" foo="bar" foobar="&quot;foobar&quot;" ></script>', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
     }
 
     /**
@@ -43,8 +42,19 @@ class AssetTest extends TestCase
     public function ensure_emited_stylesheet_html_is_correct()
     {
         $asset = new Asset('testing/css/foo.css', false);
-        $this->assertEquals('<link rel="stylesheet" type="text/css" href=""  />', $asset->get([]));
-        $this->assertEquals('<link rel="stylesheet" type="text/css" href="" foo="bar" foobar="&quot;foobar&quot;"  />', $asset->get(['foo' => 'bar', 'foobar' => '"foobar"']));
+        $this->assertEquals('<link rel="stylesheet" type="text/css" href=""  />', $asset->stylesheet([]));
+        $this->assertEquals('<link rel="stylesheet" type="text/css" href="" foo="bar" foobar="&quot;foobar&quot;"  />', $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"']));
+    }
+
+    /**
+     * @test
+     */
+    public function ensure_folder_derived_attributes_are_correct()
+    {
+        $asset = new Asset('testing', false);
+
+        $this->assertTrue($asset->isJavaScript());
+        $this->assertTrue($asset->isStyleSheet());
     }
 
     public function ensure_invalid_file_is_caught()

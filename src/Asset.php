@@ -4,6 +4,8 @@ namespace Awjudd\AssetProcessor;
 
 use SplFileInfo;
 use InvalidArgumentException;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 use Awjudd\AssetProcessor\Processor\Processor;
 
 class Asset
@@ -100,18 +102,6 @@ class Asset
     }
 
     /**
-     * Retrieves the HTML which is related to this asset.
-     *
-     * @param      array   $attributes  Any extra attributes which are required
-     *
-     * @return     string
-     */
-    public function get(array $attributes = [])
-    {
-        return $this->isStylesheet() ? $this->stylesheet($attributes) : $this->javascript($attributes);
-    }
-
-    /**
      * Retrieves the public path for the asset
      *
      * @return     string  Public path.
@@ -128,7 +118,7 @@ class Asset
      *
      * @return     string  The HTML to emit
      */
-    private function stylesheet(array $attributes)
+    public function stylesheet(array $attributes)
     {
         return sprintf(
             '<link rel="stylesheet" type="text/css" href="%s" %s />',
@@ -144,7 +134,7 @@ class Asset
      *
      * @return     string  The HTML to emit
      */
-    private function javascript(array $attributes)
+    public function javascript(array $attributes)
     {
         return sprintf(
             '<script type="text/javascript" src="%s" %s></script>',
@@ -183,15 +173,64 @@ class Asset
      */
     private function deriveMetadata()
     {
-        if($this->_file->isDir()) {
+        $files = $this->getFiles();
 
-        }
-        else {
-            $this->deriveFileMetadata($this->_file);
+        foreach($files as $file) {
+            $this->deriveFileMetadata($file);
         }
     }
 
-    private function deriveFileMetadata($file)
+    /**
+     * Retrieves all of the files that are being handled by the asset.
+     *
+     * @param      SplFileInfo  $file   The current file
+     *
+     * @return     array        Files.
+     */
+    private function getFiles(SplFileInfo $file = null)
+    {
+        // Was there a file provided? 
+        if(is_null($file)) {
+            // There wasn't, so default it
+            $file = $this->_file;
+        }
+
+        // Is the file a directory?
+        if(!$file->isDir()) {
+            // It isn't a directory, so just return it
+            return [
+                $file,
+            ];
+        }
+
+        $files = [];
+
+        // Grab the directory
+        $dir = new RecursiveDirectoryIterator($file->getPathName());
+
+        // Recursively loop through it
+        $iterator = new RecursiveIteratorIterator($dir);
+
+        foreach($iterator as $filename => $info) {
+            // Make sure it's not pointing at itself
+            if(in_array($info->getFilename(), ['.', '..'])) {
+                continue;
+            }
+
+            // Add the files to the end of the array
+            $files[] = $info;
+        }
+
+        // Return the files
+        return $files;
+    }
+
+    /**
+     * Derives the metadata based on the file
+     *
+     * @param      SplFileInfo  $file   (description)
+     */
+    private function deriveFileMetadata(SplFileInfo $file)
     {
         $this->_isJavaScript |= in_array($file->getExtension(), ['js', 'coffee']);
         $this->_isStyleSheet |= in_array($file->getExtension(), ['css', 'less', 'scss']);

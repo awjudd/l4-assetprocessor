@@ -2,12 +2,7 @@
 
 return [
     'checks'    => [
-        /**
-         * Whether or not you can have mixed asset types in groups.
-         * 
-         * @var     boolean
-         */
-        'allow-mixed-asset-groups'  => false,
+        
     ],
 
     /**
