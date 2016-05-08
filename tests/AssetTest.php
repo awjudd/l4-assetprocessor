@@ -64,7 +64,11 @@ class AssetTest extends TestCase
         $this->assertTrue($asset->isJavaScript());
         $this->assertTrue($asset->isStyleSheet());
 
+        $this->assertEquals('<link rel="stylesheet" type="text/css" href=""  />', $asset->stylesheet([]));
+        $this->assertEquals('<link rel="stylesheet" type="text/css" href="" foo="bar" foobar="&quot;foobar&quot;"  />', $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"']));
 
+        $this->assertEquals('<script type="text/javascript" src="" ></script>', $asset->javascript([]));
+        $this->assertEquals('<script type="text/javascript" src="" foo="bar" foobar="&quot;foobar&quot;" ></script>', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
     }
 
     public function ensure_invalid_file_is_caught()
