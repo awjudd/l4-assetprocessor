@@ -21,23 +21,27 @@ interface IProcessor
     function getAlias();
 
     /**
-     * Determines if the processor handles style sheet
-     *
-     * @return     boolean  True if style sheet processor, False otherwise.
-     */
-    function isStylesheetProcessor();
-
-    /**
-     * Determines if the processor handles JavaScript
-     *
-     * @return     boolean  True if JavaScript processor, False otherwise.
-     */
-    function isJavaScriptProcessor();
-
-    /**
      * Determines whether this processor handles the type of file
      *
-     * @param      Asset  $asset  (description)
+     * @param      Asset  $asset  The asset we want to process
+     * 
+     * @return      boolean
      */
     function handles(Asset $asset);
+
+    /**
+     * Processes the asset
+     *
+     * @param      Asset  $asset  The asset to process
+     * 
+     * @return      Asset
+     */
+    function process(Asset $asset);
+
+    /**
+     * Get the output file name.
+     *
+     * @param      Asset  $asset  The asset we will be emitting.
+     */
+    function getOutputFileName(Asset $asset);
 }

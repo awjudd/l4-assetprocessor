@@ -11,8 +11,6 @@ class AssetGroup
     const CDN = 'cdn';
     const INTERNAL = 'internal';
 
-    private $_config;
-
     /**
      * The name of the asset group.
      * 
@@ -33,6 +31,11 @@ class AssetGroup
      * @var        array
      */
     private $_assets = [];
+
+    private $_retrieved = [
+        'styles'    => false,
+        'scripts'   => false,
+    ];
 
     /**
      * Instantiates the asset group.
@@ -67,14 +70,21 @@ class AssetGroup
      * Adds a new file to the asset group.
      *
      * @param      string  $filename  The full path to the file
+     * @param      string  $name      The name of the asset
      */
-    public function add($filename)
+    public function add($filename, $name = null)
     {
+        // Was the name provided?
+        if(is_null($name)) {
+            // It wasn't, so assign it to the filename
+            $name = $filename;
+        }
+
         // Build the asset
         $asset = new Asset($filename, $this->isCdn());
 
         // Add it to the list
-        $this->_assets[] = $asset;
+        $this->_assets[$name] = $asset;
     }
 
     /**
@@ -85,5 +95,70 @@ class AssetGroup
     public function getAssets()
     {
         return $this->_assets;
+    }
+
+    /**
+     * Retrieves all of the scripts related to the this asset group.
+     *
+     * @param      array  $attributes  (description)
+     */
+    public function scripts(array $attributes = [])
+    {
+        $body = '';
+
+        // Was there a "asset-group" attribute?
+        if(!isset($attributes['asset-group'])) {
+            $attributes['asset-group'] = $this->_name;
+        }
+
+        foreach($this->_assets as $asset) {
+            $body .= $asset->javascript($attributes);
+        }
+
+        // Mark the asset group as retrieved
+        $this->_retrieved['scripts'] = true;
+
+        return $body;
+    }
+
+    /**
+     * Retrieves all of the styles related to the this asset group.
+     *
+     * @param      array  $attributes  (description)
+     */
+    public function styles(array $attributes = [])
+    {
+        $body = '';
+
+        // Was there a "asset-group" attribute?
+        if(!isset($attributes['asset-group'])) {
+            $attributes['asset-group'] = $this->_name;
+        }
+
+        // Build the list of assets
+        foreach($this->_assets as $asset) {
+            $body .= $asset->stylesheet($attributes);
+        }
+
+        // Mark the asset group as retrieved
+        $this->_retrieved['styles'] = true;
+
+        return $body;
+    }
+
+    /**
+     * Determines whether or not the specific type is 
+     *
+     * @param      string   $type   (description)
+     *
+     * @return     boolean
+     */
+    public function isRetrieved($type)
+    {
+        if(!isset($this->_retrieved[$type])) {
+            return false;
+        }
+
+        return $this->_retrieved[$type];
     }
 }

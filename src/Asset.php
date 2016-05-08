@@ -17,6 +17,11 @@ class Asset
      */
     private $_file;
 
+    /**
+     * The name / url to the asset file
+     * 
+     * @var        string
+     */
     private $_filename;
 
     /**
@@ -65,6 +70,7 @@ class Asset
                 );
             }
         }
+
         // Fill in the file metadata
         $this->deriveMetadata();
     }
@@ -217,8 +223,10 @@ class Asset
             return;
         }
 
+        // Get the list of files
         $files = $this->getFiles();
 
+        // Loop through them deriving the metadata
         foreach($files as $file) {
             $this->deriveFileMetadata($file);
         }

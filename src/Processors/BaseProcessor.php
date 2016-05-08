@@ -2,6 +2,8 @@
 
 namespace Awjudd\AssetProcessor\Processors;
 
+use Awjudd\AssetProcessor\Asset;
+
 abstract class BaseProcessor implements IProcessor
 {
     /**
@@ -24,6 +26,15 @@ abstract class BaseProcessor implements IProcessor
     abstract function getAlias();
 
     /**
+     * Processes the asset
+     *
+     * @param      Asset  $asset  The asset to process
+     * 
+     * @return      Asset
+     */
+    abstract function process(Asset $asset);
+
+    /**
      * Retrieves an instance of the 
      *
      * @return     BaseProcessor
@@ -43,22 +54,22 @@ abstract class BaseProcessor implements IProcessor
     }
 
     /**
-     * Determines if the processor handles style sheet
+     * Get the output file name.
      *
-     * @return     boolean  True if style sheet processor, False otherwise.
+     * @param      Asset  $asset  The asset we will be emitting.
      */
-    public function isStylesheetProcessor()
+    public function getOutputFileName(Asset $asset)
     {
-        return false;
+
     }
 
     /**
-     * Determines if the processor handles JavaScript
-     *
-     * @return     boolean  True if JavaScript processor, False otherwise.
+     * Retrieves the folder which will be use for file output.
+     * 
+     * @return     string The output directory
      */
-    public function isJavaScriptProcessor()
+    public function getBaseOutputDirectory()
     {
-        return false;
+        return '../../storage/assets/';
     }
 }
