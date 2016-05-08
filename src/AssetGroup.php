@@ -74,9 +74,9 @@ class AssetGroup
         $asset = new Asset($filename, $this->isCdn());
 
         // Do we want to allow mixed asset groups?
-        if(!Config::get('asset-processor.checks.allow-mixed-asset-groups')) {
+        /*if(!Config::get('asset-processor.checks.allow-mixed-asset-groups')) {
             // We don't, so verify that 
-        }
+        }*/
 
         $this->_assets[] = $asset;
     }

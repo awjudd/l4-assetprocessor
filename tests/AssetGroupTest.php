@@ -1,6 +1,5 @@
 <?php
 
-use InvalidArgumentException;
 use Awjudd\AssetProcessor\AssetGroup;
 
 class AssetGroupTest extends TestCase
