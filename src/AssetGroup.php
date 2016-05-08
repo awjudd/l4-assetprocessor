@@ -2,6 +2,7 @@
 
 namespace Awjudd\AssetProcessor;
 
+use Config;
 use InvalidArgumentException;
 use Awjudd\AssetProcessor\Asset;
 
@@ -9,6 +10,8 @@ class AssetGroup
 {
     const CDN = 'cdn';
     const INTERNAL = 'internal';
+
+    private $_config;
 
     /**
      * The name of the asset group.
@@ -67,7 +70,15 @@ class AssetGroup
      */
     public function add($filename)
     {
-        $this->_assets[] = new Asset($filename, $this->isCdn());
+        // Build the asset
+        $asset = new Asset($filename, $this->isCdn());
+
+        // Do we want to allow mixed asset groups?
+        if(!Config::get('asset-processor.checks.allow-mixed-asset-groups')) {
+            // We don't, so verify that 
+        }
+
+        $this->_assets[] = $asset;
     }
 
     /**

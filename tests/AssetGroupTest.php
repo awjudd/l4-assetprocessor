@@ -47,7 +47,7 @@ class AssetGroupTest extends TestCase
     public function adding_of_asset_to_asset_group()
     {
         $group = new AssetGroup('foo');
-        $group->add('foo.js');
+        $group->add('testing/js/foo.js');
 
         $this->assertEquals(1, count($group->getAssets()));
     }

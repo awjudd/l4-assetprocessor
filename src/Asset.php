@@ -59,7 +59,7 @@ class Asset
         $this->_isCdn = $isCdn;
 
         // Fill in the file metadata
-        $this->deriveFileMetadata();
+        $this->deriveMetadata();
     }
 
     /**
@@ -86,7 +86,7 @@ class Asset
      */
     public function isStylesheet()
     {
-        return $this->_isStyleSheet;
+        return (bool)$this->_isStyleSheet;
     }
 
     /**
@@ -96,7 +96,7 @@ class Asset
      */
     public function isJavaScript()
     {
-        return $this->_isJavaScript;
+        return (bool)$this->_isJavaScript;
     }
 
     /**
@@ -109,16 +109,6 @@ class Asset
     public function get(array $attributes = [])
     {
         return $this->isStylesheet() ? $this->stylesheet($attributes) : $this->javascript($attributes);
-    }
-
-    /**
-     * Retrieves the extension of the file
-     *
-     * @return     string  Extension.
-     */
-    public function getExtension()
-    {
-        return $this->_file->getExtension();
     }
 
     /**
@@ -191,9 +181,19 @@ class Asset
      * 
      * @return void
      */
-    private function deriveFileMetadata()
+    private function deriveMetadata()
     {
-        $this->_isJavaScript = in_array($this->getExtension(), ['js', 'coffee']);
-        $this->_isStyleSheet = in_array($this->getExtension(), ['css', 'less', 'scss']);
+        if($this->_file->isDir()) {
+
+        }
+        else {
+            $this->deriveFileMetadata($this->_file);
+        }
+    }
+
+    private function deriveFileMetadata($file)
+    {
+        $this->_isJavaScript |= in_array($file->getExtension(), ['js', 'coffee']);
+        $this->_isStyleSheet |= in_array($file->getExtension(), ['css', 'less', 'scss']);
     }
 }

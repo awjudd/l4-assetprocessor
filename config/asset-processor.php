@@ -1,6 +1,15 @@
 <?php
 
 return [
+    'checks'    => [
+        /**
+         * Whether or not you can have mixed asset types in groups.
+         * 
+         * @var     boolean
+         */
+        'allow-mixed-asset-groups'  => false,
+    ],
+
     /**
      * An array which holds all of the asset processors that we will use in the application.
      * 
@@ -21,7 +30,7 @@ return [
          * @var        array
          */
         'types' => [
-            
+
         ],
     ],
 ];
