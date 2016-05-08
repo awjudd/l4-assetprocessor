@@ -2,6 +2,7 @@
 
 namespace Awjudd\AssetProcessor;
 
+use InvalidArgumentException;
 use Awjudd\AssetProcessor\Asset;
 
 class AssetGroup
@@ -35,9 +36,16 @@ class AssetGroup
      *
      * @param      string  $name   The name of the asset group
      * @param      string  $type   The type of assets which we will be serving
+     * @throws     InvalidArgumentException
      */
-    public function __construct($name, $type)
+    public function __construct($name, $type = self::INTERNAL)
     {
+        // Ensure that the asset group type is valid
+        if(!in_array($type, [self::CDN, self::INTERNAL])) {
+            // Throw an exception as it is not.
+            throw new InvalidArgumentException('The asset group type is invalid.');
+        }
+
         $this->_name = $name;
         $this->_type = $type;
     }

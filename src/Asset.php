@@ -3,6 +3,7 @@
 namespace Awjudd\AssetProcessor;
 
 use SplFileInfo;
+use InvalidArgumentException;
 use Awjudd\AssetProcessor\Processor\Processor;
 
 class Asset
@@ -44,6 +45,17 @@ class Asset
     public function __construct($filename, $isCdn)
     {
         $this->_file = new SplFileInfo($filename);
+
+        // Is the file valid?
+        if(!$this->_file->isFile() && !$this->_file->isDir()) {
+            // The user didn't provide a single file, so we can't handle it
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Invalid file provided (%s)', $filename
+                )
+            );
+        }
+
         $this->_isCdn = $isCdn;
 
         // Fill in the file metadata
@@ -129,7 +141,7 @@ class Asset
     private function stylesheet(array $attributes)
     {
         return sprintf(
-            '<link rel="stylesheet" type="text/css" href="%s" %s>',
+            '<link rel="stylesheet" type="text/css" href="%s" %s />',
             $this->getPublicPath(),
             $this->deriveAttributes($attributes)
         );
@@ -165,7 +177,7 @@ class Asset
         // Loop through any attributes
         foreach($attributes as $key => $value) {
             $text .= sprintf(
-                    '%s="%s"',
+                    '%s="%s" ',
                     $key,
                     htmlentities($value)
                 );
