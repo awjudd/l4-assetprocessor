@@ -9,8 +9,8 @@ class AssetGroupTest extends TestCase
      */
     public function creation_of_cdn_asset_group()
     {
-        $group = new AssetGroup('foo', AssetGroup::CDN);
-        $this->assertTrue($group->isCdn());
+        $group = new AssetGroup('foo', AssetGroup::REMOTE);
+        $this->assertTrue($group->isRemote());
     }
 
     /**
@@ -19,7 +19,7 @@ class AssetGroupTest extends TestCase
     public function creation_of_internal_asset_group()
     {
         $group = new AssetGroup('foo', AssetGroup::INTERNAL);
-        $this->assertFalse($group->isCdn());
+        $this->assertFalse($group->isRemote());
     }
 
     /**
@@ -28,7 +28,7 @@ class AssetGroupTest extends TestCase
     public function creation_of_default_asset_group()
     {
         $group = new AssetGroup('foo');
-        $this->assertFalse($group->isCdn());
+        $this->assertFalse($group->isRemote());
     }
 
     /**

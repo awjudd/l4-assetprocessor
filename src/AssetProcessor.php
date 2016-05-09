@@ -16,16 +16,16 @@ class AssetProcessor
      *
      * @param string $asset The URL to the asset
      */
-    public function cdn($asset)
+    public function remote($asset, $group = 'cdn')
     {
         // Is there a CDN group?
-        if (!isset($this->_groups['cdn'])) {
+        if (!isset($this->_groups[$group])) {
             // There isn't, so make it
-            $this->_groups['cdn'] = new AssetGroup('cdn', AssetGroup::CDN);
+            $this->_groups[$group] = new AssetGroup($group, AssetGroup::REMOTE);
         }
 
         // Add in the asset
-        $this->_groups['cdn']->add($asset);
+        $this->_groups[$group]->add($asset);
     }
 
     /**

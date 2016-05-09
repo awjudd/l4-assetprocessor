@@ -8,7 +8,7 @@ use Awjudd\AssetProcessor\Asset\RemoteAsset;
 
 class AssetGroup
 {
-    const CDN = 'cdn';
+    const REMOTE = 'remote';
     const INTERNAL = 'internal';
 
     /**
@@ -48,7 +48,7 @@ class AssetGroup
     public function __construct($name, $type = self::INTERNAL)
     {
         // Ensure that the asset group type is valid
-        if (!in_array($type, [self::CDN, self::INTERNAL])) {
+        if (!in_array($type, [self::REMOTE, self::INTERNAL])) {
             // Throw an exception as it is not.
             throw new InvalidArgumentException('The asset group type is invalid.');
         }
@@ -58,13 +58,13 @@ class AssetGroup
     }
 
     /**
-     * Determines whether or not an asset group is for CDNs.
+     * Determines whether or not an asset group is for remote assets.
      *
-     * @return bool True if cdn, False otherwise.
+     * @return bool True if remote assets, False otherwise.
      */
-    public function isCdn()
+    public function isRemote()
     {
-        return $this->_type == self::CDN;
+        return $this->_type == self::REMOTE;
     }
 
     /**
@@ -82,7 +82,7 @@ class AssetGroup
         }
 
         // Build the asset
-        $asset = $this->isCdn() ? new RemoteAsset($filename) : new LocalAsset($filename);
+        $asset = $this->isRemote() ? new RemoteAsset($filename) : new LocalAsset($filename);
 
         // Add it to the list
         $this->_assets[$name] = $asset;
