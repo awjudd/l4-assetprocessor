@@ -103,10 +103,10 @@ class AssetProcessor
         // Did they provide a group?
         if (is_null($group)) {
             // They didn't, so add all
-            return array_keys($this->_groups);
+            return $this->_groups;
         } else {
             return [
-                $group,
+                $this->_groups[$group],
             ];
         }
     }
