@@ -6,6 +6,7 @@ use SplFileInfo;
 use InvalidArgumentException;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
+use Awjudd\AssetProcessor\Processors\Processor;
 
 class LocalAsset extends Asset
 {
@@ -22,6 +23,13 @@ class LocalAsset extends Asset
      * @var string
      */
     private $_filename;
+
+    /**
+     * The complete file list that is contained in the asset.
+     * 
+     * @var array
+     */
+    private $_files = [];
 
     /**
      * Instantiates the asset object.
@@ -71,6 +79,20 @@ class LocalAsset extends Asset
     }
 
     /**
+     * Grabs the files by a specific extension.
+     * 
+     * @var string The extension to look for
+     * 
+     * @return array
+     */
+    public function byExtension($extension)
+    {
+        $files = $this->getFiles();
+
+        return isset($files[$extension]) ? $files[$extension] : [];
+    }
+
+    /**
      * Derives the metadata that is required for the asset.
      */
     protected function deriveMetadata()
@@ -79,8 +101,10 @@ class LocalAsset extends Asset
         $files = $this->getFiles();
 
         // Loop through them deriving the metadata
-        foreach ($files as $file) {
-            $this->deriveFileMetadata($file);
+        foreach ($files as $extensions) {
+            foreach ($extensions as $file) {
+                $this->deriveFileMetadata($file);
+            }
         }
     }
 
@@ -93,6 +117,12 @@ class LocalAsset extends Asset
      */
     private function getFiles(SplFileInfo $file = null)
     {
+        // Did we already derive it?
+        if (count($this->_files) > 0) {
+            // We did, so return it
+            return $this->_files;
+        }
+
         // Was there a file provided? 
         if (is_null($file)) {
             // There wasn't, so default it
@@ -103,7 +133,7 @@ class LocalAsset extends Asset
         if (!$file->isDir()) {
             // It isn't a directory, so just return it
             return [
-                $file,
+                $file->getExtension() => [$file],
             ];
         }
 
@@ -121,9 +151,16 @@ class LocalAsset extends Asset
                 continue;
             }
 
+            if (!isset($files[$info->getExtension()])) {
+                $files[$info->getExtension()] = [];
+            }
+
             // Add the files to the end of the array
-            $files[] = $info;
+            $files[$info->getExtension()][] = $info;
         }
+
+        // Make a copy of it
+        $this->_files = $files;
 
         // Return the files
         return $files;

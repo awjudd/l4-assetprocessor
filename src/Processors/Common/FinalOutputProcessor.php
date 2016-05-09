@@ -2,6 +2,7 @@
 
 namespace Awjudd\AssetProcessor\Processors\Common;
 
+use Awjudd\AssetProcessor\Asset\Asset;
 use Awjudd\AssetProcessor\Processors\BaseProcessor;
 
 class FinalOutputProcessor extends BaseProcessor

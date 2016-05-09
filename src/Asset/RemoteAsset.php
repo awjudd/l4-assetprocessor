@@ -40,6 +40,18 @@ class RemoteAsset extends Asset
     }
 
     /**
+     * Grabs the files by a specific extension.
+     * 
+     * @var string The extension to look for
+     * 
+     * @return array
+     */
+    public function byExtension($extension)
+    {
+        return [];
+    }
+
+    /**
      * Derives the metadata that is required for the asset.
      */
     protected function deriveMetadata()

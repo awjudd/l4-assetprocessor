@@ -2,14 +2,14 @@
 
 namespace Awjudd\AssetProcessor\Processors;
 
-use Awjudd\AssetProcessor\Asset;
+use Awjudd\AssetProcessor\Asset\Asset;
 
 abstract class BaseProcessor implements IProcessor
 {
     /**
      * The instance of the asset processor.
      */
-    private static $instance;
+    protected static $instance;
 
     /**
      * Retrieves all of the extensions that this processor handles.
@@ -33,6 +33,23 @@ abstract class BaseProcessor implements IProcessor
      * @return Asset
      */
     abstract public function process(Asset $asset);
+
+    /**
+     * Determines whether this processor handles the type of file.
+     *
+     * @param Asset $asset The asset we want to process
+     * 
+     * @return bool
+     */
+    public function handles(Asset $asset)
+    {
+        $extensions = $this->getExtensions();
+        $assets = [];
+
+        /*foreach($extensions as $extension) {
+
+        }*/
+    }
 
     /**
      * Retrieves an instance of the.

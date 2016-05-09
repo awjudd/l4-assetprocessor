@@ -3,7 +3,6 @@
 namespace Awjudd\AssetProcessor;
 
 use Illuminate\Support\ServiceProvider;
-use Awjudd\AssetProcessor\AssetProcessor;
 
 class AssetProcessorServiceProvider extends ServiceProvider
 {
@@ -18,8 +17,6 @@ class AssetProcessorServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {

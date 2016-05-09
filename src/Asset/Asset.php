@@ -40,6 +40,15 @@ abstract class Asset
     abstract public function process();
 
     /**
+     * Grabs the files by a specific extension.
+     * 
+     * @var string The extension to look for
+     * 
+     * @return array
+     */
+    abstract public function byExtension($extension);
+
+    /**
      * Determines if the processor handles style sheet.
      *
      * @return bool True if style sheet processor, False otherwise.

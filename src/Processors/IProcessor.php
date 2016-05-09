@@ -2,7 +2,7 @@
 
 namespace Awjudd\AssetProcessor\Processors;
 
-use Awjudd\AssetProcessor\Asset;
+use Awjudd\AssetProcessor\Asset\Asset;
 
 interface IProcessor
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Awjudd\AssetProcessor\Processor;
+namespace Awjudd\AssetProcessor\Processors;
 
-use Awjudd\AssetProcessor\Asset;
+use Awjudd\AssetProcessor\Asset\Asset;
 
 class Processor
 {
@@ -21,7 +21,7 @@ class Processor
     public static function process(Asset $asset)
     {
         // Get the list of processors
-        $processors = static::$getProcessorsForAsset($asset);
+        $processors = static::getProcessorsForAsset($asset);
 
         // Now that we have all of the processors, run them
     }
@@ -56,7 +56,9 @@ class Processor
         // Are there any processors loaded?
         if (empty(static::$_processors)) {
             // There aren't, so let's build them
-            $processors = config('asset-processor.processors.types');
+            $processors = [
+                \Awjudd\AssetProcessor\Processors\Common\FinalOutputProcessor::class,
+            ];
 
             $mappings = [];
 

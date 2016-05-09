@@ -85,7 +85,7 @@ class AssetGroup
         $asset = $this->isRemote() ? new RemoteAsset($filename) : new LocalAsset($filename);
 
         // Add it to the list
-        $this->_assets[$name] = $asset;
+        $this->_assets[$name] = $asset->process();
     }
 
     /**
