@@ -26,22 +26,20 @@ class AssetCaching
     /**
      * Adds any information into the cache.
      *
-     * @param      string  $key    (description)
-     * @param      <type>  $processor    (description)
-     * @param      <type>  $asset  (description)
+     * @param string $key       (description)
+     * @param <type> $processor (description)
+     * @param <type> $asset     (description)
      */
     public function put($filename, $processor, $asset)
     {
-
     }
 
     /**
      * Gets the cache key.
      *
-     * @param      string  $key    The unique key for a given asset.
+     * @param string $key The unique key for a given asset.
      */
     protected function getCacheKey($key)
     {
-
     }
 }

@@ -2,80 +2,74 @@
 
 namespace Awjudd\AssetProcessor\Asset;
 
-use SplFileInfo;
-use InvalidArgumentException;
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
 use Awjudd\AssetProcessor\Processor\Processor;
 
 abstract class Asset
 {
     /**
-     * Whether or not the file is JavaScript
+     * Whether or not the file is JavaScript.
      *
-     * @var        boolean
+     * @var bool
      */
     protected $_isJavaScript = false;
 
     /**
-     * Whether or not the file is a StyleSheet
+     * Whether or not the file is a StyleSheet.
      *
-     * @var        boolean
+     * @var bool
      */
     protected $_isStyleSheet = false;
 
     /**
      * Derives the metadata that is required for the asset.
-     * 
-     * @return void
      */
     abstract protected function deriveMetadata();
 
     /**
-     * Retrieves the public path for the asset
+     * Retrieves the public path for the asset.
      *
-     * @return     string  Public path.
+     * @return string Public path.
      */
     abstract public function getPublicPath();
 
     /**
      * Processes the asset.
      * 
-     * @return     Asset The updated asset object
+     * @return Asset The updated asset object
      */
     abstract public function process();
 
     /**
-     * Determines if the processor handles style sheet
+     * Determines if the processor handles style sheet.
      *
-     * @return     boolean  True if style sheet processor, False otherwise.
+     * @return bool True if style sheet processor, False otherwise.
      */
     public function isStylesheet()
     {
-        return (bool)$this->_isStyleSheet;
+        return (bool) $this->_isStyleSheet;
     }
 
     /**
-     * Determines if the asset is a JavaScript file
+     * Determines if the asset is a JavaScript file.
      *
-     * @return     boolean  True if JavaScript file, False otherwise.
+     * @return bool True if JavaScript file, False otherwise.
      */
     public function isJavaScript()
     {
-        return (bool)$this->_isJavaScript;
+        return (bool) $this->_isJavaScript;
     }
 
     /**
-     * Retrieves the HTML required for a stylesheet
+     * Retrieves the HTML required for a stylesheet.
      *
-     * @param      array  $attributes  Any extra attributes to provide
+     * @param array $attributes Any extra attributes to provide
      *
-     * @return     string  The HTML to emit
+     * @return string The HTML to emit
      */
     public function stylesheet(array $attributes = [])
     {
         // Are we a stylesheet?
-        if(!$this->isStylesheet()) {
+        if (!$this->isStylesheet()) {
             // We aren't, so we are done
             return '';
         }
@@ -88,16 +82,16 @@ abstract class Asset
     }
 
     /**
-     * Retrieves the HTML required for a JavaScript
+     * Retrieves the HTML required for a JavaScript.
      *
-     * @param      array  $attributes  Any extra attributes to provide
+     * @param array $attributes Any extra attributes to provide
      *
-     * @return     string  The HTML to emit
+     * @return string The HTML to emit
      */
     public function javascript(array $attributes = [])
     {
         // Are we a JavaScript file?
-        if(!$this->isJavaScript()) {
+        if (!$this->isJavaScript()) {
             // We aren't, so we are done
             return '';
         }
@@ -112,16 +106,16 @@ abstract class Asset
     /**
      * Derives the key-value pair of attributes.
      *
-     * @param      array   $attributes  The attributes to include
-     *                                  
-     * @return     string  The HTML to emit for any attributes.
+     * @param  array  $attributes The attributes to include
+     *                             
+     * @return string The HTML to emit for any attributes.
      */
     private function deriveAttributes(array $attributes)
     {
         $text = '';
 
         // Loop through any attributes
-        foreach($attributes as $key => $value) {
+        foreach ($attributes as $key => $value) {
             $text .= sprintf(
                     '%s="%s" ',
                     $key,

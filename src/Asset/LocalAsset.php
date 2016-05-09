@@ -6,28 +6,27 @@ use SplFileInfo;
 use InvalidArgumentException;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
-use Awjudd\AssetProcessor\Asset\Asset;
 
 class LocalAsset extends Asset
 {
     /**
-     * The name of the file that will be processed
+     * The name of the file that will be processed.
      * 
-     * @var        SplFileInfo
+     * @var SplFileInfo
      */
     private $_file;
 
     /**
-     * The name / url to the asset file
+     * The name / url to the asset file.
      * 
-     * @var        string
+     * @var string
      */
     private $_filename;
 
     /**
-     * Instantiates the asset object
+     * Instantiates the asset object.
      *
-     * @param      string   $filename  The name of the file we will be processing.
+     * @param string $filename The name of the file we will be processing.
      */
     public function __construct($filename)
     {
@@ -36,7 +35,7 @@ class LocalAsset extends Asset
         $this->_file = new SplFileInfo($filename);
 
         // Is the file valid?
-        if(!$this->_file->isFile() && !$this->_file->isDir()) {
+        if (!$this->_file->isFile() && !$this->_file->isDir()) {
             // The user didn't provide a single file, so we can't handle it
             throw new InvalidArgumentException(
                 sprintf(
@@ -52,7 +51,7 @@ class LocalAsset extends Asset
     /**
      * Processes the asset.
      * 
-     * @return     Asset The updated asset object
+     * @return Asset The updated asset object
      */
     public function process()
     {
@@ -61,9 +60,9 @@ class LocalAsset extends Asset
     }
 
     /**
-     * Retrieves the public path for the asset
+     * Retrieves the public path for the asset.
      *
-     * @return     string  Public path.
+     * @return string Public path.
      */
     public function getPublicPath()
     {
@@ -73,8 +72,6 @@ class LocalAsset extends Asset
 
     /**
      * Derives the metadata that is required for the asset.
-     * 
-     * @return void
      */
     protected function deriveMetadata()
     {
@@ -82,7 +79,7 @@ class LocalAsset extends Asset
         $files = $this->getFiles();
 
         // Loop through them deriving the metadata
-        foreach($files as $file) {
+        foreach ($files as $file) {
             $this->deriveFileMetadata($file);
         }
     }
@@ -90,20 +87,20 @@ class LocalAsset extends Asset
     /**
      * Retrieves all of the files that are being handled by the asset.
      *
-     * @param      SplFileInfo  $file   The current file
+     * @param SplFileInfo $file The current file
      *
-     * @return     array        Files.
+     * @return array Files.
      */
     private function getFiles(SplFileInfo $file = null)
     {
         // Was there a file provided? 
-        if(is_null($file)) {
+        if (is_null($file)) {
             // There wasn't, so default it
             $file = $this->_file;
         }
 
         // Is the file a directory?
-        if(!$file->isDir()) {
+        if (!$file->isDir()) {
             // It isn't a directory, so just return it
             return [
                 $file,
@@ -118,9 +115,9 @@ class LocalAsset extends Asset
         // Recursively loop through it
         $iterator = new RecursiveIteratorIterator($dir);
 
-        foreach($iterator as $filename => $info) {
+        foreach ($iterator as $filename => $info) {
             // Make sure it's not pointing at itself
-            if(in_array($info->getFilename(), ['.', '..'])) {
+            if (in_array($info->getFilename(), ['.', '..'])) {
                 continue;
             }
 
@@ -133,9 +130,9 @@ class LocalAsset extends Asset
     }
 
     /**
-     * Derives the metadata based on the file
+     * Derives the metadata based on the file.
      *
-     * @param      SplFileInfo  $file   (description)
+     * @param SplFileInfo $file (description)
      */
     private function deriveFileMetadata(SplFileInfo $file)
     {

@@ -2,9 +2,7 @@
 
 namespace Awjudd\AssetProcessor;
 
-use Config;
 use InvalidArgumentException;
-use Awjudd\AssetProcessor\Asset;
 use Awjudd\AssetProcessor\Asset\LocalAsset;
 use Awjudd\AssetProcessor\Asset\RemoteAsset;
 
@@ -16,40 +14,41 @@ class AssetGroup
     /**
      * The name of the asset group.
      * 
-     * @var        string
+     * @var string
      */
     private $_name;
 
     /**
      * The type of the asset group.
      * 
-     * @var        string
+     * @var string
      */
     private $_type;
 
     /**
      * All of the assets which have been added to the group.
      *
-     * @var        array
+     * @var array
      */
     private $_assets = [];
 
     private $_retrieved = [
-        'styles'    => false,
-        'scripts'   => false,
+        'styles' => false,
+        'scripts' => false,
     ];
 
     /**
      * Instantiates the asset group.
      *
-     * @param      string  $name   The name of the asset group
-     * @param      string  $type   The type of assets which we will be serving
-     * @throws     InvalidArgumentException
+     * @param string $name The name of the asset group
+     * @param string $type The type of assets which we will be serving
+     *
+     * @throws InvalidArgumentException
      */
     public function __construct($name, $type = self::INTERNAL)
     {
         // Ensure that the asset group type is valid
-        if(!in_array($type, [self::CDN, self::INTERNAL])) {
+        if (!in_array($type, [self::CDN, self::INTERNAL])) {
             // Throw an exception as it is not.
             throw new InvalidArgumentException('The asset group type is invalid.');
         }
@@ -59,9 +58,9 @@ class AssetGroup
     }
 
     /**
-     * Determines whether or not an asset group is for CDNs
+     * Determines whether or not an asset group is for CDNs.
      *
-     * @return     boolean  True if cdn, False otherwise.
+     * @return bool True if cdn, False otherwise.
      */
     public function isCdn()
     {
@@ -71,13 +70,13 @@ class AssetGroup
     /**
      * Adds a new file to the asset group.
      *
-     * @param      string  $filename  The full path to the file
-     * @param      string  $name      The name of the asset
+     * @param string $filename The full path to the file
+     * @param string $name     The name of the asset
      */
     public function add($filename, $name = null)
     {
         // Was the name provided?
-        if(is_null($name)) {
+        if (is_null($name)) {
             // It wasn't, so assign it to the filename
             $name = $filename;
         }
@@ -92,7 +91,7 @@ class AssetGroup
     /**
      * Returns the complete list of assets.
      *
-     * @return     array  Assets.
+     * @return array Assets.
      */
     public function getAssets()
     {
@@ -102,18 +101,18 @@ class AssetGroup
     /**
      * Retrieves all of the scripts related to the this asset group.
      *
-     * @param      array  $attributes  (description)
+     * @param array $attributes (description)
      */
     public function scripts(array $attributes = [])
     {
         $body = '';
 
         // Was there a "asset-group" attribute?
-        if(!isset($attributes['asset-group'])) {
+        if (!isset($attributes['asset-group'])) {
             $attributes['asset-group'] = $this->_name;
         }
 
-        foreach($this->_assets as $asset) {
+        foreach ($this->_assets as $asset) {
             $body .= $asset->javascript($attributes);
         }
 
@@ -126,19 +125,19 @@ class AssetGroup
     /**
      * Retrieves all of the styles related to the this asset group.
      *
-     * @param      array  $attributes  (description)
+     * @param array $attributes (description)
      */
     public function styles(array $attributes = [])
     {
         $body = '';
 
         // Was there a "asset-group" attribute?
-        if(!isset($attributes['asset-group'])) {
+        if (!isset($attributes['asset-group'])) {
             $attributes['asset-group'] = $this->_name;
         }
 
         // Build the list of assets
-        foreach($this->_assets as $asset) {
+        foreach ($this->_assets as $asset) {
             $body .= $asset->stylesheet($attributes);
         }
 
@@ -149,15 +148,15 @@ class AssetGroup
     }
 
     /**
-     * Determines whether or not the specific type is 
+     * Determines whether or not the specific type is.
      *
-     * @param      string   $type   (description)
+     * @param string $type (description)
      *
-     * @return     boolean
+     * @return bool
      */
     public function isRetrieved($type)
     {
-        if(!isset($this->_retrieved[$type])) {
+        if (!isset($this->_retrieved[$type])) {
             return false;
         }
 

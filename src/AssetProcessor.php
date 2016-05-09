@@ -2,26 +2,24 @@
 
 namespace Awjudd\AssetProcessor;
 
-use Awjudd\AssetProcessor\AssetGroup;
-
 class AssetProcessor
 {
     /**
-     * All of the asset groups to use
+     * All of the asset groups to use.
      *
-     * @var        array
+     * @var array
      */
     private $_groups = [];
 
     /**
      * Adds in a CDN asset.
      *
-     * @param      string  $asset  The URL to the asset
+     * @param string $asset The URL to the asset
      */
     public function cdn($asset)
     {
         // Is there a CDN group?
-        if(!isset($this->_groups['cdn'])) {
+        if (!isset($this->_groups['cdn'])) {
             // There isn't, so make it
             $this->_groups['cdn'] = new AssetGroup('cdn', AssetGroup::CDN);
         }
@@ -33,14 +31,14 @@ class AssetProcessor
     /**
      * Adds an asset to the asset list.
      *
-     * @param      string  $name   A unique asset name
-     * @param      string  $file   (description)
-     * @param      string  $group  (description)
+     * @param string $name  A unique asset name
+     * @param string $file  (description)
+     * @param string $group (description)
      */
     public function add($name, $file, $group = 'default')
     {
         // Is there a group already defined?
-        if(!isset($this->_groups[$group])) {
+        if (!isset($this->_groups[$group])) {
             // There isn't, so make it
             $this->_groups[$group] = new AssetGroup($group);
         }
@@ -50,11 +48,11 @@ class AssetProcessor
     }
 
     /**
-     * Retrieves the styles for the specified 
+     * Retrieves the styles for the specified.
      *
-     * @param      string  $group  (description)
+     * @param string $group (description)
      *
-     * @return     string  ( description_of_the_return_value )
+     * @return string ( description_of_the_return_value )
      */
     public function styles($group = null)
     {
@@ -62,8 +60,8 @@ class AssetProcessor
 
         $groups = $this->getGroups($group);
 
-        foreach($groups as $group) {
-            if($group->groupRetrieved('styles')) {
+        foreach ($groups as $group) {
+            if ($group->groupRetrieved('styles')) {
                 $body .= $group->stylesheet();
             }
         }
@@ -72,11 +70,11 @@ class AssetProcessor
     }
 
     /**
-     * Retrieves the styles for the specified 
+     * Retrieves the styles for the specified.
      *
-     * @param      string  $group  (description)
+     * @param string $group (description)
      *
-     * @return     string  ( description_of_the_return_value )
+     * @return string ( description_of_the_return_value )
      */
     public function scripts($group = null)
     {
@@ -84,8 +82,8 @@ class AssetProcessor
 
         $groups = $this->getGroups($group);
 
-        foreach($groups as $group) {
-            if($group->groupRetrieved('styles')) {
+        foreach ($groups as $group) {
+            if ($group->groupRetrieved('styles')) {
                 $body .= $group->scripts();
             }
         }
@@ -96,20 +94,19 @@ class AssetProcessor
     /**
      * Get the list of groups to process.
      *
-     * @param      string  $group  The asset group we want to look for
+     * @param string $group The asset group we want to look for
      *
-     * @return     array  Asset Groups.
+     * @return array Asset Groups.
      */
     private function getGroups($group = null)
     {
-         // Did they provide a group?
-        if(is_null($group)) {
+        // Did they provide a group?
+        if (is_null($group)) {
             // They didn't, so add all
             return array_keys($this->_groups);
-        }
-        else {
+        } else {
             return [
-                $group
+                $group,
             ];
         }
     }

@@ -9,39 +9,39 @@ interface IProcessor
     /**
      * Retrieves all of the extensions that this processor handles.
      * 
-     * @var        array
+     * @var array
      */
-    function getExtensions();
+    public function getExtensions();
 
     /**
-     * Retrieves the alias for the asset processor
+     * Retrieves the alias for the asset processor.
      *
-     * @return     string  Alias.
+     * @return string Alias.
      */
-    function getAlias();
+    public function getAlias();
 
     /**
-     * Determines whether this processor handles the type of file
+     * Determines whether this processor handles the type of file.
      *
-     * @param      Asset  $asset  The asset we want to process
+     * @param Asset $asset The asset we want to process
      * 
-     * @return      boolean
+     * @return bool
      */
-    function handles(Asset $asset);
+    public function handles(Asset $asset);
 
     /**
-     * Processes the asset
+     * Processes the asset.
      *
-     * @param      Asset  $asset  The asset to process
+     * @param Asset $asset The asset to process
      * 
-     * @return      Asset
+     * @return Asset
      */
-    function process(Asset $asset);
+    public function process(Asset $asset);
 
     /**
      * Get the output file name.
      *
-     * @param      Asset  $asset  The asset we will be emitting.
+     * @param Asset $asset The asset we will be emitting.
      */
-    function getOutputFileName(Asset $asset);
+    public function getOutputFileName(Asset $asset);
 }

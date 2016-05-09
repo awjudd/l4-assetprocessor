@@ -8,8 +8,6 @@ class AssetProcessorServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application events.
-     * 
-     * @return void
      */
     public function boot()
     {
@@ -19,12 +17,10 @@ class AssetProcessorServiceProvider extends ServiceProvider
 
     /**
      * Register the configuration.
-     * 
-     * @return void
      */
     private function handleConfigs()
     {
-        $configPath = __DIR__ . '/../config/asset-processor.php';
+        $configPath = __DIR__.'/../config/asset-processor.php';
         $this->publishes([$configPath => config_path('asset-processor.php')]);
         $this->mergeConfigFrom($configPath, 'asset-processor');
     }

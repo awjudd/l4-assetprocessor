@@ -14,30 +14,30 @@ abstract class BaseProcessor implements IProcessor
     /**
      * Retrieves all of the extensions that this processor handles.
      * 
-     * @var        array
+     * @var array
      */
-    abstract function getExtensions();
+    abstract public function getExtensions();
 
     /**
-     * Retrieves the alias for the asset processor
+     * Retrieves the alias for the asset processor.
      *
-     * @return     string  Alias.
+     * @return string Alias.
      */
-    abstract function getAlias();
+    abstract public function getAlias();
 
     /**
-     * Processes the asset
+     * Processes the asset.
      *
-     * @param      Asset  $asset  The asset to process
+     * @param Asset $asset The asset to process
      * 
-     * @return      Asset
+     * @return Asset
      */
-    abstract function process(Asset $asset);
+    abstract public function process(Asset $asset);
 
     /**
-     * Retrieves an instance of the 
+     * Retrieves an instance of the.
      *
-     * @return     BaseProcessor
+     * @return BaseProcessor
      */
     public static function getInstance()
     {
@@ -45,7 +45,7 @@ abstract class BaseProcessor implements IProcessor
         $class = get_called_class();
 
         // Do we already have an instance?
-        if(!isset(static::$instance)) {
+        if (!isset(static::$instance)) {
             // We don't, so make one
             static::$instance = new $class($alias);
         }
@@ -56,17 +56,16 @@ abstract class BaseProcessor implements IProcessor
     /**
      * Get the output file name.
      *
-     * @param      Asset  $asset  The asset we will be emitting.
+     * @param Asset $asset The asset we will be emitting.
      */
     public function getOutputFileName(Asset $asset)
     {
-
     }
 
     /**
      * Retrieves the folder which will be use for file output.
      * 
-     * @return     string The output directory
+     * @return string The output directory
      */
     public function getBaseOutputDirectory()
     {

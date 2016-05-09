@@ -9,7 +9,7 @@ class FinalOutputProcessor extends BaseProcessor
     /**
      * Retrieves all of the extensions that this processor handles.
      * 
-     * @var        array
+     * @var array
      */
     public function getExtensions()
     {
@@ -20,9 +20,9 @@ class FinalOutputProcessor extends BaseProcessor
     }
 
     /**
-     * Retrieves the alias for the asset processor
+     * Retrieves the alias for the asset processor.
      *
-     * @return     string  Alias.
+     * @return string Alias.
      */
     public function getAlias()
     {
@@ -30,14 +30,13 @@ class FinalOutputProcessor extends BaseProcessor
     }
 
     /**
-     * Processes the asset
+     * Processes the asset.
      *
-     * @param      Asset  $asset  The asset to process
+     * @param Asset $asset The asset to process
      * 
-     * @return      Asset
+     * @return Asset
      */
     public function process(Asset $asset)
     {
-
     }
 }
