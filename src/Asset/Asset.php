@@ -40,13 +40,21 @@ abstract class Asset
     abstract public function process();
 
     /**
-     * Grabs the files by a specific extension.
+     * Creates an array of assets.
      * 
-     * @var string The extension to look for
-     * 
-     * @return array
+     * @param string $path
      */
-    abstract public function byExtension($extension);
+    public static function create($path)
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * Retrieves the name of the asset file.
+     *
+     * @return     string  Name.
+     */
+    abstract public function getName();
 
     /**
      * Determines if the processor handles style sheet.

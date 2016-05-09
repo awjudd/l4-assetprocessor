@@ -9,12 +9,34 @@ class RemoteAsset extends Asset
      *
      * @param string $url The URL to the file that we are processing.
      */
-    public function __construct($url)
+    private function __construct($url)
     {
         $this->_url = $url;
 
         // Fill in the file metadata
         $this->deriveMetadata();
+    }
+
+    /**
+     * Creates an array of assets.
+     * 
+     * @param string $path
+     */
+    public static function create($path)
+    {
+        return [
+            new RemoteAsset($path)
+        ];
+    }
+
+    /**
+     * Retrieves the name of the asset file.
+     *
+     * @return     string  Name.
+     */
+    public function getName()
+    {
+        return basename($this->_url);
     }
 
     /**

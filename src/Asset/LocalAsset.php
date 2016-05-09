@@ -25,35 +25,68 @@ class LocalAsset extends Asset
     private $_filename;
 
     /**
-     * The complete file list that is contained in the asset.
-     * 
-     * @var array
-     */
-    private $_files = [];
-
-    /**
      * Instantiates the asset object.
      *
      * @param string $filename The name of the file we will be processing.
      */
-    public function __construct($filename)
+    private function __construct($filename)
     {
         $this->_filename = $filename;
 
         $this->_file = new SplFileInfo($filename);
 
-        // Is the file valid?
-        if (!$this->_file->isFile() && !$this->_file->isDir()) {
+        // Fill in the file metadata
+        $this->deriveMetadata();
+    }
+
+    /**
+     * Creates an array of assets.
+     * 
+     * @param string $path
+     */
+    public static function create($path)
+    {
+        $file = new SplFileInfo($path);
+
+        // Is the file a single file?
+        if($file->isFile()) {
+            // It is, so just return it
+            return [
+                new LocalAsset($path)
+            ];
+        }
+
+        if(!$file->isDir()) {
             // The user didn't provide a single file, so we can't handle it
             throw new InvalidArgumentException(
                 sprintf(
-                    'Invalid file provided (%s)', $filename
+                    'Invalid file provided (%s)', $path
                 )
             );
         }
 
-        // Fill in the file metadata
-        $this->deriveMetadata();
+        // Grab the list of files
+        $files = static::getFiles($file);
+
+        $assets = [];
+
+        // Loop through the files
+        foreach($files as $file) {
+            // Create the asset
+            $assets[] = new LocalAsset($file->getPathname());
+        }
+
+        return $assets;
+    }
+
+    /**
+     * Retrieves the name of the asset file.
+     *
+     * @return     string  Name.
+     */
+    public function getName()
+    {
+        return $this->_file->getFileName();
     }
 
     /**
@@ -97,15 +130,8 @@ class LocalAsset extends Asset
      */
     protected function deriveMetadata()
     {
-        // Get the list of files
-        $files = $this->getFiles();
-
-        // Loop through them deriving the metadata
-        foreach ($files as $extensions) {
-            foreach ($extensions as $file) {
-                $this->deriveFileMetadata($file);
-            }
-        }
+        $this->_isJavaScript |= in_array($this->_file->getExtension(), ['js', 'coffee']);
+        $this->_isStyleSheet |= in_array($this->_file->getExtension(), ['css', 'less', 'scss']);
     }
 
     /**
@@ -115,20 +141,8 @@ class LocalAsset extends Asset
      *
      * @return array Files.
      */
-    private function getFiles(SplFileInfo $file = null)
+    private static function getFiles(SplFileInfo $file)
     {
-        // Did we already derive it?
-        if (count($this->_files) > 0) {
-            // We did, so return it
-            return $this->_files;
-        }
-
-        // Was there a file provided? 
-        if (is_null($file)) {
-            // There wasn't, so default it
-            $file = $this->_file;
-        }
-
         // Is the file a directory?
         if (!$file->isDir()) {
             // It isn't a directory, so just return it
@@ -151,29 +165,11 @@ class LocalAsset extends Asset
                 continue;
             }
 
-            if (!isset($files[$info->getExtension()])) {
-                $files[$info->getExtension()] = [];
-            }
-
             // Add the files to the end of the array
-            $files[$info->getExtension()][] = $info;
+            $files[] = $info;
         }
-
-        // Make a copy of it
-        $this->_files = $files;
 
         // Return the files
         return $files;
-    }
-
-    /**
-     * Derives the metadata based on the file.
-     *
-     * @param SplFileInfo $file (description)
-     */
-    private function deriveFileMetadata(SplFileInfo $file)
-    {
-        $this->_isJavaScript |= in_array($file->getExtension(), ['js', 'coffee']);
-        $this->_isStyleSheet |= in_array($file->getExtension(), ['css', 'less', 'scss']);
     }
 }

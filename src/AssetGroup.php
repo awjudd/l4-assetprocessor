@@ -82,10 +82,13 @@ class AssetGroup
         }
 
         // Build the asset
-        $asset = $this->isRemote() ? new RemoteAsset($filename) : new LocalAsset($filename);
+        $assets = $this->isRemote() ? RemoteAsset::create($filename) : LocalAsset::create($filename);
 
-        // Add it to the list
-        $this->_assets[$name] = $asset->process();
+        foreach($assets as $asset) {
+            $this->_assets[sprintf(
+                '%s-%s', $filename, $asset->getName()
+            )] = $asset;
+        }
     }
 
     /**

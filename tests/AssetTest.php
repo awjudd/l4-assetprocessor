@@ -10,7 +10,7 @@ class AssetTest extends TestCase
      */
     public function ensure_all_javascript_derived_attributes_are_correct()
     {
-        $asset = new LocalAsset('testing/js/foo.js');
+        $asset = LocalAsset::create('testing/js/foo.js')[0];
 
         $this->assertTrue($asset->isJavaScript());
         $this->assertFalse($asset->isStyleSheet());
@@ -21,7 +21,7 @@ class AssetTest extends TestCase
      */
     public function ensure_emited_javascript_html_is_correct()
     {
-        $asset = new LocalAsset('testing/js/foo.js');
+        $asset = LocalAsset::create('testing/js/foo.js')[0];
 
         $this->assertEquals('<script type="text/javascript" src="" ></script>', $asset->javascript([]));
         $this->assertEquals('<script type="text/javascript" src="" foo="bar" foobar="&quot;foobar&quot;" ></script>', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
@@ -35,7 +35,7 @@ class AssetTest extends TestCase
      */
     public function ensure_all_stylesheet_derived_attributes_are_correct()
     {
-        $asset = new LocalAsset('testing/css/foo.css');
+        $asset = LocalAsset::create('testing/css/foo.css')[0];
 
         $this->assertFalse($asset->isJavaScript());
         $this->assertTrue($asset->isStyleSheet());
@@ -46,7 +46,7 @@ class AssetTest extends TestCase
      */
     public function ensure_emited_stylesheet_html_is_correct()
     {
-        $asset = new LocalAsset('testing/css/foo.css');
+        $asset = LocalAsset::create('testing/css/foo.css')[0];
 
         $this->assertEquals('<link rel="stylesheet" type="text/css" href=""  />', $asset->stylesheet([]));
         $this->assertEquals('<link rel="stylesheet" type="text/css" href="" foo="bar" foobar="&quot;foobar&quot;"  />', $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"']));
@@ -60,16 +60,30 @@ class AssetTest extends TestCase
      */
     public function ensure_folder_derived_attributes_are_correct()
     {
-        $asset = new LocalAsset('testing');
+        $assets = LocalAsset::create('testing');
 
-        $this->assertTrue($asset->isJavaScript());
-        $this->assertTrue($asset->isStyleSheet());
+        foreach($assets as $asset) {
+            if($asset->getName() == 'foo.js') {
+                $this->assertTrue($asset->isJavaScript());
+                $this->assertFalse($asset->isStyleSheet());
 
-        $this->assertEquals('<link rel="stylesheet" type="text/css" href=""  />', $asset->stylesheet([]));
-        $this->assertEquals('<link rel="stylesheet" type="text/css" href="" foo="bar" foobar="&quot;foobar&quot;"  />', $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"']));
+                $this->assertEquals('', $asset->stylesheet([]));
+                $this->assertEquals('', $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"']));
 
-        $this->assertEquals('<script type="text/javascript" src="" ></script>', $asset->javascript([]));
-        $this->assertEquals('<script type="text/javascript" src="" foo="bar" foobar="&quot;foobar&quot;" ></script>', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
+                $this->assertEquals('<script type="text/javascript" src="" ></script>', $asset->javascript([]));
+                $this->assertEquals('<script type="text/javascript" src="" foo="bar" foobar="&quot;foobar&quot;" ></script>', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
+            }
+            else {
+                $this->assertFalse($asset->isJavaScript());
+                $this->assertTrue($asset->isStyleSheet());
+
+                $this->assertEquals('<link rel="stylesheet" type="text/css" href=""  />', $asset->stylesheet([]));
+                $this->assertEquals('<link rel="stylesheet" type="text/css" href="" foo="bar" foobar="&quot;foobar&quot;"  />', $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"']));
+
+                $this->assertEquals('', $asset->javascript([]));
+                $this->assertEquals('', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
+            }
+        }
     }
 
     /**
@@ -78,7 +92,7 @@ class AssetTest extends TestCase
     public function ensure_invalid_file_is_caught()
     {
         $this->expectException(InvalidArgumentException::class);
-        $asset = new LocalAsset('foo.css');
+        $asset = LocalAsset::create('foo.css');
     }
 
     /**
@@ -86,7 +100,7 @@ class AssetTest extends TestCase
      */
     public function ensure_cdn_asset_metadata()
     {
-        $asset = new RemoteAsset('//doesnt-exist.com/foo.js');
+        $asset = RemoteAsset::create('//doesnt-exist.com/foo.js')[0];
 
         $this->assertTrue($asset->isJavaScript());
         $this->assertFalse($asset->isStyleSheet());
@@ -94,7 +108,7 @@ class AssetTest extends TestCase
         $this->assertEquals('<script type="text/javascript" src="//doesnt-exist.com/foo.js" ></script>', $asset->javascript([]));
         $this->assertEquals('<script type="text/javascript" src="//doesnt-exist.com/foo.js" foo="bar" foobar="&quot;foobar&quot;" ></script>', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
 
-        $asset = new RemoteAsset('//doesnt-exist.com/foo.css');
+        $asset = RemoteAsset::create('//doesnt-exist.com/foo.css')[0];
 
         $this->assertFalse($asset->isJavaScript());
         $this->assertTrue($asset->isStyleSheet());
@@ -108,7 +122,7 @@ class AssetTest extends TestCase
      */
     public function ensure_remote_asset_with_query_string()
     {
-        $asset = new RemoteAsset('https://code.jquery.com/jquery-2.2.3.min.js');
+        $asset = RemoteAsset::create('https://code.jquery.com/jquery-2.2.3.min.js')[0];
 
         $this->assertTrue($asset->isJavaScript());
         $this->assertFalse($asset->isStyleSheet());
