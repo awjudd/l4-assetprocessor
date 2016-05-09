@@ -45,7 +45,8 @@ class RemoteAsset extends Asset
     protected function deriveMetadata()
     {
         // We are, so just look at the filename
-        $extension = substr($this->_url, strripos($this->_url, '.') + 1);
+        $basename = basename($this->_url);
+        $extension = substr($basename, strripos($basename, '.') + 1);
 
         $this->_isJavaScript = in_array($extension, ['js', 'coffee']);
         $this->_isStyleSheet = in_array($extension, ['css', 'less', 'scss']);
