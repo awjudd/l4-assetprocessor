@@ -3,6 +3,7 @@
 namespace Awjudd\AssetProcessor;
 
 use Illuminate\Support\ServiceProvider;
+use Awjudd\AssetProcessor\AssetProcessor;
 
 class AssetProcessorServiceProvider extends ServiceProvider
 {
@@ -22,7 +23,7 @@ class AssetProcessorServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        
+        $this->app->singleton('asset-processor', AssetProcessor::class);
     }
 
     /**
