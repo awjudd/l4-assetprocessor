@@ -5,6 +5,8 @@ namespace Awjudd\AssetProcessor;
 use Config;
 use InvalidArgumentException;
 use Awjudd\AssetProcessor\Asset;
+use Awjudd\AssetProcessor\Asset\LocalAsset;
+use Awjudd\AssetProcessor\Asset\RemoteAsset;
 
 class AssetGroup
 {
@@ -81,7 +83,7 @@ class AssetGroup
         }
 
         // Build the asset
-        $asset = new Asset($filename, $this->isCdn());
+        $asset = $this->isCdn() ? new RemoteAsset($filename) : new LocalAsset($filename);
 
         // Add it to the list
         $this->_assets[$name] = $asset;
