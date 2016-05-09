@@ -16,6 +16,16 @@ class AssetProcessorServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        
+    }
+
+    /**
      * Register the configuration.
      */
     private function handleConfigs()
