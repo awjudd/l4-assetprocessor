@@ -43,12 +43,7 @@ abstract class BaseProcessor implements IProcessor
      */
     public function handles(Asset $asset)
     {
-        $extensions = $this->getExtensions();
-        $assets = [];
-
-        /*foreach($extensions as $extension) {
-
-        }*/
+        return in_array($asset->getExtension(), $this->getExtensions());
     }
 
     /**
@@ -77,15 +72,13 @@ abstract class BaseProcessor implements IProcessor
      */
     public function getOutputFileName(Asset $asset)
     {
-    }
-
-    /**
-     * Retrieves the folder which will be use for file output.
-     * 
-     * @return string The output directory
-     */
-    public function getBaseOutputDirectory()
-    {
-        return '../../storage/assets/';
+        return sprintf(
+            '%s/%s-%s-%s.%s',
+            Processor::getBaseOutputDirectory(),
+            str_replace('.' . $asset->getExtension(), '', $asset->getName()),
+            $this->getAlias(),
+            time(),
+            $asset->getExtension()
+        );
     }
 }

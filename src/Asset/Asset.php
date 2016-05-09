@@ -33,6 +33,20 @@ abstract class Asset
     abstract public function getPublicPath();
 
     /**
+     * Retrieves the path for the file
+     * 
+     * @return     string
+     */
+    abstract public function getPath();
+
+    /**
+     * Retrieves the file extension for the asset.
+     * 
+     * @return     string
+     */
+    abstract public function getExtension();
+
+    /**
      * Processes the asset.
      * 
      * @return Asset The updated asset object

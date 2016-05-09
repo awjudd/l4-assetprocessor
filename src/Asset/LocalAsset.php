@@ -25,6 +25,13 @@ class LocalAsset extends Asset
     private $_filename;
 
     /**
+     * The processed version of the asset
+     *
+     * @var        LocalAsset
+     */
+    private $_processed = null;
+
+    /**
      * Instantiates the asset object.
      *
      * @param string $filename The name of the file we will be processing.
@@ -90,14 +97,28 @@ class LocalAsset extends Asset
     }
 
     /**
+     * Retrieves the file extension for the asset.
+     * 
+     * @return     string
+     */
+    public function getExtension()
+    {
+        return $this->_file->getExtension();
+    }
+
+    /**
      * Processes the asset.
      * 
      * @return Asset The updated asset object
      */
     public function process()
     {
+        if(is_null($this->_processed)) {
+            $this->_processed = Processor::process($this);
+        }
+
         // Return the helper
-        return Processor::process($this);
+        return $this->_processed;
     }
 
     /**
@@ -108,21 +129,17 @@ class LocalAsset extends Asset
     public function getPublicPath()
     {
         // Return the file name
-        return '';
+        return $this->process()->getPath();
     }
 
     /**
-     * Grabs the files by a specific extension.
+     * Retrieves the path for the file
      * 
-     * @var string The extension to look for
-     * 
-     * @return array
+     * @return     string
      */
-    public function byExtension($extension)
+    public function getPath()
     {
-        $files = $this->getFiles();
-
-        return isset($files[$extension]) ? $files[$extension] : [];
+        return '/assets/' . $this->_file->getPathname();
     }
 
     /**

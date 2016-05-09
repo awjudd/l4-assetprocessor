@@ -23,8 +23,11 @@ class AssetTest extends TestCase
     {
         $asset = LocalAsset::create('testing/js/foo.js')[0];
 
-        $this->assertEquals('<script type="text/javascript" src="" ></script>', $asset->javascript([]));
-        $this->assertEquals('<script type="text/javascript" src="" foo="bar" foobar="&quot;foobar&quot;" ></script>', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
+        $this->assertEquals('<script type="text/javascript" src="/assets/testing/js/foo.js" ></script>', $asset->javascript([]));
+        $this->assertEquals(
+            '<script type="text/javascript" src="/assets/testing/js/foo.js" foo="bar" foobar="&quot;foobar&quot;" ></script>',
+            $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"'])
+        );
 
         $this->assertEquals('', $asset->stylesheet());
         $this->assertEquals('', $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"']));
@@ -48,8 +51,11 @@ class AssetTest extends TestCase
     {
         $asset = LocalAsset::create('testing/css/foo.css')[0];
 
-        $this->assertEquals('<link rel="stylesheet" type="text/css" href=""  />', $asset->stylesheet([]));
-        $this->assertEquals('<link rel="stylesheet" type="text/css" href="" foo="bar" foobar="&quot;foobar&quot;"  />', $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"']));
+        $this->assertEquals('<link rel="stylesheet" type="text/css" href="/assets/testing/css/foo.css"  />', $asset->stylesheet([]));
+        $this->assertEquals(
+            '<link rel="stylesheet" type="text/css" href="/assets/testing/css/foo.css" foo="bar" foobar="&quot;foobar&quot;"  />',
+            $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"'])
+        );
 
         $this->assertEquals('', $asset->javascript());
         $this->assertEquals('', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
@@ -70,15 +76,18 @@ class AssetTest extends TestCase
                 $this->assertEquals('', $asset->stylesheet([]));
                 $this->assertEquals('', $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"']));
 
-                $this->assertEquals('<script type="text/javascript" src="" ></script>', $asset->javascript([]));
-                $this->assertEquals('<script type="text/javascript" src="" foo="bar" foobar="&quot;foobar&quot;" ></script>', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
+                $this->assertEquals('<script type="text/javascript" src="/assets/testing/js/foo.js" ></script>', $asset->javascript([]));
+                $this->assertEquals('<script type="text/javascript" src="/assets/testing/js/foo.js" foo="bar" foobar="&quot;foobar&quot;" ></script>', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
             }
             else {
                 $this->assertFalse($asset->isJavaScript());
                 $this->assertTrue($asset->isStyleSheet());
 
-                $this->assertEquals('<link rel="stylesheet" type="text/css" href=""  />', $asset->stylesheet([]));
-                $this->assertEquals('<link rel="stylesheet" type="text/css" href="" foo="bar" foobar="&quot;foobar&quot;"  />', $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"']));
+                $this->assertEquals('<link rel="stylesheet" type="text/css" href="/assets/testing/css/foo.css"  />', $asset->stylesheet([]));
+                $this->assertEquals(
+                    '<link rel="stylesheet" type="text/css" href="/assets/testing/css/foo.css" foo="bar" foobar="&quot;foobar&quot;"  />',
+                    $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"'])
+                );
 
                 $this->assertEquals('', $asset->javascript([]));
                 $this->assertEquals('', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));

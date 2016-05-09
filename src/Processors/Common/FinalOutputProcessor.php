@@ -39,5 +39,6 @@ class FinalOutputProcessor extends BaseProcessor
      */
     public function process(Asset $asset)
     {
+        return $asset;
     }
 }

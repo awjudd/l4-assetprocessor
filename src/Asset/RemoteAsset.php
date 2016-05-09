@@ -5,6 +5,20 @@ namespace Awjudd\AssetProcessor\Asset;
 class RemoteAsset extends Asset
 {
     /**
+     * The full URL to the asset
+     * 
+     * @var string
+     */
+    private $_url;
+
+    /**
+     * The base information of the asset
+     * 
+     * @var string
+     */
+    private $_basename;
+
+    /**
      * Instantiates the asset object.
      *
      * @param string $url The URL to the file that we are processing.
@@ -12,6 +26,9 @@ class RemoteAsset extends Asset
     private function __construct($url)
     {
         $this->_url = $url;
+
+        // We are, so just look at the filename
+        $this->_basename = basename($this->_url);
 
         // Fill in the file metadata
         $this->deriveMetadata();
@@ -36,7 +53,17 @@ class RemoteAsset extends Asset
      */
     public function getName()
     {
-        return basename($this->_url);
+        return $this->_basename;
+    }
+
+    /**
+     * Retrieves the file extension for the asset.
+     * 
+     * @return     string
+     */
+    public function getExtension()
+    {
+        return substr($this->_basename, strripos($this->_basename, '.') + 1);
     }
 
     /**
@@ -62,15 +89,13 @@ class RemoteAsset extends Asset
     }
 
     /**
-     * Grabs the files by a specific extension.
+     * Retrieves the path for the file
      * 
-     * @var string The extension to look for
-     * 
-     * @return array
+     * @return     string
      */
-    public function byExtension($extension)
+    public function getPath()
     {
-        return [];
+        return $this->_url;
     }
 
     /**
@@ -78,9 +103,7 @@ class RemoteAsset extends Asset
      */
     protected function deriveMetadata()
     {
-        // We are, so just look at the filename
-        $basename = basename($this->_url);
-        $extension = substr($basename, strripos($basename, '.') + 1);
+        $extension = $this->getExtension();
 
         $this->_isJavaScript = in_array($extension, ['js', 'coffee']);
         $this->_isStyleSheet = in_array($extension, ['css', 'less', 'scss']);
