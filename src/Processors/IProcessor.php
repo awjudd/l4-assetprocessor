@@ -30,6 +30,13 @@ interface IProcessor
     public function handles(Asset $asset);
 
     /**
+     * Get the target file extension.
+     *
+     * @return     string  Target file extension.
+     */
+    public function getTargetExtension();
+
+    /**
      * Processes the asset.
      *
      * @param Asset $asset The asset to process

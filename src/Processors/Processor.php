@@ -37,10 +37,6 @@ class Processor
                 if(static::isProcessedAsset($processedAsset)) {
                     unlink($processedAsset->getFullName());
                 }
-
-                // Copy the asset over
-                $processedAsset = is_array($newAsset) ? $newAsset[0] : $newAsset;
-
             }
             else {
                 $processedAsset = $processor->createAssetFromFile($processor->getOutputFileName($processedAsset), $asset);
@@ -60,9 +56,29 @@ class Processor
         return AssetProcessor::storage_path('/assets/');
     }
 
+    /**
+     * Get the public directory.
+     *
+     * @param      <type>  $path   (description)
+     *
+     * @return     string  Public directory.
+     */
     public static function getPublicDirectory($path)
     {
-        return '/assets/' . str_ireplace(static::getBaseOutputDirectory(), '', $path);
+        // Clean up the file name
+        $directories = [
+            config('asset-processor.paths.storage'),
+            config('asset-processor.paths.asset-root'),
+        ];
+
+        $path = str_ireplace('//', '/', $path);
+
+        // Remove any extra paths
+        foreach($directories as $directory) {
+            $path = str_ireplace($directory, '', $path);
+        }
+
+        return '/' . str_ireplace(public_path('/'), '', config('asset-processor.paths.public')) . $path;
     }
 
     /**
@@ -114,14 +130,7 @@ class Processor
         // Are there any processors loaded?
         if (empty(static::$_processors)) {
             // There aren't, so let's build them
-            $processors = [
-                \Awjudd\AssetProcessor\Processors\StyleSheet\CssMinifierProcessor::class,
-
-                \Awjudd\AssetProcessor\Processors\JavaScript\CoffeeScriptProcessor::class,
-                \Awjudd\AssetProcessor\Processors\JavaScript\JavaScriptMinifierProcessor::class,
-
-                \Awjudd\AssetProcessor\Processors\Common\FinalProcessor::class,
-            ];
+            $processors = config('asset-processor.processors.types');
 
             // Loop through all of them
             foreach ($processors as $class) {

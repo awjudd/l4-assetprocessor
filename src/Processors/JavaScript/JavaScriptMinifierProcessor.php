@@ -21,6 +21,16 @@ class JavaScriptMinifierProcessor extends BaseProcessor
     }
 
     /**
+     * Get the target file extension.
+     *
+     * @return     string  Target file extension.
+     */
+    public function getTargetExtension()
+    {
+        return 'js';
+    }
+
+    /**
      * Retrieves the alias for the asset processor.
      *
      * @return string Alias.

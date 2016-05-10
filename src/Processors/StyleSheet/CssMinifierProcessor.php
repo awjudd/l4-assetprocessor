@@ -21,6 +21,16 @@ class CssMinifierProcessor extends BaseProcessor
     }
 
     /**
+     * Get the target file extension.
+     *
+     * @return     string  Target file extension.
+     */
+    public function getTargetExtension()
+    {
+        return 'css';
+    }
+
+    /**
      * Retrieves the alias for the asset processor.
      *
      * @return string Alias.

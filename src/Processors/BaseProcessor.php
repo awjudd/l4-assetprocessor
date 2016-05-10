@@ -37,6 +37,13 @@ abstract class BaseProcessor implements IProcessor
     abstract public function process(Asset $asset);
 
     /**
+     * Get the target file extension.
+     *
+     * @return     string  Target file extension.
+     */
+    abstract public function getTargetExtension();
+
+    /**
      * Determines whether this processor handles the type of file.
      *
      * @param Asset $asset The asset we want to process
