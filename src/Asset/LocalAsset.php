@@ -160,6 +160,12 @@ class LocalAsset extends Asset
      */
     public function getModifiedTime()
     {
+        // Is there a base asset?
+        if(!is_null($this->_baseAsset)) {
+            // There is, so return that asset's modified time
+            return $this->_baseAsset->getModifiedTime();
+        }
+
         return $this->_file->getMTime();
     }
 
