@@ -3,6 +3,7 @@
 namespace Awjudd\AssetProcessor\Processors;
 
 use Awjudd\AssetProcessor\Asset\Asset;
+use Awjudd\AssetProcessor\AssetProcessor;
 use Awjudd\AssetProcessor\Asset\LocalAsset;
 
 abstract class BaseProcessor implements IProcessor
@@ -117,7 +118,7 @@ abstract class BaseProcessor implements IProcessor
     public function getOutputFileName(Asset $asset)
     {
         $outputDirectory = Processor::getBaseOutputDirectory();
-        $currentDirectory = dirname($asset->getFullName());
+        $currentDirectory = str_ireplace(AssetProcessor::resource_path('/assets/'), '', dirname($asset->getFullName()));
 
         if(stristr($currentDirectory, $outputDirectory)) {
             $outputDirectory = $currentDirectory;

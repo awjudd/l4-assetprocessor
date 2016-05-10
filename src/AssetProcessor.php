@@ -69,9 +69,28 @@ class AssetProcessor
         return $body;
     }
 
+    /**
+     * Retrieves the base storage path for assets.
+     *
+     * @param      string  $path   (description)
+     *
+     * @return     <type>  ( description_of_the_return_value )
+     */
     public static function storage_path($path = '')
     {
-        return '../storage/'.($path ? DIRECTORY_SEPARATOR.$path : $path);
+        return realpath('../storage/'.($path ? DIRECTORY_SEPARATOR.$path : $path));
+    }
+
+    /**
+     * Retrieves the base resource path for assets
+     *
+     * @param      string  $path   (description)
+     *
+     * @return     <type>  ( description_of_the_return_value )
+     */
+    public static function resource_path($path = '')
+    {
+        return realpath('../resources/'.($path ? DIRECTORY_SEPARATOR.$path : $path));
     }
 
     /**
