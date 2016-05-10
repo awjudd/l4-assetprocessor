@@ -25,7 +25,7 @@ class CoffeeScriptProcessor extends BaseProcessor
      *
      * @return     string  Target file extension.
      */
-    public function getTargetExtension()
+    public function getTargetExtension(Asset $asset)
     {
         return 'js';
     }

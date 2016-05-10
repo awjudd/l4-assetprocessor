@@ -41,7 +41,7 @@ abstract class BaseProcessor implements IProcessor
      *
      * @return     string  Target file extension.
      */
-    abstract public function getTargetExtension();
+    abstract public function getTargetExtension(Asset $asset);
 
     /**
      * Determines whether this processor handles the type of file.
@@ -140,7 +140,7 @@ abstract class BaseProcessor implements IProcessor
             str_replace('.' . $asset->getExtension(), '', $asset->getName()),
             $this->getAlias(),
             $asset->getModifiedTime(),
-            $asset->getExtension()
+            $asset->getTargetExtension()
         );
     }
 }
