@@ -102,7 +102,7 @@ abstract class BaseProcessor implements IProcessor
      */
     public function createAssetFromFile($file, Asset $base)
     {
-        return LocalAsset::create($file, $base);
+        return LocalAsset::create($file, $base)[0];
     }
 
     /**
@@ -140,7 +140,7 @@ abstract class BaseProcessor implements IProcessor
             str_replace('.' . $asset->getExtension(), '', $asset->getName()),
             $this->getAlias(),
             $asset->getModifiedTime(),
-            $asset->getTargetExtension()
+            $this->getTargetExtension($asset)
         );
     }
 }
