@@ -69,6 +69,11 @@ class AssetProcessor
         return $body;
     }
 
+    public static function storage_path($path = '')
+    {
+        return '../storage/'.($path ? DIRECTORY_SEPARATOR.$path : $path);
+    }
+
     /**
      * Retrieves the styles for the specified.
      *

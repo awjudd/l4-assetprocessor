@@ -3,6 +3,7 @@
 namespace Awjudd\AssetProcessor\Processors;
 
 use Awjudd\AssetProcessor\Asset\Asset;
+use Awjudd\AssetProcessor\AssetProcessor;
 
 class Processor
 {
@@ -56,12 +57,12 @@ class Processor
      */
     public static function getBaseOutputDirectory()
     {
-        return '../../storage/assets/';
+        return AssetProcessor::storage_path('/assets/');
     }
 
     public static function getPublicDirectory($path)
     {
-        return str_ireplace('../../storage', '', $path);
+        return '/assets/' . str_ireplace(static::getBaseOutputDirectory(), '', $path);
     }
 
     /**
