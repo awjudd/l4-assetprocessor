@@ -117,6 +117,7 @@ class Processor
             $processors = [
                 \Awjudd\AssetProcessor\Processors\StyleSheet\CssMinifierProcessor::class,
 
+                \Awjudd\AssetProcessor\Processors\JavaScript\CoffeeScriptProcessor::class,
                 \Awjudd\AssetProcessor\Processors\JavaScript\JavaScriptMinifierProcessor::class,
 
                 \Awjudd\AssetProcessor\Processors\Common\FinalProcessor::class,
