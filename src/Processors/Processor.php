@@ -78,7 +78,7 @@ class Processor
             $path = str_ireplace($directory, '', $path);
         }
 
-        return '/' . str_ireplace(public_path('/'), '', config('asset-processor.paths.public')) . $path;
+        return str_ireplace(public_path(), '', config('asset-processor.paths.public')) . $path;
     }
 
     /**
