@@ -125,7 +125,8 @@ abstract class BaseProcessor implements IProcessor
     public function getOutputFileName(Asset $asset)
     {
         $outputDirectory = Processor::getBaseOutputDirectory();
-        $currentDirectory = str_ireplace(AssetProcessor::resource_path('/assets/'), '', dirname($asset->getFullName()));
+        $currentDirectory = str_ireplace(
+            AssetProcessor::resource_path('assets'), '', dirname($asset->getFullName()));
 
         if(stristr($currentDirectory, $outputDirectory)) {
             $outputDirectory = $currentDirectory;
