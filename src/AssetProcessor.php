@@ -48,28 +48,6 @@ class AssetProcessor
     }
 
     /**
-     * Retrieves the styles for the specified.
-     *
-     * @param string $group (description)
-     *
-     * @return string ( description_of_the_return_value )
-     */
-    public function styles($group = null)
-    {
-        $body = '';
-
-        $groups = $this->getGroups($group);
-
-        foreach ($groups as $group) {
-            if (!$group->isRetrieved('styles')) {
-                $body .= $group->stylesheet();
-            }
-        }
-
-        return $body;
-    }
-
-    /**
      * Retrieves the base storage path for assets.
      *
      * @param      string  $path   (description)
@@ -91,6 +69,28 @@ class AssetProcessor
     public static function resource_path($path = '')
     {
         return realpath('../resources/'.($path ? DIRECTORY_SEPARATOR.$path : $path));
+    }
+
+    /**
+     * Retrieves the styles for the specified.
+     *
+     * @param string $group (description)
+     *
+     * @return string ( description_of_the_return_value )
+     */
+    public function styles($group = null)
+    {
+        $body = '';
+
+        $groups = $this->getGroups($group);
+
+        foreach ($groups as $group) {
+            if (!$group->isRetrieved('styles')) {
+                $body .= $group->styles();
+            }
+        }
+
+        return $body;
     }
 
     /**
