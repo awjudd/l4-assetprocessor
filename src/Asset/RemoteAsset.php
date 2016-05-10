@@ -67,6 +67,16 @@ class RemoteAsset extends Asset
     }
 
     /**
+     * Retrieves the file's full name
+     * 
+     * @return  string
+     */
+    public function getFullName()
+    {
+        return $this->_url;
+    }
+
+    /**
      * Processes the asset.
      * 
      * @return Asset The updated asset object
@@ -85,16 +95,6 @@ class RemoteAsset extends Asset
     public function getPublicPath()
     {
         // Return the file name
-        return $this->_url;
-    }
-
-    /**
-     * Retrieves the path for the file
-     * 
-     * @return     string
-     */
-    public function getPath()
-    {
         return $this->_url;
     }
 

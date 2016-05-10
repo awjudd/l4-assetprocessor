@@ -23,9 +23,19 @@ class AssetTest extends TestCase
     {
         $asset = LocalAsset::create('testing/js/foo.js')[0];
 
-        $this->assertEquals('<script type="text/javascript" src="/assets/testing/js/foo.js" ></script>', $asset->javascript([]));
         $this->assertEquals(
-            '<script type="text/javascript" src="/assets/testing/js/foo.js" foo="bar" foobar="&quot;foobar&quot;" ></script>',
+            sprintf(
+                '<script type="text/javascript" src="/assets/testing/js/foo-final-%s.js" ></script>',
+                $asset->getModifiedTime()
+            ),
+            $asset->javascript([])
+        );
+
+        $this->assertEquals(
+            sprintf(
+                '<script type="text/javascript" src="/assets/testing/js/foo-final-%s.js" foo="bar" foobar="&quot;foobar&quot;" ></script>',
+                $asset->getModifiedTime()
+            ),
             $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"'])
         );
 
@@ -51,9 +61,16 @@ class AssetTest extends TestCase
     {
         $asset = LocalAsset::create('testing/css/foo.css')[0];
 
-        $this->assertEquals('<link rel="stylesheet" type="text/css" href="/assets/testing/css/foo.css"  />', $asset->stylesheet([]));
         $this->assertEquals(
-            '<link rel="stylesheet" type="text/css" href="/assets/testing/css/foo.css" foo="bar" foobar="&quot;foobar&quot;"  />',
+            sprintf(
+                '<link rel="stylesheet" type="text/css" href="/assets/testing/css/foo-final-%s.css"  />',
+                $asset->getModifiedTime()
+            ), $asset->stylesheet([]));
+        $this->assertEquals(
+            sprintf(
+                '<link rel="stylesheet" type="text/css" href="/assets/testing/css/foo-final-%s.css" foo="bar" foobar="&quot;foobar&quot;"  />',
+                $asset->getModifiedTime()
+            ),
             $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"'])
         );
 
@@ -76,16 +93,35 @@ class AssetTest extends TestCase
                 $this->assertEquals('', $asset->stylesheet([]));
                 $this->assertEquals('', $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"']));
 
-                $this->assertEquals('<script type="text/javascript" src="/assets/testing/js/foo.js" ></script>', $asset->javascript([]));
-                $this->assertEquals('<script type="text/javascript" src="/assets/testing/js/foo.js" foo="bar" foobar="&quot;foobar&quot;" ></script>', $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
+                $this->assertEquals(
+                    sprintf(
+                        '<script type="text/javascript" src="/assets/testing/js/foo-final-%s.js" ></script>',
+                        $asset->getModifiedTime()
+                    ),
+                    $asset->javascript([]));
+                $this->assertEquals(
+                    sprintf(
+                        '<script type="text/javascript" src="/assets/testing/js/foo-final-%s.js" foo="bar" foobar="&quot;foobar&quot;" ></script>',
+                        $asset->getModifiedTime()
+                    ),
+                    $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
             }
             else {
                 $this->assertFalse($asset->isJavaScript());
                 $this->assertTrue($asset->isStyleSheet());
 
-                $this->assertEquals('<link rel="stylesheet" type="text/css" href="/assets/testing/css/foo.css"  />', $asset->stylesheet([]));
                 $this->assertEquals(
-                    '<link rel="stylesheet" type="text/css" href="/assets/testing/css/foo.css" foo="bar" foobar="&quot;foobar&quot;"  />',
+                    sprintf(
+                        '<link rel="stylesheet" type="text/css" href="/assets/testing/css/foo-final-%s.css"  />',
+                        $asset->getModifiedTime()
+                    ),
+                    $asset->stylesheet([])
+                );
+                $this->assertEquals(
+                    sprintf(
+                        '<link rel="stylesheet" type="text/css" href="/assets/testing/css/foo-final-%s.css" foo="bar" foobar="&quot;foobar&quot;"  />',
+                        $asset->getModifiedTime()
+                    ),
                     $asset->stylesheet(['foo' => 'bar', 'foobar' => '"foobar"'])
                 );
 

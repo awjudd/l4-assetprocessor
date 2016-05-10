@@ -3,6 +3,7 @@
 namespace Awjudd\AssetProcessor\Processors;
 
 use Awjudd\AssetProcessor\Asset\Asset;
+use Awjudd\AssetProcessor\Asset\LocalAsset;
 
 abstract class BaseProcessor implements IProcessor
 {
@@ -47,22 +48,65 @@ abstract class BaseProcessor implements IProcessor
     }
 
     /**
-     * Retrieves an instance of the.
+     * Reads the asset from the file system.
      *
-     * @return BaseProcessor
+     * @param      Asset   $asset  The asset to read
+     *
+     * @return     string  Contents of the asset file
      */
-    public static function getInstance()
+    public function read(Asset $asset)
     {
-        // Grab the class name
-        $class = get_called_class();
+        // Read the file
+        return file_get_contents($asset->getFullName());
+    }
 
-        // Do we already have an instance?
-        if (!isset(static::$instance)) {
-            // We don't, so make one
-            static::$instance = new $class($alias);
+    /**
+     * Writes the asset out to the file system.
+     *
+     * @param      Asset   $asset     (description)
+     * @param      <type>  $contents  (description)
+     *
+     * @return     <type>  ( description_of_the_return_value )
+     */
+    public function write(Asset $asset, $contents)
+    {
+        // Derive the output name
+        $outputFile = $this->getOutputFileName($asset);
+
+        // Make the parent directory if needed
+        if(!file_exists(dirname($outputFile))) {
+            mkdir(dirname($outputFile), 0777, true);
         }
 
-        return static::$instance;
+        // Write the contents out
+        file_put_contents($outputFile, $contents);
+
+        // Create the output asset
+        return $this->createAssetFromFile($outputFile, $asset);
+    }
+
+    /**
+     * Returns an instance of the asset from a file.
+     *
+     * @param      <type>  $file   (description)
+     *
+     * @return     Asset
+     */
+    public function createAssetFromFile($file, Asset $base)
+    {
+        return LocalAsset::create($file, $base);
+    }
+
+    /**
+     * Determine if it has changed.
+     *
+     * @param      Asset    $asset  (description)
+     *
+     * @return     boolean  True if has changed, False otherwise.
+     */
+    public function hasChanged(Asset $asset)
+    {
+        return !file_exists($this->getOutputFileName($asset));
     }
 
     /**
@@ -72,12 +116,22 @@ abstract class BaseProcessor implements IProcessor
      */
     public function getOutputFileName(Asset $asset)
     {
+        $outputDirectory = Processor::getBaseOutputDirectory();
+        $currentDirectory = dirname($asset->getFullName());
+
+        if(stristr($currentDirectory, $outputDirectory)) {
+            $outputDirectory = $currentDirectory;
+        }
+        else {
+            $outputDirectory .= $currentDirectory;
+        }
+
         return sprintf(
             '%s/%s-%s-%s.%s',
-            Processor::getBaseOutputDirectory(),
+            $outputDirectory,
             str_replace('.' . $asset->getExtension(), '', $asset->getName()),
             $this->getAlias(),
-            time(),
+            $asset->getModifiedTime(),
             $asset->getExtension()
         );
     }

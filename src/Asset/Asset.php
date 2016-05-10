@@ -33,13 +33,6 @@ abstract class Asset
     abstract public function getPublicPath();
 
     /**
-     * Retrieves the path for the file
-     * 
-     * @return     string
-     */
-    abstract public function getPath();
-
-    /**
      * Retrieves the file extension for the asset.
      * 
      * @return     string
@@ -54,6 +47,20 @@ abstract class Asset
     abstract public function process();
 
     /**
+     * Retrieves the name of the asset file.
+     *
+     * @return     string  Name.
+     */
+    abstract public function getName();
+
+    /**
+     * Retrieves the file's full name
+     * 
+     * @return  string
+     */
+    abstract public function getFullName();
+
+    /**
      * Creates an array of assets.
      * 
      * @param string $path
@@ -62,13 +69,6 @@ abstract class Asset
     {
         throw new NotImplementedException();
     }
-
-    /**
-     * Retrieves the name of the asset file.
-     *
-     * @return     string  Name.
-     */
-    abstract public function getName();
 
     /**
      * Determines if the processor handles style sheet.

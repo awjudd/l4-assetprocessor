@@ -14,7 +14,7 @@ class Processor
     private static $_processors = [];
 
     /**
-     * Process.
+     * Process the asset.
      *
      * @param Asset $asset (description)
      */
@@ -23,15 +23,30 @@ class Processor
         // Get the list of processors
         $processors = static::getProcessorsForAsset($asset);
 
-        $processed = $asset;
+        $processedAsset = $asset;
 
         // Now that we have all of the processors, run them
         foreach($processors as $processor) {
-            // Process the updated asset
-            $processed = $processor->process($processed);
+            // Has the asset changed?
+            if($processor->hasChanged($processedAsset)) {
+                // Process the updated asset
+                $newAsset = $processor->process($processedAsset);
+
+                // Remove the old asset (if needed)
+                if(static::isProcessedAsset($processedAsset)) {
+                    unlink($processedAsset->getFullName());
+                }
+
+                // Copy the asset over
+                $processedAsset = is_array($newAsset) ? $newAsset[0] : $newAsset;
+
+            }
+            else {
+                $processedAsset = $processor->createAssetFromFile($processor->getOutputFileName($processedAsset), $asset);
+            }
         }
-        
-        return $processed;
+
+        return $processedAsset;
     }
 
     /**
@@ -42,6 +57,23 @@ class Processor
     public static function getBaseOutputDirectory()
     {
         return '../../storage/assets/';
+    }
+
+    public static function getPublicDirectory($path)
+    {
+        return str_ireplace('../../storage', '', $path);
+    }
+
+    /**
+     * Determine if the asset is a processed asset
+     *
+     * @param      Asset    $asset  The asset in question
+     *
+     * @return     boolean  True if processed asset, False otherwise.
+     */
+    public static function isProcessedAsset(Asset $asset)
+    {
+        return stristr($asset->getFullName(), static::getBaseOutputDirectory());
     }
 
     /**
@@ -82,15 +114,15 @@ class Processor
         if (empty(static::$_processors)) {
             // There aren't, so let's build them
             $processors = [
-                \Awjudd\AssetProcessor\Processors\Common\FinalOutputProcessor::class,
-            ];
+                \Awjudd\AssetProcessor\Processors\StyleSheet\CssMinifierProcessor::class,
 
-            $mappings = [];
+                \Awjudd\AssetProcessor\Processors\Common\FinalProcessor::class,
+            ];
 
             // Loop through all of them
             foreach ($processors as $class) {
                 // Get an instance
-                static::$_processors[] = $class::getInstance();
+                static::$_processors[] = new $class();
             }
         }
 

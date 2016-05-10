@@ -5,7 +5,7 @@ namespace Awjudd\AssetProcessor\Processors\Common;
 use Awjudd\AssetProcessor\Asset\Asset;
 use Awjudd\AssetProcessor\Processors\BaseProcessor;
 
-class FinalOutputProcessor extends BaseProcessor
+class FinalProcessor extends BaseProcessor
 {
     /**
      * Retrieves all of the extensions that this processor handles.
@@ -15,8 +15,7 @@ class FinalOutputProcessor extends BaseProcessor
     public function getExtensions()
     {
         return [
-            'css',
-            'js',
+            'less', 'scss', 'css', 'js', 'coffee',
         ];
     }
 
@@ -39,6 +38,6 @@ class FinalOutputProcessor extends BaseProcessor
      */
     public function process(Asset $asset)
     {
-        return $asset;
+        return $this->write($asset, $this->read($asset));
     }
 }

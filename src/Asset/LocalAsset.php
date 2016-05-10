@@ -31,14 +31,18 @@ class LocalAsset extends Asset
      */
     private $_processed = null;
 
+    private $_baseAsset = null;
+
     /**
      * Instantiates the asset object.
      *
      * @param string $filename The name of the file we will be processing.
      */
-    private function __construct($filename)
+    private function __construct($filename, Asset $base = null)
     {
         $this->_filename = $filename;
+
+        $this->_baseAsset = $base;
 
         $this->_file = new SplFileInfo($filename);
 
@@ -51,7 +55,7 @@ class LocalAsset extends Asset
      * 
      * @param string $path
      */
-    public static function create($path)
+    public static function create($path, Asset $base = null)
     {
         $file = new SplFileInfo($path);
 
@@ -59,7 +63,7 @@ class LocalAsset extends Asset
         if($file->isFile()) {
             // It is, so just return it
             return [
-                new LocalAsset($path)
+                new LocalAsset($path, $base)
             ];
         }
 
@@ -93,6 +97,10 @@ class LocalAsset extends Asset
      */
     public function getName()
     {
+        if(!is_null($this->_baseAsset)) {
+            return $this->_baseAsset->getName();
+        }
+
         return $this->_file->getFileName();
     }
 
@@ -107,6 +115,16 @@ class LocalAsset extends Asset
     }
 
     /**
+     * Retrieves the file's full name
+     * 
+     * @return  string
+     */
+    public function getFullName()
+    {
+        return $this->_file->getPathname();
+    }
+
+    /**
      * Processes the asset.
      * 
      * @return Asset The updated asset object
@@ -115,6 +133,10 @@ class LocalAsset extends Asset
     {
         if(is_null($this->_processed)) {
             $this->_processed = Processor::process($this);
+
+            if(is_array($this->_processed)) {
+                $this->_processed = $this->_processed[0];
+            }
         }
 
         // Return the helper
@@ -128,18 +150,17 @@ class LocalAsset extends Asset
      */
     public function getPublicPath()
     {
-        // Return the file name
-        return $this->process()->getPath();
+        return Processor::getPublicDirectory($this->process()->getFullName());
     }
 
     /**
-     * Retrieves the path for the file
-     * 
-     * @return     string
+     * Retrieves the last modified time of an asset.
+     *
+     * @return     int  Modified time.
      */
-    public function getPath()
+    public function getModifiedTime()
     {
-        return '/assets/' . $this->_file->getPathname();
+        return $this->_file->getMTime();
     }
 
     /**
