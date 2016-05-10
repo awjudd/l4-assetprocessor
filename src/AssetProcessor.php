@@ -107,7 +107,7 @@ class AssetProcessor
         $groups = $this->getGroups($group);
 
         foreach ($groups as $group) {
-            if (!$group->isRetrieved('styles')) {
+            if (!$group->isRetrieved('scripts')) {
                 $body .= $group->scripts();
             }
         }
