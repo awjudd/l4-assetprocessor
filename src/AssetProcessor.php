@@ -56,7 +56,7 @@ class AssetProcessor
      */
     public static function storage_path($path = '')
     {
-        return realpath('../storage/'.($path ? DIRECTORY_SEPARATOR.$path : $path));
+        return storage_path($path);
     }
 
     /**
@@ -68,7 +68,7 @@ class AssetProcessor
      */
     public static function resource_path($path = '')
     {
-        return realpath('../resources/'.($path ? DIRECTORY_SEPARATOR.$path : $path));
+        return resource_path($path);
     }
 
     /**
