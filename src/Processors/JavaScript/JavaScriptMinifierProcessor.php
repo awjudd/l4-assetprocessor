@@ -1,12 +1,12 @@
 <?php
 
-namespace Awjudd\AssetProcessor\Processors\StyleSheet;
+namespace Awjudd\AssetProcessor\Processors\JavaScript;
 
-use CssMinifier;
+use JsMin\Minify;
 use Awjudd\AssetProcessor\Asset\Asset;
 use Awjudd\AssetProcessor\Processors\BaseProcessor;
 
-class CssMinifierProcessor extends BaseProcessor
+class JavaScriptMinifierProcessor extends BaseProcessor
 {
     /**
      * Retrieves all of the extensions that this processor handles.
@@ -16,7 +16,7 @@ class CssMinifierProcessor extends BaseProcessor
     public function getExtensions()
     {
         return [
-            'less', 'scss', 'css',
+            'js', 'coffee',
         ];
     }
 
@@ -27,7 +27,7 @@ class CssMinifierProcessor extends BaseProcessor
      */
     public function getAlias()
     {
-        return 'css-minifier';
+        return 'js-minifier';
     }
 
     /**
@@ -39,8 +39,6 @@ class CssMinifierProcessor extends BaseProcessor
      */
     public function process(Asset $asset)
     {
-        $css = new CssMinifier($this->read($asset));
-
-        return $this->write($asset, $css->getMinified());
+        return $this->write($asset, Minify::minify($this->read($asset)));
     }
 }
