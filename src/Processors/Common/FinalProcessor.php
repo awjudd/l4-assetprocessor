@@ -20,6 +20,16 @@ class FinalProcessor extends BaseProcessor
     }
 
     /**
+     * Get the target file extension.
+     *
+     * @return     string  Target file extension.
+     */
+    public function getTargetExtension(Asset $asset)
+    {
+        return in_array($asset->getExtension(), ['js', 'coffee']) ? 'js' : 'css';
+    }
+
+    /**
      * Retrieves the alias for the asset processor.
      *
      * @return string Alias.

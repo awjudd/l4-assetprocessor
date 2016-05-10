@@ -34,7 +34,7 @@ interface IProcessor
      *
      * @return     string  Target file extension.
      */
-    public function getTargetExtension();
+    public function getTargetExtension(Asset $asset);
 
     /**
      * Processes the asset.
