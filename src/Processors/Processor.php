@@ -4,6 +4,7 @@ namespace Awjudd\AssetProcessor\Processors;
 
 use Awjudd\AssetProcessor\Asset\Asset;
 use Awjudd\AssetProcessor\AssetProcessor;
+use Awjudd\AssetProcessor\Processors\Common\FinalProcessor;
 
 class Processor
 {
@@ -26,6 +27,15 @@ class Processor
 
         $processedAsset = $asset;
 
+        // Check if we need to process the asset
+        $final = static::finalProcessor();
+
+        // Has the asset changed?
+        if(!$final->hasChanged($asset)) {
+            // It hasn't, so we are done
+            return $final->createAssetFromFile($final->getOutputFileName($processedAsset), $asset);
+        }
+
         // Now that we have all of the processors, run them
         foreach($processors as $processor) {
             // Has the asset changed?
@@ -46,6 +56,16 @@ class Processor
         }
 
         return $processedAsset;
+    }
+
+    /**
+     * Creates an instance of the final processor that gets run.
+     *
+     * @return     FinalProcessor  ( description_of_the_return_value )
+     */
+    private static function finalProcessor()
+    {
+        return new FinalProcessor();
     }
 
     /**
