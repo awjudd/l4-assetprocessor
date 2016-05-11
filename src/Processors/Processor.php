@@ -37,6 +37,8 @@ class Processor
                 if(static::isProcessedAsset($processedAsset)) {
                     unlink($processedAsset->getFullName());
                 }
+
+                $processedAsset = $newAsset;
             }
             else {
                 $processedAsset = $processor->createAssetFromFile($processor->getOutputFileName($processedAsset), $asset);
