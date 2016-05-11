@@ -3,7 +3,6 @@
 namespace Awjudd\AssetProcessor\Processors;
 
 use Awjudd\AssetProcessor\Asset\Asset;
-use Awjudd\AssetProcessor\AssetProcessor;
 use Awjudd\AssetProcessor\Asset\LocalAsset;
 
 abstract class BaseProcessor implements IProcessor
@@ -39,7 +38,7 @@ abstract class BaseProcessor implements IProcessor
     /**
      * Get the target file extension.
      *
-     * @return     string  Target file extension.
+     * @return string Target file extension.
      */
     abstract public function getTargetExtension(Asset $asset);
 
@@ -58,9 +57,9 @@ abstract class BaseProcessor implements IProcessor
     /**
      * Reads the asset from the file system.
      *
-     * @param      Asset   $asset  The asset to read
+     * @param Asset $asset The asset to read
      *
-     * @return     string  Contents of the asset file
+     * @return string Contents of the asset file
      */
     public function read(Asset $asset)
     {
@@ -71,10 +70,10 @@ abstract class BaseProcessor implements IProcessor
     /**
      * Writes the asset out to the file system.
      *
-     * @param      Asset   $asset     (description)
-     * @param      <type>  $contents  (description)
+     * @param Asset  $asset    (description)
+     * @param <type> $contents (description)
      *
-     * @return     <type>  ( description_of_the_return_value )
+     * @return <type> ( description_of_the_return_value )
      */
     public function write(Asset $asset, $contents)
     {
@@ -82,7 +81,7 @@ abstract class BaseProcessor implements IProcessor
         $outputFile = $this->getOutputFileName($asset);
 
         // Make the parent directory if needed
-        if(!file_exists(dirname($outputFile))) {
+        if (!file_exists(dirname($outputFile))) {
             mkdir(dirname($outputFile), 0777, true);
         }
 
@@ -96,9 +95,9 @@ abstract class BaseProcessor implements IProcessor
     /**
      * Returns an instance of the asset from a file.
      *
-     * @param      <type>  $file   (description)
+     * @param <type> $file (description)
      *
-     * @return     Asset
+     * @return Asset
      */
     public function createAssetFromFile($file, Asset $base)
     {
@@ -108,9 +107,9 @@ abstract class BaseProcessor implements IProcessor
     /**
      * Determine if it has changed.
      *
-     * @param      Asset    $asset  (description)
+     * @param Asset $asset (description)
      *
-     * @return     boolean  True if has changed, False otherwise.
+     * @return bool True if has changed, False otherwise.
      */
     public function hasChanged(Asset $asset)
     {
@@ -135,7 +134,7 @@ abstract class BaseProcessor implements IProcessor
         $path = str_ireplace('//', '/', dirname($asset->getFullName()));
 
         // Remove any extra paths
-        foreach($directories as $directory) {
+        foreach ($directories as $directory) {
             $path = str_ireplace($directory, '', $path);
         }
 
@@ -143,7 +142,7 @@ abstract class BaseProcessor implements IProcessor
             '%s%s/%s-%s-%s.%s',
             config('asset-processor.paths.storage'),
             $path,
-            str_replace('.' . $asset->getExtension(), '', $asset->getName()),
+            str_replace('.'.$asset->getExtension(), '', $asset->getName()),
             $this->getAlias(),
             $asset->getModifiedTime(),
             $this->getTargetExtension($asset)

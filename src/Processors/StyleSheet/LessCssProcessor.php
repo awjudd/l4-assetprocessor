@@ -23,7 +23,7 @@ class LessCssProcessor extends BaseProcessor
     /**
      * Get the target file extension.
      *
-     * @return     string  Target file extension.
+     * @return string Target file extension.
      */
     public function getTargetExtension(Asset $asset)
     {
@@ -50,6 +50,7 @@ class LessCssProcessor extends BaseProcessor
     public function process(Asset $asset)
     {
         $less = new lessc();
+
         return $this->write($asset, $less->compile($this->read($asset)));
     }
 }

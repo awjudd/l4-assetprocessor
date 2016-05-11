@@ -35,7 +35,7 @@ abstract class Asset
     /**
      * Retrieves the file extension for the asset.
      * 
-     * @return     string
+     * @return string
      */
     abstract public function getExtension();
 
@@ -49,14 +49,14 @@ abstract class Asset
     /**
      * Retrieves the name of the asset file.
      *
-     * @return     string  Name.
+     * @return string Name.
      */
     abstract public function getName();
 
     /**
-     * Retrieves the file's full name
+     * Retrieves the file's full name.
      * 
-     * @return  string
+     * @return string
      */
     abstract public function getFullName();
 

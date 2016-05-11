@@ -84,7 +84,7 @@ class AssetGroup
         // Build the asset
         $assets = $this->isRemote() ? RemoteAsset::create($filename) : LocalAsset::create($filename);
 
-        foreach($assets as $asset) {
+        foreach ($assets as $asset) {
             $this->_assets[sprintf(
                 '%s-%s', $filename, $asset->getName()
             )] = $asset;

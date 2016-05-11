@@ -85,8 +85,8 @@ class AssetTest extends TestCase
     {
         $assets = LocalAsset::create('testing');
 
-        foreach($assets as $asset) {
-            if($asset->getName() == 'foo.js') {
+        foreach ($assets as $asset) {
+            if ($asset->getName() == 'foo.js') {
                 $this->assertTrue($asset->isJavaScript());
                 $this->assertFalse($asset->isStyleSheet());
 
@@ -105,8 +105,7 @@ class AssetTest extends TestCase
                         $asset->getModifiedTime()
                     ),
                     $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
-            }
-            else {
+            } else {
                 $this->assertFalse($asset->isJavaScript());
                 $this->assertTrue($asset->isStyleSheet());
 

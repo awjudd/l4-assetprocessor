@@ -25,9 +25,9 @@ class LocalAsset extends Asset
     private $_filename;
 
     /**
-     * The processed version of the asset
+     * The processed version of the asset.
      *
-     * @var        LocalAsset
+     * @var LocalAsset
      */
     private $_processed = null;
 
@@ -60,14 +60,14 @@ class LocalAsset extends Asset
         $file = new SplFileInfo($path);
 
         // Is the file a single file?
-        if($file->isFile()) {
+        if ($file->isFile()) {
             // It is, so just return it
             return [
-                new LocalAsset($path, $base)
+                new self($path, $base),
             ];
         }
 
-        if(!$file->isDir()) {
+        if (!$file->isDir()) {
             // The user didn't provide a single file, so we can't handle it
             throw new InvalidArgumentException(
                 sprintf(
@@ -82,9 +82,9 @@ class LocalAsset extends Asset
         $assets = [];
 
         // Loop through the files
-        foreach($files as $file) {
+        foreach ($files as $file) {
             // Create the asset
-            $assets[] = new LocalAsset($file->getPathname());
+            $assets[] = new self($file->getPathname());
         }
 
         return $assets;
@@ -93,11 +93,11 @@ class LocalAsset extends Asset
     /**
      * Retrieves the name of the asset file.
      *
-     * @return     string  Name.
+     * @return string Name.
      */
     public function getName()
     {
-        if(!is_null($this->_baseAsset)) {
+        if (!is_null($this->_baseAsset)) {
             return $this->_baseAsset->getName();
         }
 
@@ -107,7 +107,7 @@ class LocalAsset extends Asset
     /**
      * Retrieves the file extension for the asset.
      * 
-     * @return     string
+     * @return string
      */
     public function getExtension()
     {
@@ -115,9 +115,9 @@ class LocalAsset extends Asset
     }
 
     /**
-     * Retrieves the file's full name
+     * Retrieves the file's full name.
      * 
-     * @return  string
+     * @return string
      */
     public function getFullName()
     {
@@ -131,10 +131,10 @@ class LocalAsset extends Asset
      */
     public function process()
     {
-        if(is_null($this->_processed)) {
+        if (is_null($this->_processed)) {
             $this->_processed = Processor::process($this);
 
-            if(is_array($this->_processed)) {
+            if (is_array($this->_processed)) {
                 $this->_processed = $this->_processed[0];
             }
         }
@@ -156,12 +156,12 @@ class LocalAsset extends Asset
     /**
      * Retrieves the last modified time of an asset.
      *
-     * @return     int  Modified time.
+     * @return int Modified time.
      */
     public function getModifiedTime()
     {
         // Is there a base asset?
-        if(!is_null($this->_baseAsset)) {
+        if (!is_null($this->_baseAsset)) {
             // There is, so return that asset's modified time
             return $this->_baseAsset->getModifiedTime();
         }

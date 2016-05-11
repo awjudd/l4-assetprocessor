@@ -5,14 +5,14 @@ namespace Awjudd\AssetProcessor\Asset;
 class RemoteAsset extends Asset
 {
     /**
-     * The full URL to the asset
+     * The full URL to the asset.
      * 
      * @var string
      */
     private $_url;
 
     /**
-     * The base information of the asset
+     * The base information of the asset.
      * 
      * @var string
      */
@@ -42,14 +42,14 @@ class RemoteAsset extends Asset
     public static function create($path)
     {
         return [
-            new RemoteAsset($path)
+            new self($path),
         ];
     }
 
     /**
      * Retrieves the name of the asset file.
      *
-     * @return     string  Name.
+     * @return string Name.
      */
     public function getName()
     {
@@ -59,7 +59,7 @@ class RemoteAsset extends Asset
     /**
      * Retrieves the file extension for the asset.
      * 
-     * @return     string
+     * @return string
      */
     public function getExtension()
     {
@@ -67,9 +67,9 @@ class RemoteAsset extends Asset
     }
 
     /**
-     * Retrieves the file's full name
+     * Retrieves the file's full name.
      * 
-     * @return  string
+     * @return string
      */
     public function getFullName()
     {

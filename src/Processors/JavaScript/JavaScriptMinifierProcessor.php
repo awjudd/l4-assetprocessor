@@ -23,7 +23,7 @@ class JavaScriptMinifierProcessor extends BaseProcessor
     /**
      * Get the target file extension.
      *
-     * @return     string  Target file extension.
+     * @return string Target file extension.
      */
     public function getTargetExtension(Asset $asset)
     {

@@ -50,9 +50,9 @@ class AssetProcessor
     /**
      * Retrieves the base storage path for assets.
      *
-     * @param      string  $path   (description)
+     * @param string $path (description)
      *
-     * @return     <type>  ( description_of_the_return_value )
+     * @return <type> ( description_of_the_return_value )
      */
     public static function storage_path($path = '')
     {
@@ -60,11 +60,11 @@ class AssetProcessor
     }
 
     /**
-     * Retrieves the base resource path for assets
+     * Retrieves the base resource path for assets.
      *
-     * @param      string  $path   (description)
+     * @param string $path (description)
      *
-     * @return     <type>  ( description_of_the_return_value )
+     * @return <type> ( description_of_the_return_value )
      */
     public static function resource_path($path = '')
     {

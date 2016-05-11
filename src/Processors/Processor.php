@@ -31,26 +31,25 @@ class Processor
         $final = static::finalProcessor();
 
         // Has the asset changed?
-        if(!$final->hasChanged($asset)) {
+        if (!$final->hasChanged($asset)) {
             // It hasn't, so we are done
             return $final->createAssetFromFile($final->getOutputFileName($processedAsset), $asset);
         }
 
         // Now that we have all of the processors, run them
-        foreach($processors as $processor) {
+        foreach ($processors as $processor) {
             // Has the asset changed?
-            if($processor->hasChanged($processedAsset)) {
+            if ($processor->hasChanged($processedAsset)) {
                 // Process the updated asset
                 $newAsset = $processor->process($processedAsset);
 
                 // Remove the old asset (if needed)
-                if(static::isProcessedAsset($processedAsset)) {
+                if (static::isProcessedAsset($processedAsset)) {
                     unlink($processedAsset->getFullName());
                 }
 
                 $processedAsset = $newAsset;
-            }
-            else {
+            } else {
                 $processedAsset = $processor->createAssetFromFile($processor->getOutputFileName($processedAsset), $asset);
             }
         }
@@ -61,7 +60,7 @@ class Processor
     /**
      * Creates an instance of the final processor that gets run.
      *
-     * @return     FinalProcessor  ( description_of_the_return_value )
+     * @return FinalProcessor ( description_of_the_return_value )
      */
     private static function finalProcessor()
     {
@@ -81,9 +80,9 @@ class Processor
     /**
      * Get the public directory.
      *
-     * @param      <type>  $path   (description)
+     * @param <type> $path (description)
      *
-     * @return     string  Public directory.
+     * @return string Public directory.
      */
     public static function getPublicDirectory($path)
     {
@@ -96,19 +95,19 @@ class Processor
         $path = str_ireplace('//', '/', $path);
 
         // Remove any extra paths
-        foreach($directories as $directory) {
+        foreach ($directories as $directory) {
             $path = str_ireplace($directory, '', $path);
         }
 
-        return str_ireplace(public_path(), '', config('asset-processor.paths.public')) . $path;
+        return str_ireplace(public_path(), '', config('asset-processor.paths.public')).$path;
     }
 
     /**
-     * Determine if the asset is a processed asset
+     * Determine if the asset is a processed asset.
      *
-     * @param      Asset    $asset  The asset in question
+     * @param Asset $asset The asset in question
      *
-     * @return     boolean  True if processed asset, False otherwise.
+     * @return bool True if processed asset, False otherwise.
      */
     public static function isProcessedAsset(Asset $asset)
     {
@@ -116,11 +115,11 @@ class Processor
     }
 
     /**
-     * Retrieves the list of processors for the specified asset
+     * Retrieves the list of processors for the specified asset.
      *
-     * @param      Asset  $asset  The asset
+     * @param Asset $asset The asset
      *
-     * @return     array  Processors for asset.
+     * @return array Processors for asset.
      */
     private static function getProcessorsForAsset(Asset $asset)
     {
