@@ -3,6 +3,7 @@
 namespace Awjudd\AssetProcessor\Processors\StyleSheet;
 
 use lessc;
+use Awjudd\AssetProcessor\Asset\Asset;
 use Awjudd\AssetProcessor\Processors\BaseProcessor;
 
 class LessCssProcessor extends BaseProcessor
