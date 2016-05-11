@@ -125,19 +125,24 @@ abstract class BaseProcessor implements IProcessor
     public function getOutputFileName(Asset $asset)
     {
         $outputDirectory = Processor::getBaseOutputDirectory();
-        $currentDirectory = str_ireplace(
-            AssetProcessor::resource_path('assets'), '', dirname($asset->getFullName()));
 
-        if(stristr($currentDirectory, $outputDirectory)) {
-            $outputDirectory = $currentDirectory;
-        }
-        else {
-            $outputDirectory .= $currentDirectory;
+        // Clean up the file name
+        $directories = [
+            config('asset-processor.paths.storage'),
+            config('asset-processor.paths.asset-root'),
+        ];
+
+        $path = str_ireplace('//', '/', dirname($asset->getFullName()));
+
+        // Remove any extra paths
+        foreach($directories as $directory) {
+            $path = str_ireplace($directory, '', $path);
         }
 
         return sprintf(
-            '%s/%s-%s-%s.%s',
-            $outputDirectory,
+            '%s%s/%s-%s-%s.%s',
+            config('asset-processor.paths.storage'),
+            $path,
             str_replace('.' . $asset->getExtension(), '', $asset->getName()),
             $this->getAlias(),
             $asset->getModifiedTime(),

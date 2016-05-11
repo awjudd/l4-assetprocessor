@@ -53,7 +53,7 @@ class Processor
      */
     public static function getBaseOutputDirectory()
     {
-        return AssetProcessor::storage_path('/assets/');
+        return AssetProcessor::storage_path('assets/');
     }
 
     /**
