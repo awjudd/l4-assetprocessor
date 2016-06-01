@@ -26,6 +26,7 @@ return [
          */
         'types' => [
             \Awjudd\AssetProcessor\Processors\StyleSheet\LessCssProcessor::class,
+            \Awjudd\AssetProcessor\Processors\StyleSheet\ScssProcessor::class,
             \Awjudd\AssetProcessor\Processors\StyleSheet\CssMinifierProcessor::class,
 
             \Awjudd\AssetProcessor\Processors\JavaScript\CoffeeScriptProcessor::class,
