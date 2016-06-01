@@ -39,7 +39,7 @@ class Processor
         // Now that we have all of the processors, run them
         foreach ($processors as $processor) {
             // Has the asset changed?
-            if ($processor->hasChanged($processedAsset) && $processor->shouldProcess()) {
+            if ($processor->hasChanged($processedAsset)) {
                 // Process the updated asset
                 $newAsset = $processor->process($processedAsset);
 
@@ -135,7 +135,7 @@ class Processor
         // Cycle through all possible processors
         foreach ($processors as $processor) {
             // Does the processor handle the asset type?
-            if ($processor->handles($asset)) {
+            if ($processor->handles($asset) && $processor->shouldProcess()) {
                 // It does, so add it in
                 $assetProcessors[] = $processor;
             }

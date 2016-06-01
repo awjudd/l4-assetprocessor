@@ -53,4 +53,14 @@ class ScssProcessor extends BaseProcessor
 
         return $this->write($asset, $scssc->compile($this->read($asset)));
     }
+
+    /**
+     * Should this processor always be run?
+     *
+     * @return     boolean
+     */
+    public function alwaysProcess()
+    {
+        return true;
+    }
 }

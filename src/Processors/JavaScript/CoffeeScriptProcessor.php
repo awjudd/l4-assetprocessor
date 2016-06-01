@@ -51,4 +51,14 @@ class CoffeeScriptProcessor extends BaseProcessor
     {
         return $this->write($asset, Compiler::compile($this->read($asset)));
     }
+
+    /**
+     * Should this processor always be run?
+     *
+     * @return     boolean
+     */
+    public function alwaysProcess()
+    {
+        return true;
+    }
 }
