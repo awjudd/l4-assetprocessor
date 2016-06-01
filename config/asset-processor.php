@@ -31,7 +31,7 @@ return [
 
             \Awjudd\AssetProcessor\Processors\JavaScript\CoffeeScriptProcessor::class,
             \Awjudd\AssetProcessor\Processors\JavaScript\JavaScriptMinifierProcessor::class,
-            \Awjudd\AssetProcessor\Processors\JavaScript\JavaScriptPackerrocessor::class,
+            \Awjudd\AssetProcessor\Processors\JavaScript\JavaScriptPackerProcessor::class,
 
             \Awjudd\AssetProcessor\Processors\Common\FinalProcessor::class,
         ],

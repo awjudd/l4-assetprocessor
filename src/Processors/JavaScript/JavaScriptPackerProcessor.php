@@ -2,7 +2,7 @@
 
 namespace Awjudd\AssetProcessor\Processors\JavaScript;
 
-use Packer;
+use Tholu\Packer\Packer;
 use Awjudd\AssetProcessor\Asset\Asset;
 use Awjudd\AssetProcessor\Processors\BaseProcessor;
 
