@@ -27,7 +27,8 @@
         "leafo/scssphp": "v0.6.3",
         "werkint/jsmin": "1.0.0",
         "natxet/CssMin": "3.0.x",
-        "coffeescript/coffeescript": "1.3.1"
+        "coffeescript/coffeescript": "1.3.1",
+        "tholu/php-packer": "^0.2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.2"
