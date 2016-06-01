@@ -99,7 +99,11 @@ class Processor
             $path = str_ireplace($directory, '', $path);
         }
 
-        return str_ireplace(public_path(), '', config('asset-processor.paths.public')).$path;
+        // Build up the path
+        $path = str_ireplace(public_path(), '', config('asset-processor.paths.public')) . $path;
+
+        // Remove any double slashes
+        return str_ireplace('//', '/', $path);
     }
 
     /**
