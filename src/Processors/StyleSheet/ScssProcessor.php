@@ -2,7 +2,7 @@
 
 namespace Awjudd\AssetProcessor\Processors\StyleSheet;
 
-use scssc;
+use Leafo\ScssPhp\Compiler;
 use Awjudd\AssetProcessor\Asset\Asset;
 use Awjudd\AssetProcessor\Processors\BaseProcessor;
 
@@ -49,7 +49,7 @@ class ScssProcessor extends BaseProcessor
      */
     public function process(Asset $asset)
     {
-        $scssc = new scssc();
+        $scssc = new Compiler();
 
         return $this->write($asset, $scssc->compile($this->read($asset)));
     }
