@@ -50,4 +50,14 @@ class FinalProcessor extends BaseProcessor
     {
         return $this->write($asset, $this->read($asset));
     }
+
+    /**
+     * Should this processor always be run?
+     *
+     * @return     boolean
+     */
+    public function alwaysProcess()
+    {
+        return true;
+    }
 }

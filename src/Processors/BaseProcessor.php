@@ -148,4 +148,24 @@ abstract class BaseProcessor implements IProcessor
             $this->getTargetExtension($asset)
         );
     }
+
+    /**
+     * Should this processor always be run?
+     *
+     * @return     boolean
+     */
+    public function alwaysProcess()
+    {
+        return false;
+    }
+
+    /**
+     * Should we process the file?
+     *
+     * @return     boolean
+     */
+    public function shouldProcess()
+    {
+        return $this->alwaysProcess() || in_array(config('app.env'), config('asset-processor.environments'));
+    }
 }

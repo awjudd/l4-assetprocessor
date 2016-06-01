@@ -6,6 +6,15 @@ return [
     ],
 
     /*
+     * The environments that the files will be processed on.
+     *
+     * @var     array
+     */
+    'environments'  => [
+        'production',
+    ],
+
+    /*
      * An array which holds all of the asset processors that we will use in the application.
      * 
      * @var        array
