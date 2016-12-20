@@ -10,7 +10,7 @@ class CoffeeScriptProcessor extends BaseProcessor
 {
     /**
      * Retrieves all of the extensions that this processor handles.
-     * 
+     *
      * @var array
      */
     public function getExtensions()
@@ -44,7 +44,7 @@ class CoffeeScriptProcessor extends BaseProcessor
      * Processes the asset.
      *
      * @param Asset $asset The asset to process
-     * 
+     *
      * @return Asset
      */
     public function process(Asset $asset)

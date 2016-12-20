@@ -34,14 +34,14 @@ abstract class Asset
 
     /**
      * Retrieves the file extension for the asset.
-     * 
+     *
      * @return string
      */
     abstract public function getExtension();
 
     /**
      * Processes the asset.
-     * 
+     *
      * @return Asset The updated asset object
      */
     abstract public function process();
@@ -55,14 +55,14 @@ abstract class Asset
 
     /**
      * Retrieves the file's full name.
-     * 
+     *
      * @return string
      */
     abstract public function getFullName();
 
     /**
      * Creates an array of assets.
-     * 
+     *
      * @param string $path
      */
     public static function create($path)
@@ -138,7 +138,7 @@ abstract class Asset
      * Derives the key-value pair of attributes.
      *
      * @param  array  $attributes The attributes to include
-     *                             
+     *
      * @return string The HTML to emit for any attributes.
      */
     private function deriveAttributes(array $attributes)
@@ -148,10 +148,10 @@ abstract class Asset
         // Loop through any attributes
         foreach ($attributes as $key => $value) {
             $text .= sprintf(
-                    '%s="%s" ',
-                    $key,
-                    htmlentities($value)
-                );
+                '%s="%s" ',
+                $key,
+                htmlentities($value)
+            );
         }
 
         return $text;

@@ -8,9 +8,9 @@ use Awjudd\AssetProcessor\Processors\BaseProcessor;
 
 class JavaScriptPackerProcessor extends BaseProcessor
 {
-	 /**
+     /**
      * Retrieves all of the extensions that this processor handles.
-     * 
+     *
      * @var array
      */
     public function getExtensions()
@@ -44,12 +44,12 @@ class JavaScriptPackerProcessor extends BaseProcessor
      * Processes the asset.
      *
      * @param Asset $asset The asset to process
-     * 
+     *
      * @return Asset
      */
     public function process(Asset $asset)
     {
-    	$packer = new Packer($this->read($asset), 'Normal', true, false, true);
+        $packer = new Packer($this->read($asset), 'Normal', true, false, true);
         return $this->write($asset, $packer->pack());
     }
 }

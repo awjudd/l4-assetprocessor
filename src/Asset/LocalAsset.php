@@ -12,14 +12,14 @@ class LocalAsset extends Asset
 {
     /**
      * The name of the file that will be processed.
-     * 
+     *
      * @var SplFileInfo
      */
     private $_file;
 
     /**
      * The name / url to the asset file.
-     * 
+     *
      * @var string
      */
     private $_filename;
@@ -52,7 +52,7 @@ class LocalAsset extends Asset
 
     /**
      * Creates an array of assets.
-     * 
+     *
      * @param string $path
      */
     public static function create($path, Asset $base = null)
@@ -71,7 +71,8 @@ class LocalAsset extends Asset
             // The user didn't provide a single file, so we can't handle it
             throw new InvalidArgumentException(
                 sprintf(
-                    'Invalid file provided (%s)', $path
+                    'Invalid file provided (%s)',
+                    $path
                 )
             );
         }
@@ -106,7 +107,7 @@ class LocalAsset extends Asset
 
     /**
      * Retrieves the file extension for the asset.
-     * 
+     *
      * @return string
      */
     public function getExtension()
@@ -116,7 +117,7 @@ class LocalAsset extends Asset
 
     /**
      * Retrieves the file's full name.
-     * 
+     *
      * @return string
      */
     public function getFullName()
@@ -126,7 +127,7 @@ class LocalAsset extends Asset
 
     /**
      * Processes the asset.
-     * 
+     *
      * @return Asset The updated asset object
      */
     public function process()
