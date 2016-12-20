@@ -8,9 +8,9 @@ use Awjudd\AssetProcessor\Processors\BaseProcessor;
 
 class ScssProcessor extends BaseProcessor
 {
-	/**
+    /**
      * Retrieves all of the extensions that this processor handles.
-     * 
+     *
      * @var array
      */
     public function getExtensions()
@@ -44,7 +44,7 @@ class ScssProcessor extends BaseProcessor
      * Processes the asset.
      *
      * @param Asset $asset The asset to process
-     * 
+     *
      * @return Asset
      */
     public function process(Asset $asset)

@@ -65,7 +65,9 @@ class AssetTest extends TestCase
             sprintf(
                 '<link rel="stylesheet" type="text/css" href="/assets/testing/css/foo-final-%s.css"  />',
                 $asset->getModifiedTime()
-            ), $asset->stylesheet([]));
+            ),
+            $asset->stylesheet([])
+        );
         $this->assertEquals(
             sprintf(
                 '<link rel="stylesheet" type="text/css" href="/assets/testing/css/foo-final-%s.css" foo="bar" foobar="&quot;foobar&quot;"  />',
@@ -98,13 +100,15 @@ class AssetTest extends TestCase
                         '<script type="text/javascript" src="/assets/testing/js/foo-final-%s.js" ></script>',
                         $asset->getModifiedTime()
                     ),
-                    $asset->javascript([]));
+                    $asset->javascript([])
+                );
                 $this->assertEquals(
                     sprintf(
                         '<script type="text/javascript" src="/assets/testing/js/foo-final-%s.js" foo="bar" foobar="&quot;foobar&quot;" ></script>',
                         $asset->getModifiedTime()
                     ),
-                    $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"']));
+                    $asset->javascript(['foo' => 'bar', 'foobar' => '"foobar"'])
+                );
             } else {
                 $this->assertFalse($asset->isJavaScript());
                 $this->assertTrue($asset->isStyleSheet());

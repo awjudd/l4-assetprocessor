@@ -6,14 +6,14 @@ class RemoteAsset extends Asset
 {
     /**
      * The full URL to the asset.
-     * 
+     *
      * @var string
      */
     private $_url;
 
     /**
      * The base information of the asset.
-     * 
+     *
      * @var string
      */
     private $_basename;
@@ -36,7 +36,7 @@ class RemoteAsset extends Asset
 
     /**
      * Creates an array of assets.
-     * 
+     *
      * @param string $path
      */
     public static function create($path)
@@ -58,7 +58,7 @@ class RemoteAsset extends Asset
 
     /**
      * Retrieves the file extension for the asset.
-     * 
+     *
      * @return string
      */
     public function getExtension()
@@ -68,7 +68,7 @@ class RemoteAsset extends Asset
 
     /**
      * Retrieves the file's full name.
-     * 
+     *
      * @return string
      */
     public function getFullName()
@@ -78,7 +78,7 @@ class RemoteAsset extends Asset
 
     /**
      * Processes the asset.
-     * 
+     *
      * @return Asset The updated asset object
      */
     public function process()

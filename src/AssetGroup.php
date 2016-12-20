@@ -13,14 +13,14 @@ class AssetGroup
 
     /**
      * The name of the asset group.
-     * 
+     *
      * @var string
      */
     private $_name;
 
     /**
      * The type of the asset group.
-     * 
+     *
      * @var string
      */
     private $_type;
@@ -86,7 +86,9 @@ class AssetGroup
 
         foreach ($assets as $asset) {
             $this->_assets[sprintf(
-                '%s-%s', $filename, $asset->getName()
+                '%s-%s',
+                $filename,
+                $asset->getName()
             )] = $asset;
         }
     }

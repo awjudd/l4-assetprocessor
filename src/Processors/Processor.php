@@ -69,7 +69,7 @@ class Processor
 
     /**
      * Retrieves the folder which will be use for file output.
-     * 
+     *
      * @return string The output directory
      */
     public static function getBaseOutputDirectory()
