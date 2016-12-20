@@ -20,7 +20,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=5.6.4",
         "illuminate/support": "~5",
         "illuminate/config": "~5",
         "leafo/lessphp": "0.5.0",
@@ -39,6 +39,8 @@
         }
     },
     "autoload-dev": {
-        "classmap": ["tests/TestCase.php"]   
+        "classmap": [
+            "tests/TestCase.php"
+        ]
     }
 }
